@@ -44,23 +44,10 @@
         <main class="main-dashboard" role="main">
             <!-- Dashboard Grid -->
             <section id="dashboard-grid" class="dashboard-grid" aria-label="Velg et matematisk emne">
-                <div class="module-card" data-category="algebra" data-target="module-quadratic">
-                    <div class="module-card-icon">📈</div>
-                    <h3>Andregradsfunksjon</h3>
-                    <p>Beregn topp/bunnpunkt, røtter og se trinnvis utregning.</p>
-                </div>
-                <div class="module-card" data-category="grunnleggende" data-target="module-percent">
-                    <div class="module-card-icon">％</div>
-                    <h3>Prosentregning</h3>
-                    <p>Enkel og avansert prosentregning.</p>
-                </div>
-                <div class="module-card" data-category="geometri" data-target="module-pythagoras">
-                    <div class="module-card-icon">📐</div>
-                    <h3>Pytagoras</h3>
-                    <p>Beregn sider i en rettvinklet trekant.</p>
-                </div>
+                <!-- Dynamically populated by JS -->
             </section>
 
+            <!-- Quadratic Module -->
             <section id="module-quadratic" class="educational-module" aria-labelledby="quadratic-title" style="display: none;">
                 <button id="btn-back-dashboard" class="btn-secondary" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
                 <h2 id="quadratic-title">Topp- og Bunnpunkt for Andregradsfunksjon</h2>
@@ -89,6 +76,128 @@
                 <div id="step-by-step-container" class="steps-box" aria-live="polite" hidden>
                     <h3>Utregning:</h3>
                     <div id="steps-content"></div>
+                </div>
+            </section>
+
+            <!-- Linear Module -->
+            <section id="module-linear" class="educational-module" aria-labelledby="linear-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="linear-title">Lineær Funksjon</h2>
+                <p>Skriv inn stigningstall og konstantledd for funksjonen <em>f(x) = ax + b</em></p>
+
+                <form id="linear-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="linear-a">a =</label>
+                        <input type="number" id="linear-a" name="a" step="any" required aria-label="Stigningstall a">
+                    </div>
+                    <div class="input-group">
+                        <label for="linear-b">b =</label>
+                        <input type="number" id="linear-b" name="b" step="any" required aria-label="Konstantledd b">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn og tegn graf</button>
+                    <button type="button" id="btn-show-steps-linear" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-linear" class="hint-box" aria-live="polite" hidden></div>
+
+                <div id="step-by-step-container-linear" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-linear"></div>
+                </div>
+            </section>
+
+            <!-- Percent Module -->
+            <section id="module-percent" class="educational-module" aria-labelledby="percent-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="percent-title">Prosentregning</h2>
+                <p>Hvor mange prosent er en verdi av en annen?</p>
+
+                <form id="percent-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="percent-x">Del (X) =</label>
+                        <input type="number" id="percent-x" name="x" step="any" required aria-label="Del x">
+                    </div>
+                    <div class="input-group">
+                        <label for="percent-y">Hele (Y) =</label>
+                        <input type="number" id="percent-y" name="y" step="any" required aria-label="Hele y">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn prosent</button>
+                    <button type="button" id="btn-show-steps-percent" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-percent" class="hint-box" aria-live="polite" hidden></div>
+
+                <div id="result-percent" class="result-box" aria-live="polite" hidden></div>
+
+                <div id="step-by-step-container-percent" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-percent"></div>
+                </div>
+            </section>
+
+            <!-- Percent Change Module -->
+            <section id="module-percent-change" class="educational-module" aria-labelledby="percent-change-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="percent-change-title">Prosentendring</h2>
+                <p>Beregn den prosentvise økningen eller nedgangen fra en gammel til en ny verdi.</p>
+
+                <form id="percent-change-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="percent-change-old">Gammel verdi =</label>
+                        <input type="number" id="percent-change-old" name="oldVal" step="any" required aria-label="Gammel verdi">
+                    </div>
+                    <div class="input-group">
+                        <label for="percent-change-new">Ny verdi =</label>
+                        <input type="number" id="percent-change-new" name="newVal" step="any" required aria-label="Ny verdi">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn endring</button>
+                    <button type="button" id="btn-show-steps-percent-change" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-percent-change" class="hint-box" aria-live="polite" hidden></div>
+
+                <div id="result-percent-change" class="result-box" aria-live="polite" hidden></div>
+
+                <div id="step-by-step-container-percent-change" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-percent-change"></div>
+                </div>
+            </section>
+
+            <!-- Pythagoras Module -->
+            <section id="module-pythagoras" class="educational-module" aria-labelledby="pythagoras-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="pythagoras-title">Pytagoras' Setning</h2>
+                <p>Fyll inn <strong>to</strong> av sidene for å finne den tredje i en rettvinklet trekant (a² + b² = c²).</p>
+
+                <form id="pythagoras-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="pyth-a">Katet a =</label>
+                        <input type="number" id="pyth-a" name="a" step="any" aria-label="Katet a">
+                    </div>
+                    <div class="input-group">
+                        <label for="pyth-b">Katet b =</label>
+                        <input type="number" id="pyth-b" name="b" step="any" aria-label="Katet b">
+                    </div>
+                    <div class="input-group">
+                        <label for="pyth-c">Hypotenus c =</label>
+                        <input type="number" id="pyth-c" name="c" step="any" aria-label="Hypotenus c">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn</button>
+                    <button type="button" id="btn-show-steps-pythagoras" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-pythagoras" class="hint-box" aria-live="polite" hidden></div>
+
+                <div id="result-pythagoras" class="result-box" aria-live="polite" hidden></div>
+
+                <div id="step-by-step-container-pythagoras" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-pythagoras"></div>
                 </div>
             </section>
         </main>

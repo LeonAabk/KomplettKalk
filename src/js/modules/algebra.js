@@ -99,3 +99,84 @@ export function generateQuadraticDataPoints(a, b, c, xMin, xMax, step = 0.5) {
     }
     return data;
 }
+
+/**
+ * Løser en lineær funksjon y = ax + b
+ * Returnerer et objekt med resultater og trinnvis utregning.
+ *
+ * @param {number} a - Stigningstall
+ * @param {number} b - Konstantledd
+ * @returns {Object} Resultatobjekt med skjæringspunkter og steps
+ */
+export function analyzeLinear(a, b) {
+    const steps = [];
+
+    // 1. Definer funksjonen
+    steps.push({
+        description: 'Vi starter med den lineære funksjonen på standardform:',
+        math: `f(x) = ${a}x ${b >= 0 ? '+' : ''}${b}`
+    });
+
+    // 2. Forklar stigningstall og konstantledd
+    steps.push({
+        description: `Stigningstallet er ${a}. Dette betyr at for hver enhet vi går til høyre på x-aksen, går grafen ${Math.abs(a)} enheter ${a >= 0 ? 'opp' : 'ned'}.`,
+        math: `a = ${a}`
+    });
+    steps.push({
+        description: `Konstantleddet er ${b}. Dette er der grafen skjærer y-aksen.`,
+        math: `b = ${b}`
+    });
+
+    // 3. Finn skjæringspunkt med y-aksen
+    const yIntercept = { x: 0, y: b };
+    steps.push({
+        description: `Skjæringspunktet med y-aksen (når x = 0) er:`,
+        math: `f(0) = ${a}(0) ${b >= 0 ? '+' : ''}${b} = ${b}`
+    });
+
+    // 4. Finn skjæringspunkt med x-aksen (nullpunkt)
+    let root = null;
+    if (a !== 0) {
+        root = -b / a;
+        steps.push({
+            description: `Vi finner nullpunktet ved å sette f(x) = 0:`,
+            math: `${a}x ${b >= 0 ? '+' : ''}${b} = 0`
+        });
+        steps.push({
+            description: `Flytter ${b} over og deler på ${a}:`,
+            math: `x = \\frac{-(${b})}{${a}} = ${root}`
+        });
+    } else {
+        if (b === 0) {
+            steps.push({
+                description: `Siden a = 0 og b = 0, er f(x) = 0 for alle x. Grafen ligger på x-aksen.`,
+                math: `0x + 0 = 0`
+            });
+        } else {
+            steps.push({
+                description: `Siden a = 0 og b = ${b}, er grafen en horisontal linje som aldri skjærer x-aksen.`,
+                math: `${b} \\neq 0`
+            });
+        }
+    }
+
+    return {
+        yIntercept,
+        root,
+        steps
+    };
+}
+
+/**
+ * Hjelpefunksjon for å generere datapunkter for lineær graf.
+ */
+export function generateLinearDataPoints(a, b, xMin, xMax, step = 0.5) {
+    const data = [];
+    for (let x = xMin; x <= xMax; x += step) {
+        data.push({
+            x: x,
+            y: a * x + b
+        });
+    }
+    return data;
+}
