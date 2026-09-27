@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="no" data-theme="light">
+<html lang="no" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,7 +42,27 @@
 
         <!-- Main Dashboard -->
         <main class="main-dashboard" role="main">
-            <section id="module-quadratic" class="educational-module" aria-labelledby="quadratic-title">
+            <!-- Dashboard Grid -->
+            <section id="dashboard-grid" class="dashboard-grid" aria-label="Velg et matematisk emne">
+                <div class="module-card" data-category="algebra" data-target="module-quadratic">
+                    <div class="module-card-icon">📈</div>
+                    <h3>Andregradsfunksjon</h3>
+                    <p>Beregn topp/bunnpunkt, røtter og se trinnvis utregning.</p>
+                </div>
+                <div class="module-card" data-category="grunnleggende" data-target="module-percent">
+                    <div class="module-card-icon">％</div>
+                    <h3>Prosentregning</h3>
+                    <p>Enkel og avansert prosentregning.</p>
+                </div>
+                <div class="module-card" data-category="geometri" data-target="module-pythagoras">
+                    <div class="module-card-icon">📐</div>
+                    <h3>Pytagoras</h3>
+                    <p>Beregn sider i en rettvinklet trekant.</p>
+                </div>
+            </section>
+
+            <section id="module-quadratic" class="educational-module" aria-labelledby="quadratic-title" style="display: none;">
+                <button id="btn-back-dashboard" class="btn-secondary" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
                 <h2 id="quadratic-title">Topp- og Bunnpunkt for Andregradsfunksjon</h2>
                 <p>Skriv inn koeffisientene for funksjonen <em>f(x) = ax² + bx + c</em></p>
 
@@ -76,6 +96,10 @@
         <!-- Quick-Graph Sidebar -->
         <aside class="quick-graph-sidebar" aria-labelledby="graph-title">
             <h2 id="graph-title">Hurtig-Graf</h2>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <input type="text" id="quick-function-input" placeholder="f.eks. x*x" style="flex: 1; padding: var(--spacing-sm); border: 1px solid var(--border-color); border-radius: var(--border-radius); background-color: var(--bg-primary); color: var(--text-primary);">
+                <button id="btn-draw-quick" class="btn-primary">Tegn</button>
+            </div>
             <div class="chart-container">
                 <canvas id="quick-graph-canvas" aria-label="Graf av funksjonen"></canvas>
             </div>
