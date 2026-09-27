@@ -1,7 +1,8 @@
 import { validateQuadraticInput } from '../utils/validation.js';
 import { analyzeQuadratic, generateQuadraticDataPoints } from '../modules/algebra.js';
 import { renderSteps } from '../components/step-by-step.js';
-import { renderGraph } from '../components/graph.js';
+import { renderGraph, renderEmptyGraph } from '../components/graph.js';
+import { evaluateMath } from '../utils/mathParser.js';
 
 /**
  * Modul for å binde sammen UI, state og forretningslogikk.
@@ -20,6 +21,123 @@ export function initUI() {
     const stepsContent = document.getElementById('steps-content');
     const canvas = document.getElementById('quick-graph-canvas');
     const graphDetails = document.getElementById('graph-details');
+    const quickInput = document.getElementById('quick-function-input');
+    const btnDrawQuick = document.getElementById('btn-draw-quick');
+
+    // Render empty graph on startup
+    if (window.Chart) {
+        renderEmptyGraph(canvas);
+    } else {
+        // Retry if Chart.js is not fully loaded (since it's loaded via defer)
+        setTimeout(() => renderEmptyGraph(canvas), 500);
+    }
+
+    // Dashboard Elements
+    const dashboardGrid = document.getElementById('dashboard-grid');
+    const moduleCards = document.querySelectorAll('.module-card');
+    const moduleQuadratic = document.getElementById('module-quadratic');
+    const btnBackDashboard = document.getElementById('btn-back-dashboard');
+    const globalSearch = document.getElementById('global-search');
+    const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+
+    // Dashboard Logic
+    moduleCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const targetId = card.getAttribute('data-target');
+            if (targetId === 'module-quadratic') {
+                dashboardGrid.style.display = 'none';
+                moduleQuadratic.style.display = 'block';
+            } else {
+                alert('Denne modulen er under utvikling!');
+            }
+        });
+    });
+
+    if (btnBackDashboard) {
+        btnBackDashboard.addEventListener('click', () => {
+            moduleQuadratic.style.display = 'none';
+            dashboardGrid.style.display = 'grid';
+        });
+    }
+
+    if (globalSearch) {
+        globalSearch.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            moduleCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Update active state
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            const category = link.getAttribute('href').substring(1); // remove '#'
+
+            moduleCards.forEach(card => {
+                if (category === 'alle' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Ensure dashboard is visible when clicking sidebar
+            if (dashboardGrid.style.display === 'none') {
+                 moduleQuadratic.style.display = 'none';
+                 dashboardGrid.style.display = 'grid';
+            }
+        });
+    });
+
+    // Legg til en 'Alle' lenke dynamisk hvis den mangler, eller bare la de eksisterende virke
+    const navUl = document.querySelector('.sidebar-nav ul');
+    if (navUl && !navUl.querySelector('a[href="#alle"]')) {
+        const li = document.createElement('li');
+        li.innerHTML = '<a href="#alle">Alle Emner</a>';
+        navUl.insertBefore(li, navUl.firstChild);
+
+        li.querySelector('a').addEventListener('click', (e) => {
+            e.preventDefault();
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+            e.target.classList.add('active');
+            moduleCards.forEach(card => card.style.display = 'flex');
+            moduleQuadratic.style.display = 'none';
+            dashboardGrid.style.display = 'grid';
+        });
+    }
+
+    // Hurtig-Graf logikk
+    if (btnDrawQuick && quickInput) {
+        btnDrawQuick.addEventListener('click', () => {
+            const funcStr = quickInput.value.trim();
+            if (!funcStr) return;
+
+            try {
+                const dataPoints = [];
+                for (let x = -10; x <= 10; x += 0.5) {
+                    const y = evaluateMath(funcStr, x);
+                    if (isFinite(y)) {
+                        dataPoints.push({ x, y });
+                    }
+                }
+
+                renderGraph(canvas, dataPoints, null, null);
+                graphDetails.innerHTML = `<p>Viser graf for: <strong>f(x) = ${funcStr}</strong></p>`;
+            } catch (e) {
+                graphDetails.innerHTML = `<p style="color: var(--error-color);">Ugyldig funksjon. Prøv f.eks 'x*x', 'x^2' eller '2*x+1'</p>`;
+            }
+        });
+    }
 
     // Håndter skjemainnsending
     form.addEventListener('submit', (e) => {

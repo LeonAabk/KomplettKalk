@@ -12,6 +12,62 @@ let chartInstance = null;
  * @param {Object} vertex - Objekt {x, y, type} for topp/bunnpunkt
  * @param {Array} roots - Array av røtter (nullpunkter)
  */
+/**
+ * Tegner et tomt rutenett (grid) ved oppstart.
+ *
+ * @param {HTMLCanvasElement} canvas - Canvas elementet
+ */
+export function renderEmptyGraph(canvas) {
+    if (!window.Chart) {
+        console.error("Chart.js er ikke lastet ennå.");
+        return;
+    }
+
+    const style = getComputedStyle(document.body);
+    const textColor = style.getPropertyValue('--text-primary').trim() || '#0f172a';
+    const gridColor = style.getPropertyValue('--border-color').trim() || '#cbd5e1';
+
+    if (chartInstance) {
+        chartInstance.destroy();
+    }
+
+    chartInstance = new Chart(canvas, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'Tom graf',
+                data: [],
+                showLine: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'center',
+                    min: -10,
+                    max: 10,
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, stepSize: 2 }
+                },
+                y: {
+                    type: 'linear',
+                    position: 'center',
+                    min: -10,
+                    max: 10,
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, stepSize: 2 }
+                }
+            }
+        }
+    });
+}
+
 export function renderGraph(canvas, dataPoints, vertex, roots) {
     if (!window.Chart) {
         console.error("Chart.js er ikke lastet ennå.");
