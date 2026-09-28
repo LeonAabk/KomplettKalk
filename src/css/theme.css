@@ -18,6 +18,10 @@
     --hint-color: #f59e0b;
     --hint-bg: #fef3c7;
 
+    /* Input Fields */
+    --input-bg: #ffffff;
+    --input-border: #cbd5e1;
+
     /* Typography */
     --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     --font-size-base: 16px;
@@ -56,4 +60,8 @@
     --error-bg: #450a0a;
     --hint-color: #eab308;
     --hint-bg: #422006;
+
+    /* Input Fields */
+    --input-bg: #27272a;
+    --input-border: #52525b;
 }

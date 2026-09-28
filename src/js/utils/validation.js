@@ -101,7 +101,7 @@ export function validatePythagorasInput(aStr, bStr, cStr) {
     if (filledCount !== 2) {
         return {
             isValid: false,
-            hint: 'Du må fylle inn nøyaktig to av sidene for å kunne regne ut den tredje. Lengdene må være positive tall.'
+            hint: 'Fyll inn nøyaktig to verdier for å regne ut den tredje.'
         };
     }
 
