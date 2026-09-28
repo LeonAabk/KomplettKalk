@@ -39,6 +39,8 @@ export function initUI() {
     const dashboardGrid = document.getElementById('dashboard-grid');
     const globalSearch = document.getElementById('global-search');
     const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+    const quickGraphSidebar = document.querySelector('.quick-graph-sidebar');
+    const appContainer = document.querySelector('.app-container');
 
     // Dynamisk generering av dashboard-kort
     function renderDashboardCards() {
@@ -66,9 +68,19 @@ export function initUI() {
                 const targetModule = document.getElementById(item.id);
                 if (targetModule) {
                     targetModule.style.display = 'block';
+
+                    if (item.category === 'geometri' || item.category === 'grunnleggende') {
+                        if (quickGraphSidebar) quickGraphSidebar.style.display = 'none';
+                        if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr';
+                    } else {
+                        if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
+                        if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr 300px';
+                    }
                 } else {
                     alert('Denne modulen mangler HTML-struktur!');
                     dashboardGrid.style.display = 'grid';
+                    if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
+                    if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr 300px';
                 }
             });
 
@@ -87,6 +99,8 @@ export function initUI() {
                 mod.style.display = 'none';
             });
             dashboardGrid.style.display = 'grid';
+            if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
+            if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr 300px';
         });
     });
 
@@ -125,8 +139,12 @@ export function initUI() {
 
             // Ensure dashboard is visible when clicking sidebar
             if (dashboardGrid.style.display === 'none') {
-                 moduleQuadratic.style.display = 'none';
+                 document.querySelectorAll('.educational-module').forEach(mod => {
+                     mod.style.display = 'none';
+                 });
                  dashboardGrid.style.display = 'grid';
+                 if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
+                 if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr 300px';
             }
         });
     });
@@ -143,8 +161,12 @@ export function initUI() {
             sidebarLinks.forEach(l => l.classList.remove('active'));
             e.target.classList.add('active');
             moduleCards.forEach(card => card.style.display = 'flex');
-            moduleQuadratic.style.display = 'none';
+            document.querySelectorAll('.educational-module').forEach(mod => {
+                mod.style.display = 'none';
+            });
             dashboardGrid.style.display = 'grid';
+            if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
+            if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr 300px';
         });
     }
 

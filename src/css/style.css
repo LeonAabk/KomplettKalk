@@ -38,9 +38,9 @@ body {
 
 .header-controls input {
     padding: var(--spacing-sm) var(--spacing-md);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--input-border);
     border-radius: var(--border-radius);
-    background-color: var(--bg-primary);
+    background-color: var(--input-bg);
     color: var(--text-primary);
 }
 
@@ -82,9 +82,10 @@ body {
 }
 
 .module-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     box-shadow: var(--shadow-md);
     border-color: var(--accent-primary);
+    background-color: var(--bg-tertiary);
 }
 
 .module-card-icon {
@@ -161,10 +162,10 @@ body {
 
 .input-group input {
     flex: 1;
-    padding: var(--spacing-md);
-    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    border: 1px solid var(--input-border);
     border-radius: var(--border-radius);
-    background-color: var(--bg-primary);
+    background-color: var(--input-bg);
     color: var(--text-primary);
     font-size: var(--font-size-base);
     transition: box-shadow 0.2s, border-color 0.2s;
@@ -223,7 +224,7 @@ button:disabled {
 .steps-box {
     margin-top: var(--spacing-xl);
     padding: var(--spacing-lg);
-    background-color: var(--bg-primary);
+    background-color: var(--bg-tertiary);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
 }
