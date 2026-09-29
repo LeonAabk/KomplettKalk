@@ -1,7 +1,7 @@
-import { validateQuadraticInput, validateLinearInput, validatePercentInput, validatePythagorasInput } from '../utils/validation.js';
-import { analyzeQuadratic, generateQuadraticDataPoints, analyzeLinear, generateLinearDataPoints } from '../modules/algebra.js';
-import { analyzePercent, analyzePercentChange } from '../modules/basic.js';
-import { analyzePythagoras } from '../modules/geometry.js';
+import { validateQuadraticInput, validateLinearInput, validatePercentInput, validatePythagorasInput, validateAreaInput, validateTrigonometryInput, validateABCInput, validateVertexInput, validatePowerInput, validateSquareRootInput } from '../utils/validation.js';
+import { analyzeQuadratic, generateQuadraticDataPoints, analyzeLinear, generateLinearDataPoints, analyzeABC, analyzeVertex } from '../modules/algebra.js';
+import { analyzePercent, analyzePercentChange, analyzePower, analyzeSquareRoot } from '../modules/basic.js';
+import { analyzePythagoras, analyzeArea, analyzeTrigonometry } from '../modules/geometry.js';
 import { renderSteps } from '../components/step-by-step.js';
 import { renderGraph, renderEmptyGraph } from '../components/graph.js';
 import { evaluateMath } from '../utils/mathParser.js';
@@ -494,6 +494,373 @@ export function initUI() {
                 pythStepsContainer.hidden = true;
                 pythStepsBtn.textContent = 'Vis utregning';
                 pythStepsBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    // ---------------- AREA LOGIC ----------------
+    const areaForm = document.getElementById('area-form');
+    const areaShapeSelect = document.getElementById('area-shape');
+    const areaGroup2 = document.getElementById('area-group2');
+    const areaLabel1 = document.getElementById('area-label1');
+    const areaLabel2 = document.getElementById('area-label2');
+    const areaHintBox = document.getElementById('validation-hint-area');
+    const areaStepsBtn = document.getElementById('btn-show-steps-area');
+    const areaStepsContainer = document.getElementById('step-by-step-container-area');
+    const areaStepsContent = document.getElementById('steps-content-area');
+    const areaResultBox = document.getElementById('result-area');
+
+    if (areaForm) {
+        areaShapeSelect.addEventListener('change', (e) => {
+            const shape = e.target.value;
+            if (shape === 'circle') {
+                areaGroup2.style.display = 'none';
+                areaLabel1.textContent = 'Radius (r) =';
+            } else if (shape === 'rectangle') {
+                areaGroup2.style.display = 'flex';
+                areaLabel1.textContent = 'Lengde (l) =';
+                areaLabel2.textContent = 'Bredde (b) =';
+            } else if (shape === 'triangle') {
+                areaGroup2.style.display = 'flex';
+                areaLabel1.textContent = 'Grunnlinje (g) =';
+                areaLabel2.textContent = 'Høyde (h) =';
+            }
+        });
+
+        areaForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(areaForm);
+            const shape = formData.get('shape');
+            const val1Str = formData.get('val1');
+            const val2Str = formData.get('val2');
+
+            const validation = validateAreaInput(shape, val1Str, val2Str);
+
+            if (!validation.isValid) {
+                showHint(areaHintBox, validation.hint);
+                areaStepsBtn.disabled = true;
+                areaStepsContainer.hidden = true;
+                areaResultBox.hidden = true;
+                return;
+            }
+            hideHint(areaHintBox);
+
+            const { val1, val2 } = validation.values;
+            const result = analyzeArea(shape, val1, val2);
+
+            state.currentAreaResult = result;
+            areaStepsBtn.disabled = false;
+
+            areaResultBox.innerHTML = `<strong>Resultat:</strong> Arealet er ${result.result % 1 === 0 ? result.result : result.result.toFixed(2)}`;
+            areaResultBox.hidden = false;
+
+            if (!areaStepsContainer.hidden) {
+                renderSteps(result.steps, areaStepsContent);
+            }
+        });
+
+        areaStepsBtn.addEventListener('click', () => {
+            const isHidden = areaStepsContainer.hidden;
+            if (isHidden) {
+                areaStepsContainer.hidden = false;
+                areaStepsBtn.textContent = 'Skjul utregning';
+                areaStepsBtn.setAttribute('aria-expanded', 'true');
+                if (state.currentAreaResult) {
+                    renderSteps(state.currentAreaResult.steps, areaStepsContent);
+                }
+            } else {
+                areaStepsContainer.hidden = true;
+                areaStepsBtn.textContent = 'Vis utregning';
+                areaStepsBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    // ---------------- TRIGONOMETRY LOGIC ----------------
+    const trigForm = document.getElementById('trig-form');
+    const trigHintBox = document.getElementById('validation-hint-trig');
+    const trigStepsBtn = document.getElementById('btn-show-steps-trig');
+    const trigStepsContainer = document.getElementById('step-by-step-container-trig');
+    const trigStepsContent = document.getElementById('steps-content-trig');
+    const trigResultBox = document.getElementById('result-trig');
+
+    if (trigForm) {
+        trigForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(trigForm);
+
+            const givenType = formData.get('givenType');
+            const findType = formData.get('findType');
+
+            if (givenType === findType) {
+                showHint(trigHintBox, 'Kjent side og siden du vil finne kan ikke være den samme.');
+                return;
+            }
+
+            const validation = validateTrigonometryInput(formData.get('angle'), formData.get('givenValue'));
+
+            if (!validation.isValid) {
+                showHint(trigHintBox, validation.hint);
+                trigStepsBtn.disabled = true;
+                trigStepsContainer.hidden = true;
+                trigResultBox.hidden = true;
+                return;
+            }
+            hideHint(trigHintBox);
+
+            const { angle, givenValue } = validation.values;
+            const result = analyzeTrigonometry(angle, givenType, givenValue, findType);
+
+            state.currentTrigResult = result;
+            trigStepsBtn.disabled = false;
+
+            trigResultBox.innerHTML = `<strong>Resultat:</strong> Siden er ${result.result.toFixed(2)}`;
+            trigResultBox.hidden = false;
+
+            if (!trigStepsContainer.hidden) {
+                renderSteps(result.steps, trigStepsContent);
+            }
+        });
+
+        trigStepsBtn.addEventListener('click', () => {
+            const isHidden = trigStepsContainer.hidden;
+            if (isHidden) {
+                trigStepsContainer.hidden = false;
+                trigStepsBtn.textContent = 'Skjul utregning';
+                trigStepsBtn.setAttribute('aria-expanded', 'true');
+                if (state.currentTrigResult) {
+                    renderSteps(state.currentTrigResult.steps, trigStepsContent);
+                }
+            } else {
+                trigStepsContainer.hidden = true;
+                trigStepsBtn.textContent = 'Vis utregning';
+                trigStepsBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    // ---------------- ABC LOGIC ----------------
+    const abcForm = document.getElementById('abc-form');
+    const abcHintBox = document.getElementById('validation-hint-abc');
+    const abcStepsBtn = document.getElementById('btn-show-steps-abc');
+    const abcStepsContainer = document.getElementById('step-by-step-container-abc');
+    const abcStepsContent = document.getElementById('steps-content-abc');
+    const abcResultBox = document.getElementById('result-abc');
+
+    if (abcForm) {
+        abcForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(abcForm);
+            const validation = validateABCInput(formData.get('a'), formData.get('b'), formData.get('c'));
+
+            if (!validation.isValid) {
+                showHint(abcHintBox, validation.hint);
+                abcStepsBtn.disabled = true;
+                abcStepsContainer.hidden = true;
+                abcResultBox.hidden = true;
+                return;
+            }
+            hideHint(abcHintBox);
+
+            const { a, b, c } = validation.values;
+            const result = analyzeABC(a, b, c);
+
+            state.currentAbcResult = result;
+            abcStepsBtn.disabled = false;
+
+            if (result.roots.length === 2) {
+                abcResultBox.innerHTML = `<strong>Røtter:</strong> x₁ = ${result.roots[0].toFixed(2)}, x₂ = ${result.roots[1].toFixed(2)}`;
+            } else if (result.roots.length === 1) {
+                abcResultBox.innerHTML = `<strong>Røtter:</strong> x = ${result.roots[0].toFixed(2)}`;
+            } else {
+                abcResultBox.innerHTML = `<strong>Røtter:</strong> Ingen reelle røtter`;
+            }
+            abcResultBox.hidden = false;
+
+            if (!abcStepsContainer.hidden) {
+                renderSteps(result.steps, abcStepsContent);
+            }
+        });
+
+        abcStepsBtn.addEventListener('click', () => {
+            const isHidden = abcStepsContainer.hidden;
+            if (isHidden) {
+                abcStepsContainer.hidden = false;
+                abcStepsBtn.textContent = 'Skjul utregning';
+                abcStepsBtn.setAttribute('aria-expanded', 'true');
+                if (state.currentAbcResult) {
+                    renderSteps(state.currentAbcResult.steps, abcStepsContent);
+                }
+            } else {
+                abcStepsContainer.hidden = true;
+                abcStepsBtn.textContent = 'Vis utregning';
+                abcStepsBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    // ---------------- VERTEX LOGIC ----------------
+    const vertexForm = document.getElementById('vertex-form');
+    const vertexHintBox = document.getElementById('validation-hint-vertex');
+    const vertexStepsBtn = document.getElementById('btn-show-steps-vertex');
+    const vertexStepsContainer = document.getElementById('step-by-step-container-vertex');
+    const vertexStepsContent = document.getElementById('steps-content-vertex');
+    const vertexResultBox = document.getElementById('result-vertex');
+
+    if (vertexForm) {
+        vertexForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(vertexForm);
+            const validation = validateVertexInput(formData.get('a'), formData.get('b'), formData.get('c'));
+
+            if (!validation.isValid) {
+                showHint(vertexHintBox, validation.hint);
+                vertexStepsBtn.disabled = true;
+                vertexStepsContainer.hidden = true;
+                vertexResultBox.hidden = true;
+                return;
+            }
+            hideHint(vertexHintBox);
+
+            const { a, b, c } = validation.values;
+            const result = analyzeVertex(a, b, c);
+
+            state.currentVertexResult = result;
+            vertexStepsBtn.disabled = false;
+
+            vertexResultBox.innerHTML = `<strong>${result.type}:</strong> (${result.x.toFixed(2)}, ${result.y.toFixed(2)})`;
+            vertexResultBox.hidden = false;
+
+            if (!vertexStepsContainer.hidden) {
+                renderSteps(result.steps, vertexStepsContent);
+            }
+        });
+
+        vertexStepsBtn.addEventListener('click', () => {
+            const isHidden = vertexStepsContainer.hidden;
+            if (isHidden) {
+                vertexStepsContainer.hidden = false;
+                vertexStepsBtn.textContent = 'Skjul utregning';
+                vertexStepsBtn.setAttribute('aria-expanded', 'true');
+                if (state.currentVertexResult) {
+                    renderSteps(state.currentVertexResult.steps, vertexStepsContent);
+                }
+            } else {
+                vertexStepsContainer.hidden = true;
+                vertexStepsBtn.textContent = 'Vis utregning';
+                vertexStepsBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    // ---------------- POWER LOGIC ----------------
+    const powerForm = document.getElementById('power-form');
+    const powerHintBox = document.getElementById('validation-hint-power');
+    const powerStepsBtn = document.getElementById('btn-show-steps-power');
+    const powerStepsContainer = document.getElementById('step-by-step-container-power');
+    const powerStepsContent = document.getElementById('steps-content-power');
+    const powerResultBox = document.getElementById('result-power');
+
+    if (powerForm) {
+        powerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(powerForm);
+            const validation = validatePowerInput(formData.get('base'), formData.get('exp'));
+
+            if (!validation.isValid) {
+                showHint(powerHintBox, validation.hint);
+                powerStepsBtn.disabled = true;
+                powerStepsContainer.hidden = true;
+                powerResultBox.hidden = true;
+                return;
+            }
+            hideHint(powerHintBox);
+
+            const { base, exponent } = validation.values;
+            const result = analyzePower(base, exponent);
+
+            state.currentPowerResult = result;
+            powerStepsBtn.disabled = false;
+
+            powerResultBox.innerHTML = `<strong>Resultat:</strong> ${result.result}`;
+            powerResultBox.hidden = false;
+
+            if (!powerStepsContainer.hidden) {
+                renderSteps(result.steps, powerStepsContent);
+            }
+        });
+
+        powerStepsBtn.addEventListener('click', () => {
+            const isHidden = powerStepsContainer.hidden;
+            if (isHidden) {
+                powerStepsContainer.hidden = false;
+                powerStepsBtn.textContent = 'Skjul utregning';
+                powerStepsBtn.setAttribute('aria-expanded', 'true');
+                if (state.currentPowerResult) {
+                    renderSteps(state.currentPowerResult.steps, powerStepsContent);
+                }
+            } else {
+                powerStepsContainer.hidden = true;
+                powerStepsBtn.textContent = 'Vis utregning';
+                powerStepsBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    // ---------------- SQUARE ROOT LOGIC ----------------
+    const sqrtForm = document.getElementById('sqrt-form');
+    const sqrtHintBox = document.getElementById('validation-hint-sqrt');
+    const sqrtStepsBtn = document.getElementById('btn-show-steps-sqrt');
+    const sqrtStepsContainer = document.getElementById('step-by-step-container-sqrt');
+    const sqrtStepsContent = document.getElementById('steps-content-sqrt');
+    const sqrtResultBox = document.getElementById('result-sqrt');
+
+    if (sqrtForm) {
+        sqrtForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(sqrtForm);
+            const validation = validateSquareRootInput(formData.get('number'));
+
+            if (!validation.isValid) {
+                showHint(sqrtHintBox, validation.hint);
+                sqrtStepsBtn.disabled = true;
+                sqrtStepsContainer.hidden = true;
+                sqrtResultBox.hidden = true;
+                return;
+            }
+            hideHint(sqrtHintBox);
+
+            const { number } = validation.values;
+            const result = analyzeSquareRoot(number);
+
+            state.currentSqrtResult = result;
+            sqrtStepsBtn.disabled = false;
+
+            if (isNaN(result.result)) {
+                sqrtResultBox.innerHTML = `<strong>Resultat:</strong> Ikke et reelt tall`;
+            } else {
+                sqrtResultBox.innerHTML = `<strong>Resultat:</strong> ${Number.isInteger(result.result) ? result.result : result.result.toFixed(4)}`;
+            }
+            sqrtResultBox.hidden = false;
+
+            if (!sqrtStepsContainer.hidden) {
+                renderSteps(result.steps, sqrtStepsContent);
+            }
+        });
+
+        sqrtStepsBtn.addEventListener('click', () => {
+            const isHidden = sqrtStepsContainer.hidden;
+            if (isHidden) {
+                sqrtStepsContainer.hidden = false;
+                sqrtStepsBtn.textContent = 'Skjul utregning';
+                sqrtStepsBtn.setAttribute('aria-expanded', 'true');
+                if (state.currentSqrtResult) {
+                    renderSteps(state.currentSqrtResult.steps, sqrtStepsContent);
+                }
+            } else {
+                sqrtStepsContainer.hidden = true;
+                sqrtStepsBtn.textContent = 'Vis utregning';
+                sqrtStepsBtn.setAttribute('aria-expanded', 'false');
             }
         });
     }

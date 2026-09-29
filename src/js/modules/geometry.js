@@ -60,3 +60,202 @@ export function analyzePythagoras(a, b, c) {
         steps
     };
 }
+
+/**
+ * Beregner areal for 2D-figurer
+ * @param {string} shape - Type figur ('circle', 'rectangle', 'triangle')
+ * @param {number} val1 - Første verdi (f.eks radius, grunnlinje eller lengde)
+ * @param {number|null} val2 - Andre verdi (f.eks høyde eller bredde), ikke brukt for sirkel
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeArea(shape, val1, val2) {
+    const steps = [];
+    let result = 0;
+
+    if (shape === 'circle') {
+        steps.push({
+            description: `Arealet av en sirkel regnes ut med formelen:`,
+            math: `A = \\pi \\cdot r^2`
+        });
+
+        const r2 = val1 ** 2;
+        result = Math.PI * r2;
+
+        steps.push({
+            description: `Vi setter inn radius (r = ${val1}):`,
+            math: `A = \\pi \\cdot ${val1}^2 = \\pi \\cdot ${r2} \\approx ${result.toFixed(2)}`
+        });
+    } else if (shape === 'rectangle') {
+        steps.push({
+            description: `Arealet av et rektangel regnes ut ved å gange lengde med bredde:`,
+            math: `A = l \\cdot b`
+        });
+
+        result = val1 * val2;
+
+        steps.push({
+            description: `Vi setter inn lengde (${val1}) og bredde (${val2}):`,
+            math: `A = ${val1} \\cdot ${val2} = ${result}`
+        });
+    } else if (shape === 'triangle') {
+        steps.push({
+            description: `Arealet av en trekant regnes ut ved å gange grunnlinjen med høyden og dele på to:`,
+            math: `A = \\frac{g \\cdot h}{2}`
+        });
+
+        const product = val1 * val2;
+        result = product / 2;
+
+        steps.push({
+            description: `Vi setter inn grunnlinje (g = ${val1}) og høyde (h = ${val2}):`,
+            math: `A = \\frac{${val1} \\cdot ${val2}}{2} = \\frac{${product}}{2} = ${result}`
+        });
+    }
+
+    return {
+        result,
+        steps
+    };
+}
+
+/**
+ * Bruker trigonometri (rettvinklet trekant) for å finne en ukjent side.
+ * @param {number} angle - Vinkelen i grader
+ * @param {string} givenType - Hvilken side som er gitt ('opp', 'adj', 'hyp')
+ * @param {number} givenValue - Lengden av den gitte siden
+ * @param {string} findType - Hvilken side som skal finnes ('opp', 'adj', 'hyp')
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeTrigonometry(angle, givenType, givenValue, findType) {
+    const steps = [];
+    let result = 0;
+
+    // Konverter vinkel til radianer for Math.sin/cos/tan
+    const rad = angle * (Math.PI / 180);
+
+    // Hjelpefunksjoner for norske navn
+    const getName = (type) => {
+        if (type === 'opp') return 'motstående katet';
+        if (type === 'adj') return 'hosliggende katet';
+        if (type === 'hyp') return 'hypotenus';
+        return type;
+    };
+
+    const givenName = getName(givenType);
+    const findName = getName(findType);
+
+    steps.push({
+        description: `Vi vet at vinkelen er $v = ${angle}^\\circ$, og vi kjenner ${givenName} ($${givenValue}$). Vi skal finne ${findName}.`,
+        math: ``
+    });
+
+    if ((givenType === 'opp' && findType === 'hyp') || (givenType === 'hyp' && findType === 'opp')) {
+        // Sinus: sin(v) = opp / hyp
+        steps.push({
+            description: `Siden vi jobber med motstående katet og hypotenus, bruker vi sinus:`,
+            math: `\\sin(v) = \\frac{\\text{motstående}}{\\text{hypotenus}}`
+        });
+
+        const sinVal = Math.sin(rad);
+        steps.push({
+            description: `Vi regner ut $\\sin(${angle}^\\circ)$:`,
+            math: `\\sin(${angle}^\\circ) \\approx ${sinVal.toFixed(4)}`
+        });
+
+        if (givenType === 'hyp') {
+            result = sinVal * givenValue;
+            steps.push({
+                description: `Vi vil finne motstående katet (som vi kaller $x$). Vi setter inn i formelen:`,
+                math: `\\sin(${angle}^\\circ) = \\frac{x}{${givenValue}}`
+            });
+            steps.push({
+                description: `Ganger med ${givenValue} på begge sider:`,
+                math: `x = ${givenValue} \\cdot \\sin(${angle}^\\circ) \\approx ${result.toFixed(2)}`
+            });
+        } else {
+            // givenType === 'opp'
+            result = givenValue / sinVal;
+            steps.push({
+                description: `Vi vil finne hypotenusen (som vi kaller $x$). Vi setter inn i formelen:`,
+                math: `\\sin(${angle}^\\circ) = \\frac{${givenValue}}{x}`
+            });
+            steps.push({
+                description: `Vi løser for $x$:`,
+                math: `x = \\frac{${givenValue}}{\\sin(${angle}^\\circ)} \\approx ${result.toFixed(2)}`
+            });
+        }
+    } else if ((givenType === 'adj' && findType === 'hyp') || (givenType === 'hyp' && findType === 'adj')) {
+        // Cosinus: cos(v) = adj / hyp
+        steps.push({
+            description: `Siden vi jobber med hosliggende katet og hypotenus, bruker vi cosinus:`,
+            math: `\\cos(v) = \\frac{\\text{hosliggende}}{\\text{hypotenus}}`
+        });
+
+        const cosVal = Math.cos(rad);
+        steps.push({
+            description: `Vi regner ut $\\cos(${angle}^\\circ)$:`,
+            math: `\\cos(${angle}^\\circ) \\approx ${cosVal.toFixed(4)}`
+        });
+
+        if (givenType === 'hyp') {
+            result = cosVal * givenValue;
+            steps.push({
+                description: `Vi vil finne hosliggende katet ($x$). Vi setter inn:`,
+                math: `\\cos(${angle}^\\circ) = \\frac{x}{${givenValue}}`
+            });
+            steps.push({
+                description: `Ganger med ${givenValue} på begge sider:`,
+                math: `x = ${givenValue} \\cdot \\cos(${angle}^\\circ) \\approx ${result.toFixed(2)}`
+            });
+        } else {
+            result = givenValue / cosVal;
+            steps.push({
+                description: `Vi vil finne hypotenusen ($x$). Vi setter inn:`,
+                math: `\\cos(${angle}^\\circ) = \\frac{${givenValue}}{x}`
+            });
+            steps.push({
+                description: `Løser for $x$:`,
+                math: `x = \\frac{${givenValue}}{\\cos(${angle}^\\circ)} \\approx ${result.toFixed(2)}`
+            });
+        }
+    } else if ((givenType === 'opp' && findType === 'adj') || (givenType === 'adj' && findType === 'opp')) {
+        // Tangens: tan(v) = opp / adj
+        steps.push({
+            description: `Siden vi jobber med motstående og hosliggende katet, bruker vi tangens:`,
+            math: `\\tan(v) = \\frac{\\text{motstående}}{\\text{hosliggende}}`
+        });
+
+        const tanVal = Math.tan(rad);
+        steps.push({
+            description: `Vi regner ut $\\tan(${angle}^\\circ)$:`,
+            math: `\\tan(${angle}^\\circ) \\approx ${tanVal.toFixed(4)}`
+        });
+
+        if (givenType === 'adj') {
+            result = tanVal * givenValue;
+            steps.push({
+                description: `Vi skal finne motstående katet ($x$). Vi setter inn:`,
+                math: `\\tan(${angle}^\\circ) = \\frac{x}{${givenValue}}`
+            });
+            steps.push({
+                description: `Ganger med ${givenValue}:`,
+                math: `x = ${givenValue} \\cdot \\tan(${angle}^\\circ) \\approx ${result.toFixed(2)}`
+            });
+        } else {
+            result = givenValue / tanVal;
+            steps.push({
+                description: `Vi skal finne hosliggende katet ($x$). Vi setter inn:`,
+                math: `\\tan(${angle}^\\circ) = \\frac{${givenValue}}{x}`
+            });
+            steps.push({
+                description: `Løser for $x$:`,
+                math: `x = \\frac{${givenValue}}{\\tan(${angle}^\\circ)} \\approx ${result.toFixed(2)}`
+            });
+        }
+    }
+
+    return {
+        result,
+        steps
+    };
+}

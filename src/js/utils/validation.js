@@ -44,6 +44,105 @@ export function validateQuadraticInput(aStr, bStr, cStr) {
 }
 
 /**
+ * Validerer input for areal
+ */
+export function validateAreaInput(shape, val1Str, val2Str) {
+    const val1 = parseFloat(val1Str);
+
+    if (isNaN(val1) || val1 <= 0) {
+        return {
+            isValid: false,
+            hint: 'Du må oppgi en gyldig positiv verdi for det første målet.'
+        };
+    }
+
+    if (shape !== 'circle') {
+        const val2 = parseFloat(val2Str);
+        if (isNaN(val2) || val2 <= 0) {
+            return {
+                isValid: false,
+                hint: 'Du må oppgi en gyldig positiv verdi for det andre målet (f.eks høyde eller bredde).'
+            };
+        }
+        return { isValid: true, values: { shape, val1, val2 }, hint: null };
+    }
+
+    return { isValid: true, values: { shape, val1, val2: null }, hint: null };
+}
+
+/**
+ * Validerer input for trigonometri
+ */
+export function validateTrigonometryInput(angleStr, givenValueStr) {
+    const angle = parseFloat(angleStr);
+    const givenValue = parseFloat(givenValueStr);
+
+    if (isNaN(angle) || angle <= 0 || angle >= 90) {
+        return {
+            isValid: false,
+            hint: 'Vinkelen må være mellom 0 og 90 grader (i en rettvinklet trekant, ekskludert selve den rette vinkelen).'
+        };
+    }
+
+    if (isNaN(givenValue) || givenValue <= 0) {
+        return {
+            isValid: false,
+            hint: 'Du må oppgi en gyldig, positiv lengde for den kjente siden.'
+        };
+    }
+
+    return {
+        isValid: true,
+        values: { angle, givenValue },
+        hint: null
+    };
+}
+
+/**
+ * Validerer input for ABC-formelen og Vertex (samme format, a,b,c)
+ * Siden vi allerede har validateQuadraticInput, kan vi bare eksportere eller gjenbruke den,
+ * men vi lager et alias for tydelighet.
+ */
+export const validateABCInput = validateQuadraticInput;
+export const validateVertexInput = validateQuadraticInput;
+
+/**
+ * Validerer input for potensregning
+ */
+export function validatePowerInput(baseStr, expStr) {
+    const base = parseFloat(baseStr);
+    const exponent = parseFloat(expStr);
+
+    if (isNaN(base) || isNaN(exponent)) {
+        return {
+            isValid: false,
+            hint: 'Du må oppgi både et grunntall og en eksponent.'
+        };
+    }
+
+    return { isValid: true, values: { base, exponent }, hint: null };
+}
+
+/**
+ * Validerer input for kvadratrot
+ */
+export function validateSquareRootInput(numStr) {
+    const number = parseFloat(numStr);
+
+    if (isNaN(number)) {
+        return {
+            isValid: false,
+            hint: 'Du må oppgi et tall.'
+        };
+    }
+
+    // Vi lar matematikk-modulen håndtere feilen for negative tall, eller vi kan gjøre det her.
+    // Oppgaven ba om gode pedagogiske meldinger, så kanskje la basic.js ta seg av den matematiske forklaringen.
+
+    return { isValid: true, values: { number }, hint: null };
+}
+
+/**
  * Validerer input for en lineær funksjon (a, b)
  *
  * @param {string} aStr - Input for a
