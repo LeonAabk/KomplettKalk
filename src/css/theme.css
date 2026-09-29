@@ -18,6 +18,11 @@
     --hint-color: #f59e0b;
     --hint-bg: #fef3c7;
 
+    /* Category Colors */
+    --cat-algebra: #3b82f6;
+    --cat-geometri: #10b981;
+    --cat-grunnleggende: #eab308;
+
     /* Input Fields */
     --input-bg: #ffffff;
     --input-border: #cbd5e1;
@@ -60,6 +65,11 @@
     --error-bg: #450a0a;
     --hint-color: #eab308;
     --hint-bg: #422006;
+
+    /* Category Colors */
+    --cat-algebra: #3b82f6;
+    --cat-geometri: #10b981;
+    --cat-grunnleggende: #eab308;
 
     /* Input Fields */
     --input-bg: #27272a;

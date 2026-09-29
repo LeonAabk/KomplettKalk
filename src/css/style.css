@@ -61,6 +61,10 @@ body {
     min-height: calc(100vh - 70px); /* Adjust based on header height */
 }
 
+.app-container.hide-right-sidebar {
+    grid-template-columns: 200px 1fr;
+}
+
 /* Dashboard Grid */
 .dashboard-grid {
     display: grid;
@@ -82,10 +86,22 @@ body {
 }
 
 .module-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-8px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     border-color: var(--accent-primary);
     background-color: var(--bg-tertiary);
+}
+
+.module-card[data-category="algebra"] {
+    border-top: 4px solid var(--cat-algebra);
+}
+
+.module-card[data-category="geometri"] {
+    border-top: 4px solid var(--cat-geometri);
+}
+
+.module-card[data-category="grunnleggende"] {
+    border-top: 4px solid var(--cat-grunnleggende);
 }
 
 .module-card-icon {
@@ -278,7 +294,7 @@ button:disabled {
 
 /* Responsive */
 @media (max-width: 900px) {
-    .app-container {
+    .app-container, .app-container.hide-right-sidebar {
         grid-template-columns: 1fr;
     }
 
