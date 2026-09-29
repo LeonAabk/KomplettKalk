@@ -71,16 +71,16 @@ export function initUI() {
 
                     if (item.category === 'geometri' || item.category === 'grunnleggende') {
                         if (quickGraphSidebar) quickGraphSidebar.style.display = 'none';
-                        if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr';
+                        if (appContainer) appContainer.classList.add('hide-right-sidebar');
                     } else {
                         if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-                        if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr 300px';
+                        if (appContainer) appContainer.classList.remove('hide-right-sidebar');
                     }
                 } else {
                     alert('Denne modulen mangler HTML-struktur!');
                     dashboardGrid.style.display = 'grid';
                     if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-                    if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr 300px';
+                    if (appContainer) appContainer.classList.remove('hide-right-sidebar');
                 }
             });
 
@@ -100,7 +100,7 @@ export function initUI() {
             });
             dashboardGrid.style.display = 'grid';
             if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-            if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr 300px';
+            if (appContainer) appContainer.classList.remove('hide-right-sidebar');
         });
     });
 
@@ -129,6 +129,8 @@ export function initUI() {
 
             const category = link.getAttribute('href').substring(1); // remove '#'
 
+            // Oppdater moduleCards hver gang i tilfelle de har blitt gjenskapt (viktig for filtrering)
+            moduleCards = document.querySelectorAll('.module-card');
             moduleCards.forEach(card => {
                 if (category === 'alle' || card.getAttribute('data-category') === category) {
                     card.style.display = 'flex';
@@ -144,7 +146,7 @@ export function initUI() {
                  });
                  dashboardGrid.style.display = 'grid';
                  if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-                 if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr 300px';
+                 if (appContainer) appContainer.classList.remove('hide-right-sidebar');
             }
         });
     });
@@ -166,7 +168,7 @@ export function initUI() {
             });
             dashboardGrid.style.display = 'grid';
             if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-            if (appContainer) appContainer.style.gridTemplateColumns = '200px 1fr 300px';
+            if (appContainer) appContainer.classList.remove('hide-right-sidebar');
         });
     }
 
@@ -174,7 +176,11 @@ export function initUI() {
     if (btnDrawQuick && quickInput) {
         btnDrawQuick.addEventListener('click', () => {
             const funcStr = quickInput.value.trim();
-            if (!funcStr) return;
+            if (!funcStr) {
+                renderEmptyGraph(canvas);
+                graphDetails.innerHTML = '';
+                return;
+            }
 
             try {
                 const dataPoints = [];
