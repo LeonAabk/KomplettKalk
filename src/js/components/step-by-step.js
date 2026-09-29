@@ -9,12 +9,6 @@
  * @param {HTMLElement} containerElement - DOM-elementet der trinnene skal plasseres
  */
 export function renderSteps(steps, containerElement) {
-    const hasKatex = typeof window.katex !== 'undefined';
-
-    if (!hasKatex) {
-        console.warn("KaTeX biblioteket er ikke lastet inn ennå. Bruker fallback-formatering.");
-    }
-
     containerElement.innerHTML = '';
 
     steps.forEach(step => {
@@ -29,24 +23,23 @@ export function renderSteps(steps, containerElement) {
         if (step.math) {
             const mathDiv = document.createElement('div');
             mathDiv.className = 'step-math';
-
-            if (hasKatex) {
-                try {
-                    window.katex.render(step.math, mathDiv, {
-                        displayMode: true,
-                        throwOnError: false
-                    });
-                } catch (e) {
-                    console.error("KaTeX feil:", e);
-                    mathDiv.textContent = step.math; // Fallback
-                }
-            } else {
-                mathDiv.textContent = step.math; // Fallback for when KaTeX is missing
-            }
-
+            mathDiv.textContent = `\\[ ${step.math} \\]`; // Wrap i display delimiters
             stepDiv.appendChild(mathDiv);
         }
 
         containerElement.appendChild(stepDiv);
     });
+
+    if (typeof window.renderMathInElement !== 'undefined') {
+        window.renderMathInElement(containerElement, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ],
+            throwOnError: false
+        });
+    } else {
+        console.warn("KaTeX auto-render er ikke lastet inn ennå. Bruker fallback-formatering.");
+    }
 }
