@@ -140,14 +140,12 @@ export function initUI() {
             });
 
             // Ensure dashboard is visible when clicking sidebar
-            if (dashboardGrid.style.display === 'none') {
-                 document.querySelectorAll('.educational-module').forEach(mod => {
-                     mod.style.display = 'none';
-                 });
-                 dashboardGrid.style.display = 'grid';
-                 if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-                 if (appContainer) appContainer.classList.remove('hide-right-sidebar');
-            }
+            document.querySelectorAll('.educational-module').forEach(mod => {
+                mod.style.display = 'none';
+            });
+            dashboardGrid.style.display = 'grid';
+            if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
+            if (appContainer) appContainer.classList.remove('hide-right-sidebar');
         });
     });
 
