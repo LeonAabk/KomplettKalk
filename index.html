@@ -201,6 +201,202 @@
                     <div id="steps-content-pythagoras"></div>
                 </div>
             </section>
+
+            <!-- Area Module -->
+            <section id="module-area" class="educational-module" aria-labelledby="area-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="area-title">Areal (2D-figurer)</h2>
+                <p>Velg en figur og fyll inn målene for å beregne arealet.</p>
+
+                <form id="area-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="area-shape">Figur:</label>
+                        <select id="area-shape" name="shape" class="math-select" aria-label="Velg figur">
+                            <option value="circle">Sirkel (oppgi radius)</option>
+                            <option value="rectangle">Rektangel (oppgi lengde og bredde)</option>
+                            <option value="triangle">Trekant (oppgi grunnlinje og høyde)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label id="area-label1" for="area-val1">Radius (r) =</label>
+                        <input type="number" id="area-val1" name="val1" step="any" required aria-label="Første mål">
+                    </div>
+                    <div class="input-group" id="area-group2" style="display: none;">
+                        <label id="area-label2" for="area-val2">Verdi 2 =</label>
+                        <input type="number" id="area-val2" name="val2" step="any" aria-label="Andre mål">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn Areal</button>
+                    <button type="button" id="btn-show-steps-area" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-area" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-area" class="result-box" aria-live="polite" hidden></div>
+                <div id="step-by-step-container-area" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-area"></div>
+                </div>
+            </section>
+
+            <!-- Trigonometry Module -->
+            <section id="module-trig" class="educational-module" aria-labelledby="trig-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="trig-title">Trigonometri (Rettvinklet)</h2>
+                <p>Finn ukjente sider ved hjelp av Sinus, Cosinus og Tangens. Fyll inn én vinkel og én side.</p>
+
+                <form id="trig-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="trig-angle">Vinkel (i grader) =</label>
+                        <input type="number" id="trig-angle" name="angle" step="any" required aria-label="Vinkel i grader">
+                    </div>
+                    <div class="input-group">
+                        <label for="trig-given-type">Kjent side er:</label>
+                        <select id="trig-given-type" name="givenType" class="math-select" aria-label="Kjent side">
+                            <option value="opp">Motstående katet</option>
+                            <option value="adj">Hosliggende katet</option>
+                            <option value="hyp">Hypotenus</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="trig-given-val">Kjent side lengde =</label>
+                        <input type="number" id="trig-given-val" name="givenValue" step="any" required aria-label="Lengde av kjent side">
+                    </div>
+                    <div class="input-group">
+                        <label for="trig-find-type">Jeg vil finne:</label>
+                        <select id="trig-find-type" name="findType" class="math-select" aria-label="Siden du vil finne">
+                            <option value="hyp">Hypotenus</option>
+                            <option value="adj">Hosliggende katet</option>
+                            <option value="opp">Motstående katet</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn</button>
+                    <button type="button" id="btn-show-steps-trig" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-trig" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-trig" class="result-box" aria-live="polite" hidden></div>
+                <div id="step-by-step-container-trig" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-trig"></div>
+                </div>
+            </section>
+
+            <!-- ABC Module -->
+            <section id="module-abc" class="educational-module" aria-labelledby="abc-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="abc-title">ABC-formelen</h2>
+                <p>Finn røttene til andregradsligningen <em>ax² + bx + c = 0</em>.</p>
+
+                <form id="abc-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="abc-a">a =</label>
+                        <input type="number" id="abc-a" name="a" step="any" required aria-label="Koeffisient a">
+                    </div>
+                    <div class="input-group">
+                        <label for="abc-b">b =</label>
+                        <input type="number" id="abc-b" name="b" step="any" required aria-label="Koeffisient b">
+                    </div>
+                    <div class="input-group">
+                        <label for="abc-c">c =</label>
+                        <input type="number" id="abc-c" name="c" step="any" required aria-label="Koeffisient c">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn Røtter</button>
+                    <button type="button" id="btn-show-steps-abc" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-abc" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-abc" class="result-box" aria-live="polite" hidden></div>
+                <div id="step-by-step-container-abc" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-abc"></div>
+                </div>
+            </section>
+
+            <!-- Vertex Module -->
+            <section id="module-vertex" class="educational-module" aria-labelledby="vertex-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="vertex-title">Topp- og Bunnpunkt</h2>
+                <p>Finn ekstremalpunktet for funksjonen <em>f(x) = ax² + bx + c</em>.</p>
+
+                <form id="vertex-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="vertex-a">a =</label>
+                        <input type="number" id="vertex-a" name="a" step="any" required aria-label="Koeffisient a">
+                    </div>
+                    <div class="input-group">
+                        <label for="vertex-b">b =</label>
+                        <input type="number" id="vertex-b" name="b" step="any" required aria-label="Koeffisient b">
+                    </div>
+                    <div class="input-group">
+                        <label for="vertex-c">c =</label>
+                        <input type="number" id="vertex-c" name="c" step="any" required aria-label="Koeffisient c">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Finn Ekstremalpunkt</button>
+                    <button type="button" id="btn-show-steps-vertex" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-vertex" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-vertex" class="result-box" aria-live="polite" hidden></div>
+                <div id="step-by-step-container-vertex" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-vertex"></div>
+                </div>
+            </section>
+
+            <!-- Power Module -->
+            <section id="module-power" class="educational-module" aria-labelledby="power-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="power-title">Potensregning</h2>
+                <p>Regn ut potenser med grunntall og eksponent.</p>
+
+                <form id="power-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="power-base">Grunntall =</label>
+                        <input type="number" id="power-base" name="base" step="any" required aria-label="Grunntall">
+                    </div>
+                    <div class="input-group">
+                        <label for="power-exp">Eksponent =</label>
+                        <input type="number" id="power-exp" name="exp" step="any" required aria-label="Eksponent">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Regn ut</button>
+                    <button type="button" id="btn-show-steps-power" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-power" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-power" class="result-box" aria-live="polite" hidden></div>
+                <div id="step-by-step-container-power" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-power"></div>
+                </div>
+            </section>
+
+            <!-- Square Root Module -->
+            <section id="module-sqrt" class="educational-module" aria-labelledby="sqrt-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="sqrt-title">Kvadratrot</h2>
+                <p>Regn ut og forenkle kvadratroten av et tall.</p>
+
+                <form id="sqrt-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="sqrt-num">Tall (under rottegnet) =</label>
+                        <input type="number" id="sqrt-num" name="number" step="any" required aria-label="Tall under rottegnet">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Regn ut rot</button>
+                    <button type="button" id="btn-show-steps-sqrt" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-sqrt" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-sqrt" class="result-box" aria-live="polite" hidden></div>
+                <div id="step-by-step-container-sqrt" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-sqrt"></div>
+                </div>
+            </section>
         </main>
 
         <!-- Quick-Graph Sidebar -->

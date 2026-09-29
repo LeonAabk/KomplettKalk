@@ -40,6 +40,132 @@ export function analyzePercent(x, y) {
 }
 
 /**
+ * Regner ut og viser utregning for potens.
+ * @param {number} base - Grunntall
+ * @param {number} exponent - Eksponent
+ * @returns {Object} Resultat og steps
+ */
+export function analyzePower(base, exponent) {
+    const steps = [];
+
+    steps.push({
+        description: `Vi skal regne ut potens med grunntall ${base} og eksponent ${exponent}:`,
+        math: `${base}^{${exponent}}`
+    });
+
+    let result = 1;
+
+    if (exponent === 0) {
+        result = 1;
+        steps.push({
+            description: `Enhver potens (unntatt $0^0$) med eksponent 0 er lik 1.`,
+            math: `${base}^0 = 1`
+        });
+    } else if (exponent > 0 && Number.isInteger(exponent) && exponent <= 10) {
+        // Vis detaljert multiplikasjon for små positive heltallseksponenter
+        let multStr = Array(exponent).fill(base).join(' \\cdot ');
+        result = Math.pow(base, exponent);
+        steps.push({
+            description: `Eksponenten forteller oss hvor mange ganger grunntallet skal ganges med seg selv:`,
+            math: `${base}^{${exponent}} = ${multStr} = ${result}`
+        });
+    } else if (exponent < 0 && Number.isInteger(exponent) && exponent >= -10) {
+        const posExp = Math.abs(exponent);
+        let multStr = Array(posExp).fill(base).join(' \\cdot ');
+        result = Math.pow(base, exponent);
+        steps.push({
+            description: `En negativ eksponent betyr at vi deler 1 på potensen med positiv eksponent:`,
+            math: `${base}^{${exponent}} = \\frac{1}{${base}^{${posExp}}}`
+        });
+        steps.push({
+            description: `Regner ut nevneren:`,
+            math: `\\frac{1}{${multStr}} = \\frac{1}{${Math.pow(base, posExp)}} = ${result}`
+        });
+    } else {
+        result = Math.pow(base, exponent);
+        steps.push({
+            description: `Vi bruker kalkulator/formel for å regne ut resultatet direkte:`,
+            math: `${base}^{${exponent}} \\approx ${result.toFixed(4)}`
+        });
+    }
+
+    return {
+        result,
+        steps
+    };
+}
+
+/**
+ * Regner ut kvadratrot og prøver å forenkle om nødvendig.
+ * @param {number} number - Tallet vi skal finne roten av
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeSquareRoot(number) {
+    const steps = [];
+
+    if (number < 0) {
+         steps.push({
+             description: `Vi kan ikke ta kvadratroten av et negativt tall i de reelle tallene.`,
+             math: `\\sqrt{${number}} \\notin \\mathbb{R}`
+         });
+         return {
+             result: NaN,
+             steps
+         };
+    }
+
+    steps.push({
+        description: `Vi skal finne kvadratroten av ${number}:`,
+        math: `\\sqrt{${number}}`
+    });
+
+    const result = Math.sqrt(number);
+
+    if (Number.isInteger(result)) {
+        steps.push({
+            description: `Siden ${result} ganget med seg selv er ${number}, er ${number} et perfekt kvadrat:`,
+            math: `${result} \\cdot ${result} = ${number} \\implies \\sqrt{${number}} = ${result}`
+        });
+    } else {
+        // Forsøk på å forenkle kvadratroten: sqrt(number) = a * sqrt(b)
+        let maxSquareFactor = 1;
+        for (let i = Math.floor(Math.sqrt(number)); i > 1; i--) {
+            if (number % (i * i) === 0) {
+                maxSquareFactor = i * i;
+                break;
+            }
+        }
+
+        if (maxSquareFactor > 1 && Number.isInteger(number)) {
+            const remainder = number / maxSquareFactor;
+            const a = Math.sqrt(maxSquareFactor);
+            steps.push({
+                description: `Tallet ${number} er ikke et perfekt kvadrat, men vi kan trekke ut en faktor som er et perfekt kvadrat. Den største kvadratiske faktoren er ${maxSquareFactor} ($${a}^2$):`,
+                math: `\\sqrt{${number}} = \\sqrt{${maxSquareFactor} \\cdot ${remainder}}`
+            });
+            steps.push({
+                description: `Vi kan nå skille faktorene og ta kvadratroten av ${maxSquareFactor}:`,
+                math: `\\sqrt{${maxSquareFactor}} \\cdot \\sqrt{${remainder}} = ${a}\\sqrt{${remainder}}`
+            });
+            steps.push({
+                description: `Dette gir oss en eksakt forenklet verdi, som er omtrent lik:`,
+                math: `${a}\\sqrt{${remainder}} \\approx ${result.toFixed(3)}`
+            });
+        } else {
+            steps.push({
+                description: `Tallet kan ikke forenkles eksakt, så vi regner ut en tilnærmet verdi:`,
+                math: `\\sqrt{${number}} \\approx ${result.toFixed(3)}`
+            });
+        }
+    }
+
+    return {
+        result,
+        steps
+    };
+}
+
+/**
  * Beregner prosentvis endring fra en gammel verdi til en ny verdi.
  * @param {number} oldVal - Gammel verdi
  * @param {number} newVal - Ny verdi

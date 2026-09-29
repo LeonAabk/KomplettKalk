@@ -101,6 +101,129 @@ export function generateQuadraticDataPoints(a, b, c, xMin, xMax, step = 0.5) {
 }
 
 /**
+ * Løser abc-formelen eksplisitt for nullpunkter
+ * @param {number} a - Koeffisient a
+ * @param {number} b - Koeffisient b
+ * @param {number} c - Koeffisient c
+ * @returns {Object} Røtter og steps
+ */
+export function analyzeABC(a, b, c) {
+    const steps = [];
+
+    steps.push({
+        description: 'Vi skal finne nullpunktene ved hjelp av abc-formelen:',
+        math: `x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}`
+    });
+
+    steps.push({
+        description: `Våre verdier er: $a = ${a}$, $b = ${b}$, og $c = ${c}$. Vi setter dette inn i formelen:`,
+        math: `x = \\frac{-(${b}) \\pm \\sqrt{(${b})^2 - 4 \\cdot ${a} \\cdot ${c}}}{2 \\cdot ${a}}`
+    });
+
+    const b2 = b ** 2;
+    const ac4 = 4 * a * c;
+
+    steps.push({
+        description: 'Vi regner ut det som står under rottegnet (diskriminanten) og nevneren:',
+        math: `x = \\frac{${-b} \\pm \\sqrt{${b2} - ${ac4}}}{${2 * a}}`
+    });
+
+    const discriminant = b2 - ac4;
+
+    steps.push({
+        description: 'Forenkler under rottegnet:',
+        math: `x = \\frac{${-b} \\pm \\sqrt{${discriminant}}}{${2 * a}}`
+    });
+
+    let roots = [];
+    if (discriminant > 0) {
+        const sqrtDesc = Math.sqrt(discriminant);
+        steps.push({
+            description: `Siden ${discriminant} > 0, har ligningen to løsninger. Kvadratroten er:`,
+            math: `\\sqrt{${discriminant}} = ${Number.isInteger(sqrtDesc) ? sqrtDesc : sqrtDesc.toFixed(2)}`
+        });
+
+        const root1 = (-b + sqrtDesc) / (2 * a);
+        const root2 = (-b - sqrtDesc) / (2 * a);
+        roots = [Math.min(root1, root2), Math.max(root1, root2)];
+
+        steps.push({
+            description: `Da får vi to løsninger:`,
+            math: `x_1 = \\frac{${-b} - ${Number.isInteger(sqrtDesc) ? sqrtDesc : sqrtDesc.toFixed(2)}}{${2 * a}} = ${roots[0].toFixed(2)}, \\quad x_2 = \\frac{${-b} + ${Number.isInteger(sqrtDesc) ? sqrtDesc : sqrtDesc.toFixed(2)}}{${2 * a}} = ${roots[1].toFixed(2)}`
+        });
+    } else if (discriminant === 0) {
+        const root = -b / (2 * a);
+        roots = [root];
+        steps.push({
+            description: `Siden det står 0 under roten, får vi én løsning:`,
+            math: `x = \\frac{${-b}}{${2 * a}} = ${root.toFixed(2)}`
+        });
+    } else {
+        steps.push({
+            description: `Vi kan ikke ta kvadratroten av et negativt tall (${discriminant}). Derfor har ligningen ingen løsning.`,
+            math: `\\Delta < 0 \\implies \\text{Ingen løsning}`
+        });
+    }
+
+    return {
+        roots,
+        steps
+    };
+}
+
+/**
+ * Finner topp- eller bunnpunkt for en andregradsfunksjon
+ * @param {number} a - Koeffisient a
+ * @param {number} b - Koeffisient b
+ * @param {number} c - Koeffisient c
+ * @returns {Object} Punktet og steps
+ */
+export function analyzeVertex(a, b, c) {
+    const steps = [];
+    const isTopPoint = a < 0;
+
+    steps.push({
+        description: `Funksjonen er $f(x) = ${a}x^2 ${b >= 0 ? '+' : ''}${b}x ${c >= 0 ? '+' : ''}${c}$. Først sjekker vi om det er et topp- eller bunnpunkt. Siden $a = ${a}$ (som er ${isTopPoint ? '<' : '>'} 0), smiler grafen ${isTopPoint ? 'surt (∩)' : 'blidt (∪)'}, og vi har et ${isTopPoint ? 'toppunkt' : 'bunnpunkt'}.`,
+        math: ``
+    });
+
+    steps.push({
+        description: 'For å finne x-koordinaten til ekstremalpunktet, bruker vi formelen for symmetriaksen:',
+        math: `x = \\frac{-b}{2a}`
+    });
+
+    const xVertex = -b / (2 * a);
+    steps.push({
+        description: `Vi setter inn $a = ${a}$ og $b = ${b}$:`,
+        math: `x = \\frac{-(${b})}{2 \\cdot ${a}} = \\frac{${-b}}{${2 * a}} = ${xVertex}`
+    });
+
+    const yVertex = a * (xVertex ** 2) + b * xVertex + c;
+    steps.push({
+        description: `For å finne y-koordinaten, setter vi $x = ${xVertex}$ inn i funksjonen igjen:`,
+        math: `y = f(${xVertex}) = ${a}(${xVertex})^2 ${b >= 0 ? '+' : ''}${b}(${xVertex}) ${c >= 0 ? '+' : ''}${c}`
+    });
+
+    steps.push({
+        description: `Vi regner ut:`,
+        math: `y = ${a}(${xVertex ** 2}) ${b >= 0 ? '+' : ''}${b * xVertex} ${c >= 0 ? '+' : ''}${c} = ${yVertex}`
+    });
+
+    const type = isTopPoint ? 'Toppunkt' : 'Bunnpunkt';
+    steps.push({
+        description: `Svar: ${type}et er:`,
+        math: `(${xVertex.toFixed(2)}, ${yVertex.toFixed(2)})`
+    });
+
+    return {
+        x: xVertex,
+        y: yVertex,
+        type: type,
+        steps
+    };
+}
+
+/**
  * Løser en lineær funksjon y = ax + b
  * Returnerer et objekt med resultater og trinnvis utregning.
  *
