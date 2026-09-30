@@ -104,6 +104,22 @@ body {
     border-top: 4px solid var(--cat-grunnleggende);
 }
 
+.module-card[data-category="okonomi"] {
+    border-top: 4px solid var(--cat-okonomi);
+}
+
+.module-card[data-category="konvertering"] {
+    border-top: 4px solid var(--cat-konvertering);
+}
+
+.module-card[data-category="statistikk"] {
+    border-top: 4px solid var(--cat-statistikk);
+}
+
+.module-card[data-category="fysikk"] {
+    border-top: 4px solid var(--cat-fysikk);
+}
+
 .module-card-icon {
     font-size: 3rem;
     margin-bottom: var(--spacing-sm);
