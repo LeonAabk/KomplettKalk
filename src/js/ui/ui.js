@@ -42,9 +42,9 @@ export function initUI() {
     // Dashboard Elements
     const dashboardGrid = document.getElementById('dashboard-grid');
     const globalSearch = document.getElementById('global-search');
-    const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
     const quickGraphSidebar = document.querySelector('.quick-graph-sidebar');
     const appContainer = document.querySelector('.app-container');
+    const navUl = document.querySelector('.sidebar-nav ul');
 
     // Dynamisk generering av dashboard-kort
     function renderDashboardCards() {
@@ -124,53 +124,61 @@ export function initUI() {
         });
     }
 
-    sidebarLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Update active state
-            sidebarLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
+    // Dynamisk generering av Sidemeny
+    if (navUl) {
+        navUl.innerHTML = '';
 
-            const category = link.getAttribute('href').substring(1); // remove '#'
+        // Finn unike kategorier
+        const uniqueCategories = [...new Set(functionData.map(item => item.category))];
 
-            // Oppdater moduleCards hver gang i tilfelle de har blitt gjenskapt (viktig for filtrering)
-            moduleCards = document.querySelectorAll('.module-card');
-            moduleCards.forEach(card => {
-                if (category === 'alle' || card.getAttribute('data-category') === category) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+        // Alle emner øverst
+        const alleLi = document.createElement('li');
+        alleLi.innerHTML = '<a href="#alle" class="active">Alle Emner</a>';
+        navUl.appendChild(alleLi);
 
-            // Ensure dashboard is visible when clicking sidebar
-            document.querySelectorAll('.educational-module').forEach(mod => {
-                mod.style.display = 'none';
-            });
-            dashboardGrid.style.display = 'grid';
-            if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-            if (appContainer) appContainer.classList.remove('hide-right-sidebar');
+        // Kategori-navn oversettelse
+        const categoryNames = {
+            'okonomi': 'Økonomi',
+            'grunnleggende': 'Grunnleggende'
+        };
+
+        // Legg til de andre kategoriene
+        uniqueCategories.forEach(cat => {
+            const li = document.createElement('li');
+            let displayName = categoryNames[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
+            li.innerHTML = `<a href="#${cat}">${displayName}</a>`;
+            navUl.appendChild(li);
         });
-    });
 
-    // Legg til en 'Alle' lenke dynamisk hvis den mangler, eller bare la de eksisterende virke
-    const navUl = document.querySelector('.sidebar-nav ul');
-    if (navUl && !navUl.querySelector('a[href="#alle"]')) {
-        const li = document.createElement('li');
-        li.innerHTML = '<a href="#alle">Alle Emner</a>';
-        navUl.insertBefore(li, navUl.firstChild);
+        // Filtreringslogikk for nye lenker
+        const newSidebarLinks = navUl.querySelectorAll('a');
+        newSidebarLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Update active state
+                newSidebarLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
 
-        li.querySelector('a').addEventListener('click', (e) => {
-            e.preventDefault();
-            sidebarLinks.forEach(l => l.classList.remove('active'));
-            e.target.classList.add('active');
-            moduleCards.forEach(card => card.style.display = 'flex');
-            document.querySelectorAll('.educational-module').forEach(mod => {
-                mod.style.display = 'none';
+                const category = link.getAttribute('href').substring(1); // remove '#'
+
+                // Filtrer kort
+                const moduleCards = document.querySelectorAll('.module-card');
+                moduleCards.forEach(card => {
+                    if (category === 'alle' || card.getAttribute('data-category') === category) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Sørg for at dashboardet vises og moduler skjules
+                document.querySelectorAll('.educational-module').forEach(mod => {
+                    mod.style.display = 'none';
+                });
+                dashboardGrid.style.display = 'grid';
+                if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
+                if (appContainer) appContainer.classList.remove('hide-right-sidebar');
             });
-            dashboardGrid.style.display = 'grid';
-            if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-            if (appContainer) appContainer.classList.remove('hide-right-sidebar');
         });
     }
 
