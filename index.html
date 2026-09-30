@@ -667,6 +667,312 @@
                 <div id="steps-content-fractions" class="steps-content"></div>
             </div>
         </section>
+
+        <!-- RENTESRENTE (Compound Interest) -->
+        <section id="module-compound-interest" class="educational-module" aria-labelledby="compound-interest-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="compound-interest-title">Rentesrente (Sparekalkulator)</h2>
+            </div>
+            <p>Beregn sluttbeløpet for et innskudd som står på konto over flere år med fast rente.</p>
+            <form id="compound-interest-form" class="math-form" aria-label="Skjema for rentesrente">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="ci-principal">Startbeløp (kr)</label>
+                        <input type="number" id="ci-principal" name="principal" step="any" min="0" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="ci-rate">Rente (%)</label>
+                        <input type="number" id="ci-rate" name="rate" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="ci-years">Antall år</label>
+                        <input type="number" id="ci-years" name="years" step="any" min="0" required>
+                    </div>
+                </div>
+                <div id="validation-hint-compound-interest" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Sluttbeløp</button>
+            </form>
+            <div id="result-compound-interest" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-compound-interest" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-compound-interest">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-compound-interest" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-compound-interest" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- MVA KALKULATOR -->
+        <section id="module-vat" class="educational-module" aria-labelledby="vat-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="vat-title">MVA-kalkulator</h2>
+            </div>
+            <p>Legg til eller trekk fra merverdiavgift for en gitt pris.</p>
+            <form id="vat-form" class="math-form" aria-label="Skjema for MVA">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="vat-price">Pris (kr)</label>
+                        <input type="number" id="vat-price" name="price" step="any" min="0" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="vat-rate">MVA-sats (%)</label>
+                        <input type="number" id="vat-rate" name="vatRate" step="any" value="25" min="0" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="vat-operation">Handling</label>
+                        <select id="vat-operation" name="operation" required>
+                            <option value="add">Legg til MVA (Ekskl. -> Inkl.)</option>
+                            <option value="sub">Trekk fra MVA (Inkl. -> Ekskl.)</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="validation-hint-vat" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn</button>
+            </form>
+            <div id="result-vat" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-vat" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-vat">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-vat" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-vat" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- ENHETSKONVERTERING -->
+        <section id="module-unit-conversion" class="educational-module" aria-labelledby="unit-conversion-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="unit-conversion-title">Enhetskonvertering</h2>
+            </div>
+            <p>Konverter verdier mellom ulike måleenheter (lengde, areal, volum).</p>
+            <form id="unit-conversion-form" class="math-form" aria-label="Skjema for enhetskonvertering">
+                <div class="input-group">
+                    <label for="conv-dimension">Type måling</label>
+                    <select id="conv-dimension" name="dimension" required>
+                        <option value="length">Lengde (mm, cm, dm, m, km)</option>
+                        <option value="area">Areal (mm², cm², dm², m², km²)</option>
+                        <option value="volume">Volum (mm³, cm³, dm³, m³, km³)</option>
+                    </select>
+                </div>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="conv-value">Verdi</label>
+                        <input type="number" id="conv-value" name="value" step="any" min="0" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="conv-from">Fra enhet</label>
+                        <select id="conv-from" name="fromUnit" required>
+                            <option value="m" selected>m</option>
+                            <option value="mm">mm</option>
+                            <option value="cm">cm</option>
+                            <option value="dm">dm</option>
+                            <option value="km">km</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="conv-to">Til enhet</label>
+                        <select id="conv-to" name="toUnit" required>
+                            <option value="cm" selected>cm</option>
+                            <option value="mm">mm</option>
+                            <option value="dm">dm</option>
+                            <option value="m">m</option>
+                            <option value="km">km</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="validation-hint-unit-conversion" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Konverter</button>
+            </form>
+            <div id="result-unit-conversion" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-unit-conversion" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-unit-conversion">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-unit-conversion" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-unit-conversion" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- SYMMETRILINJE -->
+        <section id="module-symmetry-line" class="educational-module" aria-labelledby="symmetry-line-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="symmetry-line-title">Symmetrilinje</h2>
+            </div>
+            <p>Finn symmetrilinjen til en andregradsfunksjon på formen ax² + bx + c.</p>
+            <form id="symmetry-line-form" class="math-form" aria-label="Skjema for symmetrilinje">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="sym-a">a (foran x²)</label>
+                        <input type="number" id="sym-a" name="a" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="sym-b">b (foran x)</label>
+                        <input type="number" id="sym-b" name="b" step="any" required>
+                    </div>
+                </div>
+                <div id="validation-hint-symmetry-line" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Finn Symmetrilinje</button>
+            </form>
+            <div id="result-symmetry-line" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-symmetry-line" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-symmetry-line">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-symmetry-line" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-symmetry-line" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- NULLPUNKT (LINEÆR) -->
+        <section id="module-linear-root" class="educational-module" aria-labelledby="linear-root-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="linear-root-title">Nullpunkt (Lineær)</h2>
+            </div>
+            <p>Løs likningen ax + b = 0 for å finne nullpunktet til en rett linje.</p>
+            <form id="linear-root-form" class="math-form" aria-label="Skjema for nullpunkt i lineær funksjon">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="lr-a">a (stigningstall)</label>
+                        <input type="number" id="lr-a" name="a" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="lr-b">b (konstantledd)</label>
+                        <input type="number" id="lr-b" name="b" step="any" required>
+                    </div>
+                </div>
+                <div id="validation-hint-linear-root" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Finn Nullpunkt</button>
+            </form>
+            <div id="result-linear-root" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-linear-root" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-linear-root">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-linear-root" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-linear-root" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- GJENNOMSNITTLIG VEKSTFART -->
+        <section id="module-average-rate" class="educational-module" aria-labelledby="average-rate-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="average-rate-title">Gjennomsnittlig Vekstfart</h2>
+            </div>
+            <p>Finn stigningstallet for sekanten mellom to punkter (x₁, y₁) og (x₂, y₂).</p>
+            <form id="average-rate-form" class="math-form" aria-label="Skjema for gjennomsnittlig vekstfart">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="ar-x1">x₁</label>
+                        <input type="number" id="ar-x1" name="x1" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="ar-y1">y₁</label>
+                        <input type="number" id="ar-y1" name="y1" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="ar-x2">x₂</label>
+                        <input type="number" id="ar-x2" name="x2" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="ar-y2">y₂</label>
+                        <input type="number" id="ar-y2" name="y2" step="any" required>
+                    </div>
+                </div>
+                <div id="validation-hint-average-rate" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Vekstfart</button>
+            </form>
+            <div id="result-average-rate" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-average-rate" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-average-rate">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-average-rate" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-average-rate" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- FORMLIKHET -->
+        <section id="module-similarity" class="educational-module" aria-labelledby="similarity-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="similarity-title">Formlikhet</h2>
+            </div>
+            <p>Fyll inn de tre kjente sidene i to formlike trekanter for å finne den siste siden.</p>
+            <form id="similarity-form" class="math-form" aria-label="Skjema for formlikhet">
+                <fieldset style="margin-bottom: 1rem; padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius);">
+                    <legend>Kjent par med samsvarende sider</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="sim-s1">Liten trekant (side A)</label>
+                            <input type="number" id="sim-s1" name="s1" step="any" min="0" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="sim-l1">Stor trekant (side A)</label>
+                            <input type="number" id="sim-l1" name="l1" step="any" min="0" required>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset style="margin-bottom: 1rem; padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--border-radius);">
+                    <legend>Sideparet med én ukjent (fyll ut kun én)</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="sim-s2">Liten trekant (side B)</label>
+                            <input type="number" id="sim-s2" name="s2" step="any" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="sim-l2">Stor trekant (side B)</label>
+                            <input type="number" id="sim-l2" name="l2" step="any" min="0">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div id="validation-hint-similarity" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Ukjent Side</button>
+            </form>
+            <div id="result-similarity" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-similarity" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-similarity">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-similarity" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-similarity" class="steps-content"></div>
+            </div>
+        </section>
     </main>
 
         <!-- Quick-Graph Sidebar -->

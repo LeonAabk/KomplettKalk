@@ -316,3 +316,50 @@ export function analyzeVolume(shape, val1, val2) {
         steps
     };
 }
+
+/**
+ * Beregner formlikhet (ukjent side i formlike trekanter)
+ * Forholdstall = largeSide1 / smallSide1
+ * largeSide2 = smallSide2 * Forholdstall
+ * @param {number} smallSide1
+ * @param {number} largeSide1
+ * @param {number} smallSide2
+ * @param {number|null} largeSide2 - null hvis den skal finnes, ellers finnes smallSide2
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeSimilarity(smallSide1, largeSide1, smallSide2, largeSide2) {
+    const steps = [];
+
+    steps.push({
+        description: `For formlike trekanter er forholdet mellom samsvarende sider konstant. Vi kaller dette forholdstallet $k$:`,
+        math: `k = \\frac{\\text{Stor side}}{\\text{Liten side}}`
+    });
+
+    const k = largeSide1 / smallSide1;
+
+    steps.push({
+        description: `Vi kjenner et par av samsvarende sider (${smallSide1} og ${largeSide1}). Vi regner ut forholdstallet:`,
+        math: `k = \\frac{${largeSide1}}{${smallSide1}} = ${k.toFixed(4)}`
+    });
+
+    let result = 0;
+
+    if (largeSide2 === null) {
+        result = smallSide2 * k;
+        steps.push({
+            description: `For å finne den ukjente store siden ($x$), ganger vi den kjente lille siden (${smallSide2}) med forholdstallet $k$:`,
+            math: `x = ${smallSide2} \\cdot ${k.toFixed(4)} = ${result.toFixed(2)}`
+        });
+    } else if (smallSide2 === null) {
+        result = largeSide2 / k;
+        steps.push({
+            description: `For å finne den ukjente lille siden ($x$), deler vi den kjente store siden (${largeSide2}) med forholdstallet $k$:`,
+            math: `x = \\frac{${largeSide2}}{${k.toFixed(4)}} = ${result.toFixed(2)}`
+        });
+    }
+
+    return {
+        result,
+        steps
+    };
+}
