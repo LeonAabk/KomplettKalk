@@ -495,3 +495,130 @@ export function analyzeFactoring(a, b, c) {
         steps
     };
 }
+
+/**
+ * Finner symmetrilinjen for en andregradsfunksjon
+ * @param {number} a - Koeffisient a
+ * @param {number} b - Koeffisient b
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeSymmetryLine(a, b) {
+    const steps = [];
+
+    steps.push({
+        description: `Formelen for symmetrilinjen til en andregradsfunksjon er:`,
+        math: `x = \\frac{-b}{2a}`
+    });
+
+    steps.push({
+        description: `Vi setter inn verdiene for a (${a}) og b (${b}):`,
+        math: `x = \\frac{-(${b})}{2 \\cdot ${a}}`
+    });
+
+    const teller = -b;
+    const nevner = 2 * a;
+    const result = teller / nevner;
+
+    steps.push({
+        description: `Regner ut teller og nevner:`,
+        math: `x = \\frac{${teller}}{${nevner}} = ${result.toFixed(2)}`
+    });
+
+    return {
+        result,
+        steps
+    };
+}
+
+/**
+ * Finner nullpunktet for en lineær funksjon (ax + b = 0)
+ * @param {number} a - Koeffisient a
+ * @param {number} b - Koeffisient b
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeLinearRoot(a, b) {
+    const steps = [];
+
+    steps.push({
+        description: `Vi skal finne nullpunktet til den lineære funksjonen $f(x) = ${a}x ${b >= 0 ? '+' : ''}${b}$. Vi setter opp likningen:`,
+        math: `${a}x ${b >= 0 ? '+' : ''}${b} = 0`
+    });
+
+    if (a === 0) {
+        if (b === 0) {
+            steps.push({
+                description: `Siden $a = 0$ og $b = 0$, er $0 = 0$ sant for alle $x$. Linjen ligger på x-aksen.`,
+                math: `0x + 0 = 0`
+            });
+            return { result: 'Alle reelle tall', steps };
+        } else {
+            steps.push({
+                description: `Siden $a = 0$ og $b = ${b}$, blir likningen $${b} = 0$, som er umulig. Linjen er parallell med x-aksen og har ingen nullpunkter.`,
+                math: `${b} \\neq 0`
+            });
+            return { result: 'Ingen løsning', steps };
+        }
+    }
+
+    steps.push({
+        description: `Flytter konstantleddet (${b}) over til høyre side og bytter fortegn:`,
+        math: `${a}x = ${-b}`
+    });
+
+    const result = -b / a;
+
+    steps.push({
+        description: `Deler på ${a} for å få $x$ alene:`,
+        math: `x = \\frac{${-b}}{${a}} = ${result.toFixed(2)}`
+    });
+
+    return {
+        result,
+        steps
+    };
+}
+
+/**
+ * Finner gjennomsnittlig vekstfart (stigningstallet til sekanten)
+ * @param {number} x1 - Punkt 1 x
+ * @param {number} y1 - Punkt 1 y
+ * @param {number} x2 - Punkt 2 x
+ * @param {number} y2 - Punkt 2 y
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeAverageRateOfChange(x1, y1, x2, y2) {
+    const steps = [];
+
+    steps.push({
+        description: `Gjennomsnittlig vekstfart mellom to punkter $(x_1, y_1)$ og $(x_2, y_2)$ er gitt ved formelen:`,
+        math: `a = \\frac{\\Delta y}{\\Delta x} = \\frac{y_2 - y_1}{x_2 - x_1}`
+    });
+
+    steps.push({
+        description: `Våre punkter er $(${x1}, ${y1})$ og $(${x2}, ${y2})$. Vi setter inn i formelen:`,
+        math: `a = \\frac{${y2} - ${y1 < 0 ? `(${y1})` : y1}}{${x2} - ${x1 < 0 ? `(${x1})` : x1}}`
+    });
+
+    const dy = y2 - y1;
+    const dx = x2 - x1;
+
+    if (dx === 0) {
+        steps.push({
+            description: `Nevneren blir 0. Man kan ikke dele på 0, noe som betyr at linjen er vertikal og vekstfarten er udefinert.`,
+            math: `a = \\frac{${dy}}{0}`
+        });
+        return { result: 'Udefinert', steps };
+    }
+
+    const result = dy / dx;
+
+    steps.push({
+        description: `Vi regner ut teller og nevner:`,
+        math: `a = \\frac{${dy}}{${dx}} = ${result.toFixed(2)}`
+    });
+
+    return {
+        result,
+        steps
+    };
+}

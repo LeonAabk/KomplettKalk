@@ -75,8 +75,7 @@ export const functionData = [
         category: 'grunnleggende',
         description: 'Regn ut og forenkle kvadratrøtter.',
         icon: '√'
-    }
-,
+    },
     {
         id: 'module-mean',
         title: 'Gjennomsnitt',
@@ -125,5 +124,54 @@ export const functionData = [
         category: 'grunnleggende',
         description: 'Pluss, minus, gange eller dele brøker med fellesnevner.',
         icon: '➗'
+    },
+    {
+        id: 'module-compound-interest',
+        title: 'Rentesrente',
+        category: 'okonomi',
+        description: 'Beregn sluttbeløp over tid med renters rente.',
+        icon: '📈'
+    },
+    {
+        id: 'module-vat',
+        title: 'MVA-kalkulator',
+        category: 'okonomi',
+        description: 'Legg til eller trekk fra merverdiavgift.',
+        icon: '💰'
+    },
+    {
+        id: 'module-unit-conversion',
+        title: 'Enhetskonvertering',
+        category: 'konvertering',
+        description: 'Konverter mellom lengde, areal og volum.',
+        icon: '🔄'
+    },
+    {
+        id: 'module-symmetry-line',
+        title: 'Symmetrilinje',
+        category: 'algebra',
+        description: 'Finn symmetrilinjen til en parabel x = -b/2a.',
+        icon: '📉'
+    },
+    {
+        id: 'module-linear-root',
+        title: 'Nullpunkt (Lineær)',
+        category: 'algebra',
+        description: 'Løs ax + b = 0 trinnvis.',
+        icon: '📏'
+    },
+    {
+        id: 'module-average-rate',
+        title: 'Gjennomsnittlig Vekstfart',
+        category: 'algebra',
+        description: 'Finn stigningstallet mellom to punkter på en graf.',
+        icon: '📈'
+    },
+    {
+        id: 'module-similarity',
+        title: 'Formlikhet',
+        category: 'geometri',
+        description: 'Finn manglende sider i formlike trekanter.',
+        icon: '📐'
     }
 ];

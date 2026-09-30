@@ -1,8 +1,10 @@
-import { validateQuadraticInput, validateLinearInput, validatePercentInput, validatePythagorasInput, validateAreaInput, validateTrigonometryInput, validateABCInput, validateVertexInput, validatePowerInput, validateSquareRootInput, validateStatisticsInput, validateEquationSystemInput, validateVolumeInput, validateFractionInput } from '../utils/validation.js';
-import { analyzeQuadratic, generateQuadraticDataPoints, analyzeLinear, generateLinearDataPoints, analyzeABC, analyzeVertex, analyzeEquationSystem, analyzeFactoring } from '../modules/algebra.js';
+import { validateQuadraticInput, validateLinearInput, validatePercentInput, validatePythagorasInput, validateAreaInput, validateTrigonometryInput, validateABCInput, validateVertexInput, validatePowerInput, validateSquareRootInput, validateStatisticsInput, validateEquationSystemInput, validateVolumeInput, validateFractionInput, validateCompoundInterest, validateVAT, validateUnitConversion, validateSymmetryLine, validateLinearRoot, validateAverageRateOfChange, validateSimilarity } from '../utils/validation.js';
+import { analyzeQuadratic, generateQuadraticDataPoints, analyzeLinear, generateLinearDataPoints, analyzeABC, analyzeVertex, analyzeEquationSystem, analyzeFactoring, analyzeSymmetryLine, analyzeLinearRoot, analyzeAverageRateOfChange } from '../modules/algebra.js';
 import { analyzePercent, analyzePercentChange, analyzePower, analyzeSquareRoot, analyzeFractions } from '../modules/basic.js';
-import { analyzePythagoras, analyzeArea, analyzeTrigonometry, analyzeVolume } from '../modules/geometry.js';
+import { analyzePythagoras, analyzeArea, analyzeTrigonometry, analyzeVolume, analyzeSimilarity } from '../modules/geometry.js';
 import { analyzeMean, analyzeMedian, analyzeMode, analyzeRange } from '../modules/statistics.js';
+import { analyzeCompoundInterest, analyzeVAT } from '../modules/economics.js';
+import { analyzeUnitConversion } from '../modules/conversion.js';
 import { renderSteps } from '../components/step-by-step.js';
 import { renderGraph, renderEmptyGraph } from '../components/graph.js';
 import { evaluateMath } from '../utils/mathParser.js';
@@ -71,7 +73,7 @@ export function initUI() {
                 if (targetModule) {
                     targetModule.style.display = 'block';
 
-                    if (item.category === 'geometri' || item.category === 'grunnleggende' || item.category === 'statistikk') {
+                    if (item.category === 'geometri' || item.category === 'grunnleggende' || item.category === 'statistikk' || item.category === 'okonomi' || item.category === 'konvertering') {
                         if (quickGraphSidebar) quickGraphSidebar.style.display = 'none';
                         if (appContainer) appContainer.classList.add('hide-right-sidebar');
                     } else {
@@ -1231,6 +1233,105 @@ export function initUI() {
             }
         }
     }
+
+
+    // Helper function for new modules
+    function setupAdvancedModuleUI(id, validateFn, analyzeFn, formatResFn) {
+        const form = document.getElementById(`${id}-form`);
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const val = validateFn(formData);
+
+                const hintBox = document.getElementById(`validation-hint-${id}`);
+                const resBox = document.getElementById(`result-${id}`);
+                const stepsBtn = document.getElementById(`btn-show-steps-${id}`);
+                const stepsContainer = document.getElementById(`step-by-step-container-${id}`);
+                const stepsContent = document.getElementById(`steps-content-${id}`);
+
+                if (!val.isValid) {
+                    showHint(hintBox, val.hint);
+                    stepsBtn.disabled = true;
+                    stepsContainer.hidden = true;
+                    resBox.hidden = true;
+                    return;
+                }
+                hideHint(hintBox);
+
+                const res = analyzeFn(val.values, formData);
+                state[`current${id}Result`] = res;
+
+                resBox.innerHTML = formatResFn(res);
+                resBox.hidden = false;
+                stepsBtn.disabled = false;
+                if (!stepsContainer.hidden) {
+                    renderSteps(res.steps, stepsContent);
+                }
+            });
+
+            const stepsBtn = document.getElementById(`btn-show-steps-${id}`);
+            const stepsContainer = document.getElementById(`step-by-step-container-${id}`);
+            const stepsContent = document.getElementById(`steps-content-${id}`);
+            if(stepsBtn) {
+                stepsBtn.addEventListener('click', () => {
+                    if (stepsContainer.hidden) {
+                        stepsContainer.hidden = false;
+                        stepsBtn.textContent = 'Skjul utregning';
+                        stepsBtn.setAttribute('aria-expanded', 'true');
+                        if (state[`current${id}Result`]) renderSteps(state[`current${id}Result`].steps, stepsContent);
+                    } else {
+                        stepsContainer.hidden = true;
+                        stepsBtn.textContent = 'Vis utregning';
+                        stepsBtn.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+        }
+    }
+
+    setupAdvancedModuleUI('compound-interest',
+        (fd) => validateCompoundInterest(fd.get('principal'), fd.get('rate'), fd.get('years')),
+        (vals, fd) => analyzeCompoundInterest(vals.principal, vals.rate, vals.years),
+        (res) => `<strong>Sluttbeløp:</strong> ${res.result.toFixed(2)} kr`
+    );
+
+    setupAdvancedModuleUI('vat',
+        (fd) => validateVAT(fd.get('price'), fd.get('vatRate')),
+        (vals, fd) => analyzeVAT(vals.price, fd.get('operation') === 'add', vals.vatRate),
+        (res) => `<strong>Ny pris:</strong> ${res.result.toFixed(2)} kr <br> <strong>MVA-beløp:</strong> ${res.vatAmount.toFixed(2)} kr`
+    );
+
+    setupAdvancedModuleUI('unit-conversion',
+        (fd) => validateUnitConversion(fd.get('value')),
+        (vals, fd) => analyzeUnitConversion(fd.get('dimension'), vals.value, fd.get('fromUnit'), fd.get('toUnit')),
+        (res) => res.result !== null ? `<strong>Resultat:</strong> ${res.displayResult}` : `<strong>Feil:</strong> Ugyldig enhet.`
+    );
+
+    setupAdvancedModuleUI('symmetry-line',
+        (fd) => validateSymmetryLine(fd.get('a'), fd.get('b')),
+        (vals, fd) => analyzeSymmetryLine(vals.a, vals.b),
+        (res) => `<strong>Symmetrilinje:</strong> x = ${res.result.toFixed(2)}`
+    );
+
+    setupAdvancedModuleUI('linear-root',
+        (fd) => validateLinearRoot(fd.get('a'), fd.get('b')),
+        (vals, fd) => analyzeLinearRoot(vals.a, vals.b),
+        (res) => `<strong>Nullpunkt:</strong> ${typeof res.result === 'number' ? 'x = ' + res.result.toFixed(2) : res.result}`
+    );
+
+    setupAdvancedModuleUI('average-rate',
+        (fd) => validateAverageRateOfChange(fd.get('x1'), fd.get('y1'), fd.get('x2'), fd.get('y2')),
+        (vals, fd) => analyzeAverageRateOfChange(vals.x1, vals.y1, vals.x2, vals.y2),
+        (res) => `<strong>Gjennomsnittlig vekstfart:</strong> ${typeof res.result === 'number' ? res.result.toFixed(2) : res.result}`
+    );
+
+    setupAdvancedModuleUI('similarity',
+        (fd) => validateSimilarity(fd.get('s1'), fd.get('l1'), fd.get('s2'), fd.get('l2')),
+        (vals, fd) => analyzeSimilarity(vals.s1, vals.l1, vals.s2, vals.l2),
+        (res) => `<strong>Ukjent side:</strong> ${res.result.toFixed(2)}`
+    );
+
 
     // Oppdater graf på tema-bytte
     window.addEventListener('themeChanged', () => {

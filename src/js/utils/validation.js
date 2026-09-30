@@ -382,3 +382,121 @@ export function validateFractionInput(n1Str, d1Str, n2Str, d2Str) {
         hint: null
     };
 }
+
+/**
+ * Validerer input for rentesrente
+ */
+export function validateCompoundInterest(principalStr, rateStr, yearsStr) {
+    const principal = parseFloat(principalStr);
+    const rate = parseFloat(rateStr);
+    const years = parseFloat(yearsStr);
+
+    if (isNaN(principal) || isNaN(rate) || isNaN(years)) {
+        return { isValid: false, hint: 'Fyll inn alle feltene med gyldige tall.' };
+    }
+    if (principal < 0 || years < 0) {
+        return { isValid: false, hint: 'Startbeløp og antall år kan ikke være negative.' };
+    }
+    return { isValid: true, values: { principal, rate, years }, hint: null };
+}
+
+/**
+ * Validerer input for MVA
+ */
+export function validateVAT(priceStr, vatRateStr) {
+    const price = parseFloat(priceStr);
+    const vatRate = parseFloat(vatRateStr);
+
+    if (isNaN(price) || isNaN(vatRate)) {
+        return { isValid: false, hint: 'Fyll inn gyldige tall.' };
+    }
+    if (price < 0 || vatRate < 0) {
+        return { isValid: false, hint: 'Pris og MVA-sats må være positive tall.' };
+    }
+    return { isValid: true, values: { price, vatRate }, hint: null };
+}
+
+/**
+ * Validerer input for enhetskonvertering
+ */
+export function validateUnitConversion(valueStr) {
+    const value = parseFloat(valueStr);
+    if (isNaN(value)) {
+        return { isValid: false, hint: 'Fyll inn et gyldig tall å konvertere.' };
+    }
+    if (value < 0) {
+        return { isValid: false, hint: 'Avstand, areal og volum kan ikke være negativt.' };
+    }
+    return { isValid: true, values: { value }, hint: null };
+}
+
+/**
+ * Validerer input for symmetrilinje (a, b)
+ */
+export function validateSymmetryLine(aStr, bStr) {
+    const a = parseFloat(aStr);
+    const b = parseFloat(bStr);
+
+    if (isNaN(a) || isNaN(b)) {
+        return { isValid: false, hint: 'Fyll inn gyldige tall for a og b.' };
+    }
+    if (a === 0) {
+        return { isValid: false, hint: 'Koeffisient a kan ikke være 0 i en andregradsfunksjon.' };
+    }
+    return { isValid: true, values: { a, b }, hint: null };
+}
+
+/**
+ * Validerer input for nullpunkt i lineær funksjon (a, b)
+ */
+export function validateLinearRoot(aStr, bStr) {
+    const a = parseFloat(aStr);
+    const b = parseFloat(bStr);
+
+    if (isNaN(a) || isNaN(b)) {
+        return { isValid: false, hint: 'Fyll inn gyldige tall for a og b.' };
+    }
+    return { isValid: true, values: { a, b }, hint: null };
+}
+
+/**
+ * Validerer input for gjennomsnittlig vekstfart
+ */
+export function validateAverageRateOfChange(x1Str, y1Str, x2Str, y2Str) {
+    const x1 = parseFloat(x1Str);
+    const y1 = parseFloat(y1Str);
+    const x2 = parseFloat(x2Str);
+    const y2 = parseFloat(y2Str);
+
+    if (isNaN(x1) || isNaN(y1) || isNaN(x2) || isNaN(y2)) {
+        return { isValid: false, hint: 'Alle fire koordinatene må være fylt ut med tall.' };
+    }
+    return { isValid: true, values: { x1, y1, x2, y2 }, hint: null };
+}
+
+/**
+ * Validerer input for formlikhet
+ */
+export function validateSimilarity(s1Str, l1Str, s2Str, l2Str) {
+    const s1 = parseFloat(s1Str);
+    const l1 = parseFloat(l1Str);
+    let s2 = parseFloat(s2Str);
+    let l2 = parseFloat(l2Str);
+
+    if (isNaN(s1) || isNaN(l1) || s1 <= 0 || l1 <= 0) {
+        return { isValid: false, hint: 'Det kjente paret med samsvarende sider må ha gyldige, positive tall.' };
+    }
+
+    // Nøyaktig en av de to andre må være utfylt
+    const isS2Valid = !isNaN(s2) && s2 > 0;
+    const isL2Valid = !isNaN(l2) && l2 > 0;
+
+    if ((isS2Valid && isL2Valid) || (!isS2Valid && !isL2Valid)) {
+        return { isValid: false, hint: 'Fyll inn nøyaktig én av sidene i det andre paret for å finne den andre.' };
+    }
+
+    if (!isS2Valid) s2 = null;
+    if (!isL2Valid) l2 = null;
+
+    return { isValid: true, values: { s1, l1, s2, l2 }, hint: null };
+}
