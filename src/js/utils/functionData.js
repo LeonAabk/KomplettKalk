@@ -76,4 +76,54 @@ export const functionData = [
         description: 'Regn ut og forenkle kvadratrøtter.',
         icon: '√'
     }
+,
+    {
+        id: 'module-mean',
+        title: 'Gjennomsnitt',
+        category: 'statistikk',
+        description: 'Regn ut summen delt på antall for en liste med tall.',
+        icon: '📊'
+    },
+    {
+        id: 'module-median',
+        title: 'Median',
+        category: 'statistikk',
+        description: 'Finn det midterste tallet i en sortert liste.',
+        icon: '⚖️'
+    },
+    {
+        id: 'module-mode-range',
+        title: 'Typetall & Variasjonsbredde',
+        category: 'statistikk',
+        description: 'Finn tallet som forekommer oftest og bredden i dataene.',
+        icon: '🎯'
+    },
+    {
+        id: 'module-eq-system',
+        title: 'To Ukjente',
+        category: 'algebra',
+        description: 'Løs et likningssett med x og y trinnvis.',
+        icon: '✖️'
+    },
+    {
+        id: 'module-factoring',
+        title: 'Faktorisering',
+        category: 'algebra',
+        description: 'Faktoriser andregradsuttrykk med nullpunkter.',
+        icon: '🧩'
+    },
+    {
+        id: 'module-volume',
+        title: 'Volum (3D-figurer)',
+        category: 'geometri',
+        description: 'Beregn volumet av sylinder, kube eller kule.',
+        icon: '🧊'
+    },
+    {
+        id: 'module-fractions',
+        title: 'Brøkregning',
+        category: 'grunnleggende',
+        description: 'Pluss, minus, gange eller dele brøker med fellesnevner.',
+        icon: '➗'
+    }
 ];

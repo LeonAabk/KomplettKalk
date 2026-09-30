@@ -256,3 +256,129 @@ export function validatePercentInput(xStr, yStr) {
         hint: null
     };
 }
+
+/**
+ * Validerer input for statistikk (kommadelt liste med tall).
+ * @param {string} inputStr - Input-streng
+ * @returns {Object} Valideringsresultat
+ */
+export function validateStatisticsInput(inputStr) {
+    if (!inputStr || inputStr.trim() === '') {
+        return {
+            isValid: false,
+            hint: 'Vennligst skriv inn noen tall separert med komma (f.eks. "2, 5, 8, 3").'
+        };
+    }
+
+    const numbers = inputStr.split(',').map(s => s.trim());
+    const parsedNumbers = numbers.map(s => parseFloat(s));
+
+    if (parsedNumbers.some(isNaN)) {
+        return {
+            isValid: false,
+            hint: 'Listen din inneholder ugyldige verdier. Pass på at du kun bruker tall og at de er separert med komma (bruk punktum for desimaltall).'
+        };
+    }
+
+    if (parsedNumbers.length === 0) {
+         return {
+             isValid: false,
+             hint: 'Vi fant ingen tall. Vennligst skriv inn noen tall separert med komma.'
+         };
+    }
+
+    return {
+        isValid: true,
+        values: { inputStr },
+        hint: null
+    };
+}
+
+/**
+ * Validerer input for likningssett med to ukjente (a1, b1, c1, a2, b2, c2).
+ */
+export function validateEquationSystemInput(a1Str, b1Str, c1Str, a2Str, b2Str, c2Str) {
+    const a1 = parseFloat(a1Str);
+    const b1 = parseFloat(b1Str);
+    const c1 = parseFloat(c1Str);
+    const a2 = parseFloat(a2Str);
+    const b2 = parseFloat(b2Str);
+    const c2 = parseFloat(c2Str);
+
+    if (isNaN(a1) || isNaN(b1) || isNaN(c1) || isNaN(a2) || isNaN(b2) || isNaN(c2)) {
+        return {
+            isValid: false,
+            hint: 'Vennligst fyll inn alle seks feltene med gyldige tall.'
+        };
+    }
+
+    if (a1 === 0 && a2 === 0) {
+        return {
+            isValid: false,
+            hint: 'Både a1 og a2 kan ikke være null samtidig (da har vi ikke noen x å løse for).'
+        };
+    }
+
+    return {
+        isValid: true,
+        values: { a1, b1, c1, a2, b2, c2 },
+        hint: null
+    };
+}
+
+/**
+ * Validerer input for volum (3D-figurer).
+ */
+export function validateVolumeInput(shape, val1Str, val2Str) {
+    const val1 = parseFloat(val1Str);
+
+    if (isNaN(val1) || val1 <= 0) {
+        return {
+            isValid: false,
+            hint: 'Du må oppgi en gyldig positiv verdi for radius eller sidekant.'
+        };
+    }
+
+    if (shape === 'cylinder') {
+        const val2 = parseFloat(val2Str);
+        if (isNaN(val2) || val2 <= 0) {
+            return {
+                isValid: false,
+                hint: 'Du må oppgi en gyldig positiv verdi for høyde.'
+            };
+        }
+        return { isValid: true, values: { shape, val1, val2 }, hint: null };
+    }
+
+    return { isValid: true, values: { shape, val1, val2: null }, hint: null };
+}
+
+/**
+ * Validerer input for brøkregning.
+ */
+export function validateFractionInput(n1Str, d1Str, n2Str, d2Str) {
+    const n1 = parseInt(n1Str, 10);
+    const d1 = parseInt(d1Str, 10);
+    const n2 = parseInt(n2Str, 10);
+    const d2 = parseInt(d2Str, 10);
+
+    if (isNaN(n1) || isNaN(d1) || isNaN(n2) || isNaN(d2)) {
+        return {
+            isValid: false,
+            hint: 'Vennligst fyll inn alle feltene for brøkene (kun heltall).'
+        };
+    }
+
+    if (d1 === 0 || d2 === 0) {
+        return {
+            isValid: false,
+            hint: 'En nevner kan aldri være null.'
+        };
+    }
+
+    return {
+        isValid: true,
+        values: { n1, d1, n2, d2 },
+        hint: null
+    };
+}

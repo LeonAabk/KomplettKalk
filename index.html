@@ -397,7 +397,277 @@
                     <div id="steps-content-sqrt"></div>
                 </div>
             </section>
-        </main>
+
+        <!-- NYE MODULER -->
+        <!-- GJENNOMSNITT -->
+        <section id="module-mean" class="educational-module" aria-labelledby="mean-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="mean-title">Gjennomsnitt</h2>
+            </div>
+            <p>Skriv inn en kommadelt liste med tall for å finne gjennomsnittet (summen delt på antall).</p>
+            <form id="mean-form" class="math-form" aria-label="Skjema for gjennomsnitt">
+                <div class="input-group">
+                    <label for="input-mean-list">Talliste (f.eks: 2, 5, 8, 3)</label>
+                    <input type="text" id="input-mean-list" name="list" placeholder="Skriv tall her" required>
+                </div>
+                <div id="validation-hint-mean" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Gjennomsnitt</button>
+            </form>
+            <div id="result-mean" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-mean" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-mean">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-mean" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-mean" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- MEDIAN -->
+        <section id="module-median" class="educational-module" aria-labelledby="median-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="median-title">Median</h2>
+            </div>
+            <p>Skriv inn en kommadelt liste med tall. Vi sorterer listen og finner det midterste tallet.</p>
+            <form id="median-form" class="math-form" aria-label="Skjema for median">
+                <div class="input-group">
+                    <label for="input-median-list">Talliste (f.eks: 2, 5, 8, 3)</label>
+                    <input type="text" id="input-median-list" name="list" placeholder="Skriv tall her" required>
+                </div>
+                <div id="validation-hint-median" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Finn Median</button>
+            </form>
+            <div id="result-median" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-median" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-median">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-median" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-median" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- TYPETALL & VARIASJONSBREDDE -->
+        <section id="module-mode-range" class="educational-module" aria-labelledby="mode-range-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="mode-range-title">Typetall & Variasjonsbredde</h2>
+            </div>
+            <p>Skriv inn en kommadelt liste med tall for å finne tallet som forekommer oftest og forskjellen mellom største og minste tall.</p>
+            <form id="mode-range-form" class="math-form" aria-label="Skjema for typetall og variasjonsbredde">
+                <div class="input-group">
+                    <label for="input-mode-range-list">Talliste (f.eks: 2, 5, 5, 8, 3)</label>
+                    <input type="text" id="input-mode-range-list" name="list" placeholder="Skriv tall her" required>
+                </div>
+                <div id="validation-hint-mode-range" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn</button>
+            </form>
+            <div id="result-mode-range" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-mode-range" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-mode-range">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-mode-range" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-mode-range" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- TO UKJENTE (LIKNINGSSETT) -->
+        <section id="module-eq-system" class="educational-module" aria-labelledby="eq-system-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="eq-system-title">To Ukjente (Likningssett)</h2>
+            </div>
+            <p>Løs et likningssett på formen (a_1x + b_1y = c_1) og (a_2x + b_2y = c_2).</p>
+            <form id="eq-system-form" class="math-form" aria-label="Skjema for likningssett">
+                <div class="formula-display">
+                    <div>a₁x + b₁y = c₁</div>
+                    <div>a₂x + b₂y = c₂</div>
+                </div>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="eq-a1">a₁</label>
+                        <input type="number" id="eq-a1" name="a1" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="eq-b1">b₁</label>
+                        <input type="number" id="eq-b1" name="b1" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="eq-c1">c₁</label>
+                        <input type="number" id="eq-c1" name="c1" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="eq-a2">a₂</label>
+                        <input type="number" id="eq-a2" name="a2" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="eq-b2">b₂</label>
+                        <input type="number" id="eq-b2" name="b2" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="eq-c2">c₂</label>
+                        <input type="number" id="eq-c2" name="c2" step="any" required>
+                    </div>
+                </div>
+                <div id="validation-hint-eq-system" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Løs Likningssett</button>
+            </form>
+            <div id="result-eq-system" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-eq-system" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-eq-system">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-eq-system" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-eq-system" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- FAKTORISERING -->
+        <section id="module-factoring" class="educational-module" aria-labelledby="factoring-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="factoring-title">Faktorisering (Andregrad)</h2>
+            </div>
+            <p>Faktoriser et andregradsuttrykk på formen (ax^2 + bx + c = 0) til (a(x-x_1)(x-x_2)).</p>
+            <form id="factoring-form" class="math-form" aria-label="Skjema for faktorisering">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="fact-a">a (foran x²)</label>
+                        <input type="number" id="fact-a" name="a" step="any" value="1" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="fact-b">b (foran x)</label>
+                        <input type="number" id="fact-b" name="b" step="any" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="fact-c">c (konstant)</label>
+                        <input type="number" id="fact-c" name="c" step="any" required>
+                    </div>
+                </div>
+                <div id="validation-hint-factoring" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Faktoriser</button>
+            </form>
+            <div id="result-factoring" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-factoring" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-factoring">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-factoring" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-factoring" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- VOLUM -->
+        <section id="module-volume" class="educational-module" aria-labelledby="volume-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="volume-title">Volum (3D-figurer)</h2>
+            </div>
+            <p>Velg en 3D-figur for å beregne volumet.</p>
+            <form id="volume-form" class="math-form" aria-label="Skjema for volum">
+                <div class="input-group">
+                    <label for="volume-shape">Velg figur</label>
+                    <select id="volume-shape" name="shape" required>
+                        <option value="cylinder">Sylinder</option>
+                        <option value="cube">Kube</option>
+                        <option value="sphere">Kule</option>
+                    </select>
+                </div>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label id="vol-label-1" for="vol-val1">Radius (r)</label>
+                        <input type="number" id="vol-val1" name="val1" step="any" min="0" required>
+                    </div>
+                    <div class="input-group" id="vol-input2-group">
+                        <label id="vol-label-2" for="vol-val2">Høyde (h)</label>
+                        <input type="number" id="vol-val2" name="val2" step="any" min="0" required>
+                    </div>
+                </div>
+                <div id="validation-hint-volume" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Volum</button>
+            </form>
+            <div id="result-volume" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-volume" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-volume">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-volume" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-volume" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- BRØKREGNING -->
+        <section id="module-fractions" class="educational-module" aria-labelledby="fractions-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="fractions-title">Brøkregning</h2>
+            </div>
+            <p>Pluss, minus, gange eller dele to brøker trinnvis.</p>
+            <form id="fractions-form" class="math-form" aria-label="Skjema for brøkregning">
+                <div class="fractions-inputs" style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="display: flex; flex-direction: column; width: 60px;">
+                        <input type="number" name="n1" required aria-label="Teller 1">
+                        <hr style="margin: 0; border-top: 2px solid var(--text-color);">
+                        <input type="number" name="d1" required aria-label="Nevner 1">
+                    </div>
+                    <div>
+                        <select name="operation" aria-label="Operasjon" required style="font-size: 1.5rem; padding: 0.2rem;">
+                            <option value="add">+</option>
+                            <option value="sub">-</option>
+                            <option value="mul">×</option>
+                            <option value="div">÷</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; width: 60px;">
+                        <input type="number" name="n2" required aria-label="Teller 2">
+                        <hr style="margin: 0; border-top: 2px solid var(--text-color);">
+                        <input type="number" name="d2" required aria-label="Nevner 2">
+                    </div>
+                </div>
+                <div id="validation-hint-fractions" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Regn Ut</button>
+            </form>
+            <div id="result-fractions" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-fractions" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-fractions">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-fractions" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-fractions" class="steps-content"></div>
+            </div>
+        </section>
+    </main>
 
         <!-- Quick-Graph Sidebar -->
         <aside class="quick-graph-sidebar" aria-labelledby="graph-title">

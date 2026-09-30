@@ -1,11 +1,13 @@
-import { validateQuadraticInput, validateLinearInput, validatePercentInput, validatePythagorasInput, validateAreaInput, validateTrigonometryInput, validateABCInput, validateVertexInput, validatePowerInput, validateSquareRootInput } from '../utils/validation.js';
-import { analyzeQuadratic, generateQuadraticDataPoints, analyzeLinear, generateLinearDataPoints, analyzeABC, analyzeVertex } from '../modules/algebra.js';
-import { analyzePercent, analyzePercentChange, analyzePower, analyzeSquareRoot } from '../modules/basic.js';
-import { analyzePythagoras, analyzeArea, analyzeTrigonometry } from '../modules/geometry.js';
+import { validateQuadraticInput, validateLinearInput, validatePercentInput, validatePythagorasInput, validateAreaInput, validateTrigonometryInput, validateABCInput, validateVertexInput, validatePowerInput, validateSquareRootInput, validateStatisticsInput, validateEquationSystemInput, validateVolumeInput, validateFractionInput } from '../utils/validation.js';
+import { analyzeQuadratic, generateQuadraticDataPoints, analyzeLinear, generateLinearDataPoints, analyzeABC, analyzeVertex, analyzeEquationSystem, analyzeFactoring } from '../modules/algebra.js';
+import { analyzePercent, analyzePercentChange, analyzePower, analyzeSquareRoot, analyzeFractions } from '../modules/basic.js';
+import { analyzePythagoras, analyzeArea, analyzeTrigonometry, analyzeVolume } from '../modules/geometry.js';
+import { analyzeMean, analyzeMedian, analyzeMode, analyzeRange } from '../modules/statistics.js';
 import { renderSteps } from '../components/step-by-step.js';
 import { renderGraph, renderEmptyGraph } from '../components/graph.js';
 import { evaluateMath } from '../utils/mathParser.js';
 import { functionData } from '../utils/functionData.js';
+
 
 /**
  * Modul for å binde sammen UI, state og forretningslogikk.
@@ -69,7 +71,7 @@ export function initUI() {
                 if (targetModule) {
                     targetModule.style.display = 'block';
 
-                    if (item.category === 'geometri' || item.category === 'grunnleggende') {
+                    if (item.category === 'geometri' || item.category === 'grunnleggende' || item.category === 'statistikk') {
                         if (quickGraphSidebar) quickGraphSidebar.style.display = 'none';
                         if (appContainer) appContainer.classList.add('hide-right-sidebar');
                     } else {
@@ -861,6 +863,373 @@ export function initUI() {
                 sqrtStepsBtn.setAttribute('aria-expanded', 'false');
             }
         });
+    }
+
+
+    // ---------------- NYE MODULER ----------------
+
+    // GJENNOMSNITT
+    setupModuleUI('mean', validateStatisticsInput, analyzeMean, (res) => `<strong>Gjennomsnitt:</strong> ${res.result.toFixed(2)}`);
+
+    // MEDIAN
+    setupModuleUI('median', validateStatisticsInput, analyzeMedian, (res) => `<strong>Median:</strong> ${res.result}`);
+
+    // TYPETALL & VARIASJONSBREDDE (Kombinert skjema, to analyser)
+    const modeRangeForm = document.getElementById('mode-range-form');
+    if (modeRangeForm) {
+        modeRangeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(modeRangeForm);
+            const val = validateStatisticsInput(formData.get('list'));
+            const hintBox = document.getElementById('validation-hint-mode-range');
+            const resBox = document.getElementById('result-mode-range');
+            const stepsBtn = document.getElementById('btn-show-steps-mode-range');
+            const stepsContainer = document.getElementById('step-by-step-container-mode-range');
+            const stepsContent = document.getElementById('steps-content-mode-range');
+
+            if (!val.isValid) {
+                showHint(hintBox, val.hint);
+                stepsBtn.disabled = true;
+                stepsContainer.hidden = true;
+                resBox.hidden = true;
+                return;
+            }
+            hideHint(hintBox);
+
+            const modeRes = analyzeMode(val.values.inputStr);
+            const rangeRes = analyzeRange(val.values.inputStr);
+
+            const combinedSteps = modeRes.steps.concat(rangeRes.steps);
+            state.currentModeRangeResult = { steps: combinedSteps };
+
+            resBox.innerHTML = `<strong>Typetall:</strong> ${modeRes.result ? modeRes.result.join(', ') : 'Ingen'} <br> <strong>Variasjonsbredde:</strong> ${rangeRes.result}`;
+            resBox.hidden = false;
+            stepsBtn.disabled = false;
+            if (!stepsContainer.hidden) {
+                renderSteps(combinedSteps, stepsContent);
+            }
+        });
+
+        const stepsBtn = document.getElementById('btn-show-steps-mode-range');
+        const stepsContainer = document.getElementById('step-by-step-container-mode-range');
+        const stepsContent = document.getElementById('steps-content-mode-range');
+        if (stepsBtn) {
+            stepsBtn.addEventListener('click', () => {
+                if (stepsContainer.hidden) {
+                    stepsContainer.hidden = false;
+                    stepsBtn.textContent = 'Skjul utregning';
+                    stepsBtn.setAttribute('aria-expanded', 'true');
+                    if (state.currentModeRangeResult) renderSteps(state.currentModeRangeResult.steps, stepsContent);
+                } else {
+                    stepsContainer.hidden = true;
+                    stepsBtn.textContent = 'Vis utregning';
+                    stepsBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+    }
+
+    // TO UKJENTE (LIKNINGSSETT)
+    const eqForm = document.getElementById('eq-system-form');
+    if (eqForm) {
+        eqForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(eqForm);
+            const val = validateEquationSystemInput(
+                formData.get('a1'), formData.get('b1'), formData.get('c1'),
+                formData.get('a2'), formData.get('b2'), formData.get('c2')
+            );
+            const hintBox = document.getElementById('validation-hint-eq-system');
+            const resBox = document.getElementById('result-eq-system');
+            const stepsBtn = document.getElementById('btn-show-steps-eq-system');
+            const stepsContainer = document.getElementById('step-by-step-container-eq-system');
+            const stepsContent = document.getElementById('steps-content-eq-system');
+
+            if (!val.isValid) {
+                showHint(hintBox, val.hint);
+                stepsBtn.disabled = true;
+                stepsContainer.hidden = true;
+                resBox.hidden = true;
+                return;
+            }
+            hideHint(hintBox);
+
+            const res = analyzeEquationSystem(val.values.a1, val.values.b1, val.values.c1, val.values.a2, val.values.b2, val.values.c2);
+            state.currentEqResult = res;
+
+            if (res.result) {
+                resBox.innerHTML = `<strong>x =</strong> ${res.result.x.toFixed(2)}, <strong>y =</strong> ${res.result.y.toFixed(2)}`;
+            } else {
+                resBox.innerHTML = `<strong>Resultat:</strong> Ingen unik løsning.`;
+            }
+            resBox.hidden = false;
+            stepsBtn.disabled = false;
+            if (!stepsContainer.hidden) {
+                renderSteps(res.steps, stepsContent);
+            }
+        });
+
+        const stepsBtn = document.getElementById('btn-show-steps-eq-system');
+        const stepsContainer = document.getElementById('step-by-step-container-eq-system');
+        const stepsContent = document.getElementById('steps-content-eq-system');
+        if(stepsBtn) {
+            stepsBtn.addEventListener('click', () => {
+                if (stepsContainer.hidden) {
+                    stepsContainer.hidden = false;
+                    stepsBtn.textContent = 'Skjul utregning';
+                    stepsBtn.setAttribute('aria-expanded', 'true');
+                    if (state.currentEqResult) renderSteps(state.currentEqResult.steps, stepsContent);
+                } else {
+                    stepsContainer.hidden = true;
+                    stepsBtn.textContent = 'Vis utregning';
+                    stepsBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+    }
+
+    // FAKTORISERING
+    const factForm = document.getElementById('factoring-form');
+    if (factForm) {
+        factForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(factForm);
+            const val = validateQuadraticInput(formData.get('a'), formData.get('b'), formData.get('c'));
+            const hintBox = document.getElementById('validation-hint-factoring');
+            const resBox = document.getElementById('result-factoring');
+            const stepsBtn = document.getElementById('btn-show-steps-factoring');
+            const stepsContainer = document.getElementById('step-by-step-container-factoring');
+            const stepsContent = document.getElementById('steps-content-factoring');
+
+            if (!val.isValid) {
+                showHint(hintBox, val.hint);
+                stepsBtn.disabled = true;
+                stepsContainer.hidden = true;
+                resBox.hidden = true;
+                return;
+            }
+            hideHint(hintBox);
+
+            const res = analyzeFactoring(val.values.a, val.values.b, val.values.c);
+            state.currentFactResult = res;
+
+            if (res.result) {
+                resBox.innerHTML = `<strong>Faktorisert uttrykk:</strong> ${res.result.a}(x - ${res.result.root1.toFixed(2)})(x - ${res.result.root2.toFixed(2)})`;
+            } else {
+                resBox.innerHTML = `<strong>Kan ikke faktoriseres med reelle tall.</strong>`;
+            }
+            resBox.hidden = false;
+            stepsBtn.disabled = false;
+            if (!stepsContainer.hidden) {
+                renderSteps(res.steps, stepsContent);
+            }
+        });
+
+        const stepsBtn = document.getElementById('btn-show-steps-factoring');
+        const stepsContainer = document.getElementById('step-by-step-container-factoring');
+        const stepsContent = document.getElementById('steps-content-factoring');
+        if(stepsBtn) {
+            stepsBtn.addEventListener('click', () => {
+                if (stepsContainer.hidden) {
+                    stepsContainer.hidden = false;
+                    stepsBtn.textContent = 'Skjul utregning';
+                    stepsBtn.setAttribute('aria-expanded', 'true');
+                    if (state.currentFactResult) renderSteps(state.currentFactResult.steps, stepsContent);
+                } else {
+                    stepsContainer.hidden = true;
+                    stepsBtn.textContent = 'Vis utregning';
+                    stepsBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+    }
+
+    // VOLUM
+    const volForm = document.getElementById('volume-form');
+    if (volForm) {
+        const shapeSelect = document.getElementById('volume-shape');
+        const label1 = document.getElementById('vol-label-1');
+        const label2 = document.getElementById('vol-label-2');
+        const input2Group = document.getElementById('vol-input2-group');
+        const val2Input = document.getElementById('vol-val2');
+
+        shapeSelect.addEventListener('change', () => {
+            if (shapeSelect.value === 'cylinder') {
+                label1.textContent = 'Radius (r)';
+                input2Group.style.display = 'block';
+                val2Input.required = true;
+            } else if (shapeSelect.value === 'cube') {
+                label1.textContent = 'Sidekant (s)';
+                input2Group.style.display = 'none';
+                val2Input.required = false;
+            } else if (shapeSelect.value === 'sphere') {
+                label1.textContent = 'Radius (r)';
+                input2Group.style.display = 'none';
+                val2Input.required = false;
+            }
+        });
+
+        volForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(volForm);
+            const val = validateVolumeInput(formData.get('shape'), formData.get('val1'), formData.get('val2'));
+            const hintBox = document.getElementById('validation-hint-volume');
+            const resBox = document.getElementById('result-volume');
+            const stepsBtn = document.getElementById('btn-show-steps-volume');
+            const stepsContainer = document.getElementById('step-by-step-container-volume');
+            const stepsContent = document.getElementById('steps-content-volume');
+
+            if (!val.isValid) {
+                showHint(hintBox, val.hint);
+                stepsBtn.disabled = true;
+                stepsContainer.hidden = true;
+                resBox.hidden = true;
+                return;
+            }
+            hideHint(hintBox);
+
+            const res = analyzeVolume(val.values.shape, val.values.val1, val.values.val2);
+            state.currentVolResult = res;
+
+            resBox.innerHTML = `<strong>Volum:</strong> ${res.result.toFixed(2)}`;
+            resBox.hidden = false;
+            stepsBtn.disabled = false;
+            if (!stepsContainer.hidden) {
+                renderSteps(res.steps, stepsContent);
+            }
+        });
+
+        const stepsBtn = document.getElementById('btn-show-steps-volume');
+        const stepsContainer = document.getElementById('step-by-step-container-volume');
+        const stepsContent = document.getElementById('steps-content-volume');
+        if(stepsBtn) {
+            stepsBtn.addEventListener('click', () => {
+                if (stepsContainer.hidden) {
+                    stepsContainer.hidden = false;
+                    stepsBtn.textContent = 'Skjul utregning';
+                    stepsBtn.setAttribute('aria-expanded', 'true');
+                    if (state.currentVolResult) renderSteps(state.currentVolResult.steps, stepsContent);
+                } else {
+                    stepsContainer.hidden = true;
+                    stepsBtn.textContent = 'Vis utregning';
+                    stepsBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+    }
+
+    // BRØKREGNING
+    const fracForm = document.getElementById('fractions-form');
+    if (fracForm) {
+        fracForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(fracForm);
+            const val = validateFractionInput(formData.get('n1'), formData.get('d1'), formData.get('n2'), formData.get('d2'));
+            const op = formData.get('operation');
+
+            const hintBox = document.getElementById('validation-hint-fractions');
+            const resBox = document.getElementById('result-fractions');
+            const stepsBtn = document.getElementById('btn-show-steps-fractions');
+            const stepsContainer = document.getElementById('step-by-step-container-fractions');
+            const stepsContent = document.getElementById('steps-content-fractions');
+
+            if (!val.isValid) {
+                showHint(hintBox, val.hint);
+                stepsBtn.disabled = true;
+                stepsContainer.hidden = true;
+                resBox.hidden = true;
+                return;
+            }
+            hideHint(hintBox);
+
+            const res = analyzeFractions(val.values.n1, val.values.d1, val.values.n2, val.values.d2, op);
+            state.currentFracResult = res;
+
+            if (res.resultD === 1) {
+                resBox.innerHTML = `<strong>Resultat:</strong> ${res.resultN}`;
+            } else {
+                resBox.innerHTML = `<strong>Resultat:</strong> ${res.resultN} / ${res.resultD}`;
+            }
+            resBox.hidden = false;
+            stepsBtn.disabled = false;
+            if (!stepsContainer.hidden) {
+                renderSteps(res.steps, stepsContent);
+            }
+        });
+
+        const stepsBtn = document.getElementById('btn-show-steps-fractions');
+        const stepsContainer = document.getElementById('step-by-step-container-fractions');
+        const stepsContent = document.getElementById('steps-content-fractions');
+        if(stepsBtn) {
+            stepsBtn.addEventListener('click', () => {
+                if (stepsContainer.hidden) {
+                    stepsContainer.hidden = false;
+                    stepsBtn.textContent = 'Skjul utregning';
+                    stepsBtn.setAttribute('aria-expanded', 'true');
+                    if (state.currentFracResult) renderSteps(state.currentFracResult.steps, stepsContent);
+                } else {
+                    stepsContainer.hidden = true;
+                    stepsBtn.textContent = 'Vis utregning';
+                    stepsBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+    }
+
+    // Helper function for simple inputs (Mean, Median)
+    function setupModuleUI(id, validateFn, analyzeFn, formatResFn) {
+        const form = document.getElementById(`${id}-form`);
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const inputVal = formData.get('list') || formData.get('number'); // Handle different single inputs if needed
+                const val = validateFn(inputVal);
+
+                const hintBox = document.getElementById(`validation-hint-${id}`);
+                const resBox = document.getElementById(`result-${id}`);
+                const stepsBtn = document.getElementById(`btn-show-steps-${id}`);
+                const stepsContainer = document.getElementById(`step-by-step-container-${id}`);
+                const stepsContent = document.getElementById(`steps-content-${id}`);
+
+                if (!val.isValid) {
+                    showHint(hintBox, val.hint);
+                    stepsBtn.disabled = true;
+                    stepsContainer.hidden = true;
+                    resBox.hidden = true;
+                    return;
+                }
+                hideHint(hintBox);
+
+                const res = analyzeFn(val.values.inputStr || val.values.number);
+                state[`current${id}Result`] = res;
+
+                resBox.innerHTML = formatResFn(res);
+                resBox.hidden = false;
+                stepsBtn.disabled = false;
+                if (!stepsContainer.hidden) {
+                    renderSteps(res.steps, stepsContent);
+                }
+            });
+
+            const stepsBtn = document.getElementById(`btn-show-steps-${id}`);
+            const stepsContainer = document.getElementById(`step-by-step-container-${id}`);
+            const stepsContent = document.getElementById(`steps-content-${id}`);
+            if(stepsBtn) {
+                stepsBtn.addEventListener('click', () => {
+                    if (stepsContainer.hidden) {
+                        stepsContainer.hidden = false;
+                        stepsBtn.textContent = 'Skjul utregning';
+                        stepsBtn.setAttribute('aria-expanded', 'true');
+                        if (state[`current${id}Result`]) renderSteps(state[`current${id}Result`].steps, stepsContent);
+                    } else {
+                        stepsContainer.hidden = true;
+                        stepsBtn.textContent = 'Vis utregning';
+                        stepsBtn.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+        }
     }
 
     // Oppdater graf på tema-bytte

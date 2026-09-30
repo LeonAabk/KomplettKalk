@@ -259,3 +259,60 @@ export function analyzeTrigonometry(angle, givenType, givenValue, findType) {
         steps
     };
 }
+
+/**
+ * Beregner volum for 3D-figurer
+ * @param {string} shape - Type figur ('cylinder', 'cube', 'sphere')
+ * @param {number} val1 - Første verdi (radius eller sidekant)
+ * @param {number|null} val2 - Andre verdi (høyde, kun for sylinder)
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeVolume(shape, val1, val2) {
+    const steps = [];
+    let result = 0;
+
+    if (shape === 'cylinder') {
+        steps.push({
+            description: `Volumet av en sylinder regnes ut med formelen:`,
+            math: `V = \\pi \\cdot r^2 \\cdot h`
+        });
+
+        const r2 = val1 ** 2;
+        result = Math.PI * r2 * val2;
+
+        steps.push({
+            description: `Vi setter inn radius ($r = ${val1}$) og høyde ($h = ${val2}$):`,
+            math: `V = \\pi \\cdot ${val1}^2 \\cdot ${val2} = \\pi \\cdot ${r2} \\cdot ${val2} \\approx ${result.toFixed(2)}`
+        });
+    } else if (shape === 'cube') {
+        steps.push({
+            description: `Volumet av en kube regnes ut med formelen:`,
+            math: `V = s^3`
+        });
+
+        result = val1 ** 3;
+
+        steps.push({
+            description: `Vi setter inn sidekanten ($s = ${val1}$):`,
+            math: `V = ${val1}^3 = ${val1} \\cdot ${val1} \\cdot ${val1} = ${result}`
+        });
+    } else if (shape === 'sphere') {
+        steps.push({
+            description: `Volumet av en kule regnes ut med formelen:`,
+            math: `V = \\frac{4}{3} \\cdot \\pi \\cdot r^3`
+        });
+
+        const r3 = val1 ** 3;
+        result = (4 / 3) * Math.PI * r3;
+
+        steps.push({
+            description: `Vi setter inn radius ($r = ${val1}$):`,
+            math: `V = \\frac{4}{3} \\cdot \\pi \\cdot ${val1}^3 = \\frac{4}{3} \\cdot \\pi \\cdot ${r3} \\approx ${result.toFixed(2)}`
+        });
+    }
+
+    return {
+        result,
+        steps
+    };
+}

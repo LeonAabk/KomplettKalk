@@ -215,3 +215,160 @@ export function analyzePercentChange(oldVal, newVal) {
         steps
     };
 }
+
+/**
+ * Hjelpefunksjon: Finner største felles divisor (GCD)
+ */
+function gcd(a, b) {
+    return b === 0 ? a : gcd(b, a % b);
+}
+
+/**
+ * Hjelpefunksjon: Finner minste felles multiplum (LCM)
+ */
+function lcm(a, b) {
+    return (a * b) / gcd(a, b);
+}
+
+/**
+ * Utfører brøkregning og viser trinnvis utregning
+ * @param {number} n1 - Teller 1
+ * @param {number} d1 - Nevner 1
+ * @param {number} n2 - Teller 2
+ * @param {number} d2 - Nevner 2
+ * @param {string} op - Operasjon ('add', 'sub', 'mul', 'div')
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeFractions(n1, d1, n2, d2, op) {
+    const steps = [];
+    let resultN, resultD;
+
+    // Tegn for operasjonen
+    const opChar = op === 'add' ? '+' : op === 'sub' ? '-' : op === 'mul' ? '\\cdot' : ':';
+
+    steps.push({
+        description: `Vi skal regne ut:`,
+        math: `\\frac{${n1}}{${d1}} ${opChar} \\frac{${n2}}{${d2}}`
+    });
+
+    if (op === 'add' || op === 'sub') {
+        if (d1 === d2) {
+            steps.push({
+                description: `Nevnerne er allerede like (${d1}). Vi kan derfor ${op === 'add' ? 'legge sammen' : 'trekke fra'} tellerne direkte:`,
+                math: `\\frac{${n1} ${opChar} ${n2}}{${d1}}`
+            });
+            resultN = op === 'add' ? n1 + n2 : n1 - n2;
+            resultD = d1;
+            steps.push({
+                description: `Resultatet blir:`,
+                math: `\\frac{${resultN}}{${resultD}}`
+            });
+        } else {
+            const fellesNevner = lcm(d1, d2);
+            steps.push({
+                description: `Brøkene har ikke felles nevner. Vi finner minste felles multiplum (LCM) for nevnerne ${d1} og ${d2}, som er ${fellesNevner}.`,
+                math: `\\text{Fellesnevner} = ${fellesNevner}`
+            });
+
+            const mult1 = fellesNevner / d1;
+            const mult2 = fellesNevner / d2;
+
+            steps.push({
+                description: `Vi utvider brøkene slik at begge får ${fellesNevner} som nevner. Vi ganger første brøk oppe og nede med ${mult1}, og andre med ${mult2}:`,
+                math: `\\frac{${n1} \\cdot ${mult1}}{${d1} \\cdot ${mult1}} ${opChar} \\frac{${n2} \\cdot ${mult2}}{${d2} \\cdot ${mult2}}`
+            });
+
+            const newN1 = n1 * mult1;
+            const newN2 = n2 * mult2;
+
+            steps.push({
+                description: `Nå har brøkene felles nevner:`,
+                math: `\\frac{${newN1}}{${fellesNevner}} ${opChar} \\frac{${newN2}}{${fellesNevner}}`
+            });
+
+            resultN = op === 'add' ? newN1 + newN2 : newN1 - newN2;
+            resultD = fellesNevner;
+
+            steps.push({
+                description: `Vi kan nå utføre operasjonen på tellerne:`,
+                math: `\\frac{${newN1} ${opChar} ${newN2}}{${fellesNevner}} = \\frac{${resultN}}{${resultD}}`
+            });
+        }
+    } else if (op === 'mul') {
+        steps.push({
+            description: `Når vi ganger to brøker, ganger vi teller med teller og nevner med nevner:`,
+            math: `\\frac{${n1} \\cdot ${n2}}{${d1} \\cdot ${d2}}`
+        });
+
+        resultN = n1 * n2;
+        resultD = d1 * d2;
+
+        steps.push({
+            description: `Vi regner ut:`,
+            math: `\\frac{${resultN}}{${resultD}}`
+        });
+    } else if (op === 'div') {
+        steps.push({
+            description: `Når vi deler på en brøk, er det samme som å gange med den omvendte brøken. Vi snur den andre brøken opp-ned og bytter operasjon til multiplikasjon:`,
+            math: `\\frac{${n1}}{${d1}} \\cdot \\frac{${d2}}{${n2}}`
+        });
+
+        steps.push({
+            description: `Vi ganger så teller med teller og nevner med nevner:`,
+            math: `\\frac{${n1} \\cdot ${d2}}{${d1} \\cdot ${n2}}`
+        });
+
+        resultN = n1 * d2;
+        resultD = d1 * n2;
+
+        steps.push({
+            description: `Vi regner ut:`,
+            math: `\\frac{${resultN}}{${resultD}}`
+        });
+    }
+
+    // Forkorting
+    if (resultN === 0) {
+        steps.push({
+            description: `Siden telleren er 0, er brøken lik 0.`,
+            math: `0`
+        });
+        return { resultN: 0, resultD: 1, isSimplified: false, steps };
+    }
+
+    const divisor = gcd(Math.abs(resultN), Math.abs(resultD));
+    let finalN = resultN / divisor;
+    let finalD = resultD / divisor;
+
+    // Hvis nevner er negativ, flytt fortegnet opp
+    if (finalD < 0) {
+        finalN = -finalN;
+        finalD = -finalD;
+    }
+
+    if (divisor > 1) {
+        steps.push({
+            description: `Brøken kan forkortes. Største felles divisor for ${Math.abs(resultN)} og ${Math.abs(resultD)} er ${divisor}. Vi deler teller og nevner på ${divisor}:`,
+            math: `\\frac{${resultN} : ${divisor}}{${resultD} : ${divisor}} = \\frac{${finalN}}{${finalD}}`
+        });
+    } else {
+        steps.push({
+            description: `Brøken kan ikke forkortes mer.`,
+            math: ``
+        });
+    }
+
+    if (finalD === 1) {
+        steps.push({
+            description: `Siden nevneren er 1, kan vi skrive resultatet som et heltall:`,
+            math: `${finalN}`
+        });
+    }
+
+    return {
+        resultN: finalN,
+        resultD: finalD,
+        isSimplified: divisor > 1,
+        steps
+    };
+}
