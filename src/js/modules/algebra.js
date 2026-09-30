@@ -87,6 +87,37 @@ export function analyzeQuadratic(a, b, c) {
 }
 
 /**
+ * Løser log10(x) og viser potenssammenheng.
+ * @param {number} x - Tallet man skal ta logaritmen av
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeLog10(x) {
+    const steps = [];
+
+    steps.push({
+        description: `Tierlogaritmen ($\\log_{10}$) til et tall er den eksponenten 10 må opphøyes i for å få tallet.`,
+        math: `\\log_{10}(${x})`
+    });
+
+    const result = Math.log10(x);
+
+    steps.push({
+        description: `Vi regner ut logaritmen:`,
+        math: `\\log_{10}(${x}) = ${result.toFixed(4)}`
+    });
+
+    steps.push({
+        description: `Dette betyr at hvis vi opphøyer 10 i dette svaret, får vi det opprinnelige tallet tilbake:`,
+        math: `10^{${result.toFixed(4)}} \\approx ${x}`
+    });
+
+    return {
+        result,
+        steps
+    };
+}
+
+/**
  * Hjelpefunksjon for å generere datapunkter for grafen.
  */
 export function generateQuadraticDataPoints(a, b, c, xMin, xMax, step = 0.5) {
