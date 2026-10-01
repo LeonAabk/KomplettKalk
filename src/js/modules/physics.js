@@ -76,3 +76,45 @@ export function analyzeDensity(m, V) {
         steps
     };
 }
+
+/**
+ * Mekanisk energi (Kinetisk + Potensiell energi)
+ */
+export function analyzeMechEnergy(m, v, h) {
+    const steps = [];
+
+    // G = 9.81 for tyngdeakselerasjon på jorden
+    const g = 9.81;
+
+    steps.push({
+        description: 'Vi kjenner følgende variabler:',
+        math: `m = ${m}\\text{ kg}, \\quad v = ${v}\\text{ m/s}, \\quad h = ${h}\\text{ m}`
+    });
+
+    // Kinetisk energi = 1/2 * m * v^2
+    const e_k = 0.5 * m * (v * v);
+    steps.push({
+        description: 'Kinetisk energi ($E_k$) regnes ut med formelen $E_k = \\frac{1}{2}mv^2$:',
+        math: `E_k = \\frac{1}{2} \\cdot ${m} \\cdot ${v}^2 = ${e_k.toFixed(2)} \\text{ J}`
+    });
+
+    // Potensiell energi = m * g * h
+    const e_p = m * g * h;
+    steps.push({
+        description: `Potensiell energi ($E_p$) regnes ut med formelen $E_p = mgh$ (hvor $g \\approx 9.81\\text{ m/s}^2$):`,
+        math: `E_p = ${m} \\cdot 9.81 \\cdot ${h} = ${e_p.toFixed(2)} \\text{ J}`
+    });
+
+    const totalEnergy = e_k + e_p;
+    steps.push({
+        description: 'Den totale mekaniske energien ($E$) er summen av kinetisk og potensiell energi:',
+        math: `E = E_k + E_p = ${e_k.toFixed(2)} + ${e_p.toFixed(2)} = ${totalEnergy.toFixed(2)} \\text{ J}`
+    });
+
+    return {
+        result: totalEnergy,
+        e_k,
+        e_p,
+        steps
+    };
+}

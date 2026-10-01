@@ -684,3 +684,113 @@ export function validateAlgLog10(xStr) {
         hint: null
     };
 }
+
+// --- BATCH 6 VALIDATORS ---
+
+export function validateAsymptotes(aStr, bStr, cStr, dStr) {
+    const a = parseFloat(aStr);
+    const b = parseFloat(bStr);
+    const c = parseFloat(cStr);
+    const d = parseFloat(dStr);
+
+    if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) {
+        return { isValid: false, hint: 'Alle felter må være gyldige tall.' };
+    }
+
+    return { isValid: true, hint: null, values: { a, b, c, d } };
+}
+
+export function validateRationalEq(aStr, bStr, cStr) {
+    const a = parseFloat(aStr);
+    const b = parseFloat(bStr);
+    const c = parseFloat(cStr);
+
+    if (isNaN(a) || isNaN(b) || isNaN(c)) {
+        return { isValid: false, hint: 'Alle felter må være gyldige tall.' };
+    }
+    if (c === 0) {
+        return { isValid: false, hint: 'Nevner (c) kan ikke være null.' };
+    }
+
+    return { isValid: true, hint: null, values: { a, b, c } };
+}
+
+export function validateCongruence(t1_1, t1_2, t1_3, t2_1, t2_2, t2_3) {
+    const vals = [t1_1, t1_2, t1_3, t2_1, t2_2, t2_3].map(parseFloat);
+    if (vals.some(isNaN)) {
+        return { isValid: false, hint: 'Alle side/vinkel-felt må være fylt ut.' };
+    }
+    if (vals.some(v => v <= 0)) {
+        return { isValid: false, hint: 'Sider og vinkler må være større enn 0.' };
+    }
+
+    return { isValid: true, hint: null, values: {
+        t1: [vals[0], vals[1], vals[2]],
+        t2: [vals[3], vals[4], vals[5]]
+    }};
+}
+
+export function validateTriangleSolver(val1Str, val2Str, val3Str) {
+    const v1 = parseFloat(val1Str);
+    const v2 = parseFloat(val2Str);
+    const v3 = parseFloat(val3Str);
+
+    if (isNaN(v1) || isNaN(v2) || isNaN(v3)) {
+        return { isValid: false, hint: 'Alle verdier må fylles ut.' };
+    }
+    if (v1 <= 0 || v2 <= 0 || v3 <= 0) {
+        return { isValid: false, hint: 'Sider og vinkler må være større enn 0.' };
+    }
+
+    return { isValid: true, hint: null, values: { val1: v1, val2: v2, val3: v3 } };
+}
+
+export function validateCurrency(amountStr, rateStr, fromCurr, toCurr) {
+    const amount = parseFloat(amountStr);
+    const rate = parseFloat(rateStr);
+
+    if (isNaN(amount) || amount < 0) {
+        return { isValid: false, hint: 'Beløp må være et positivt tall.' };
+    }
+    if (isNaN(rate) || rate <= 0) {
+        return { isValid: false, hint: 'Kurs må være et gyldig tall over 0.' };
+    }
+    if (!fromCurr.trim() || !toCurr.trim()) {
+        return { isValid: false, hint: 'Valutakoder må fylles ut.' };
+    }
+
+    return { isValid: true, hint: null, values: { amount, rate, fromCurr: fromCurr.trim(), toCurr: toCurr.trim() } };
+}
+
+export function validateSalaryTax(grossStr, taxRateStr, deductionStr) {
+    const gross = parseFloat(grossStr);
+    const taxRate = parseFloat(taxRateStr);
+    const deduction = deductionStr ? parseFloat(deductionStr) : 0;
+
+    if (isNaN(gross) || gross < 0) {
+        return { isValid: false, hint: 'Bruttolønn må være positiv.' };
+    }
+    if (isNaN(taxRate) || taxRate < 0 || taxRate > 100) {
+        return { isValid: false, hint: 'Skattetrekk må være mellom 0 og 100 prosent.' };
+    }
+    if (isNaN(deduction) || deduction < 0) {
+        return { isValid: false, hint: 'Fradrag kan ikke være negativt.' };
+    }
+
+    return { isValid: true, hint: null, values: { gross, taxRate, deduction } };
+}
+
+export function validateMechEnergy(mStr, vStr, hStr) {
+    const m = parseFloat(mStr);
+    const v = parseFloat(vStr);
+    const h = parseFloat(hStr);
+
+    if (isNaN(m) || isNaN(v) || isNaN(h)) {
+        return { isValid: false, hint: 'Alle verdier må fylles ut.' };
+    }
+    if (m < 0) {
+        return { isValid: false, hint: 'Masse kan ikke være negativ.' };
+    }
+
+    return { isValid: true, hint: null, values: { m, v, h } };
+}

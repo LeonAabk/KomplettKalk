@@ -653,3 +653,86 @@ export function analyzeAverageRateOfChange(x1, y1, x2, y2) {
         steps
     };
 }
+
+/**
+ * Finner loddrett og vannrett asymptote for f(x) = (ax+b)/(cx+d).
+ */
+export function analyzeAsymptotes(a, b, c, d) {
+    const steps = [];
+
+    steps.push({
+        description: 'Funksjonen er gitt ved:',
+        math: `f(x) = \\frac{${a}x + ${b}}{${c}x + ${d}}`
+    });
+
+    let vertical = null;
+    let horizontal = null;
+
+    if (c === 0) {
+        steps.push({
+            description: 'Siden nevneren er konstant ($c = 0$), har vi ingen loddrett eller vannrett asymptote i tradisjonell forstand (dette er en lineær funksjon).',
+            math: `f(x) = \\frac{${a}}{${d}}x + \\frac{${b}}{${d}}`
+        });
+        return { result: 'Ingen asymptoter (lineær funksjon)', vertical: null, horizontal: null, steps };
+    }
+
+    // Loddrett asymptote: cx + d = 0
+    vertical = -d / c;
+    steps.push({
+        description: 'Loddrett (vertikal) asymptote finner vi der nevneren er lik 0:',
+        math: `${c}x + ${d} = 0 \\rightarrow ${c}x = ${-d} \\rightarrow x = ${vertical.toFixed(2)}`
+    });
+
+    // Vannrett asymptote: y = a/c
+    horizontal = a / c;
+    steps.push({
+        description: 'Vannrett (horisontal) asymptote finner vi ved å se på koeffisientene til høyeste grad av x når $x \\to \\pm \\infty$:',
+        math: `y = \\frac{${a}}{${c}} = ${horizontal.toFixed(2)}`
+    });
+
+    return {
+        result: `x = ${vertical.toFixed(2)}, y = ${horizontal.toFixed(2)}`,
+        vertical,
+        horizontal,
+        steps
+    };
+}
+
+/**
+ * Løser rasjonal ligning a/x = b/c med kryssmultiplikasjon.
+ */
+export function analyzeRationalEq(a, b, c) {
+    const steps = [];
+
+    steps.push({
+        description: 'Vi skal løse ligningen for $x$:',
+        math: `\\frac{${a}}{x} = \\frac{${b}}{${c}}`
+    });
+
+    if (b === 0) {
+        steps.push({
+            description: 'Siden telleren på høyre side er 0, er uttrykket umulig å løse så lenge $a \\neq 0$.',
+            math: `\\frac{${a}}{x} = 0`
+        });
+        return { result: 'Ingen løsning', x: null, steps };
+    }
+
+    steps.push({
+        description: 'Vi bruker kryssmultiplikasjon:',
+        math: `${a} \\cdot ${c} = ${b} \\cdot x`
+    });
+
+    const ac = a * c;
+    steps.push({
+        description: 'Dette gir oss:',
+        math: `${ac} = ${b}x`
+    });
+
+    const x = ac / b;
+    steps.push({
+        description: 'Vi deler begge sider på b for å finne x:',
+        math: `x = \\frac{${ac}}{${b}} = ${x.toFixed(2)}`
+    });
+
+    return { result: x, x, steps };
+}

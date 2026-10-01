@@ -408,3 +408,134 @@ export function analyzeSimilarity(smallSide1, largeSide1, smallSide2, largeSide2
         steps
     };
 }
+
+/**
+ * Sjekker om to trekanter er kongruente.
+ */
+export function analyzeCongruence(method, t1, t2) {
+    const steps = [];
+    let isCongruent = false;
+
+    steps.push({
+        description: `Vi sammenligner de to trekantene basert på metoden: ${method}.`,
+        math: ''
+    });
+
+    // Enkel flyttall-sammenligning
+    const approxEqual = (a, b) => Math.abs(a - b) < 0.0001;
+
+    if (method === 'SSS') {
+        const sortedT1 = [...t1].sort((a,b)=>a-b);
+        const sortedT2 = [...t2].sort((a,b)=>a-b);
+        isCongruent = approxEqual(sortedT1[0], sortedT2[0]) &&
+                      approxEqual(sortedT1[1], sortedT2[1]) &&
+                      approxEqual(sortedT1[2], sortedT2[2]);
+
+        steps.push({
+            description: 'Vi sorterer og sammenligner de tre sidene:',
+            math: `\\text{Trekant 1: } ${sortedT1.join(', ')} \\quad \\text{Trekant 2: } ${sortedT2.join(', ')}`
+        });
+    } else if (method === 'SAS') {
+        // Vi antar at input er [side1, vinkel_i_mellom, side2]
+        // Bytter plass for å tillate speiling
+        const matchDirect = approxEqual(t1[0], t2[0]) && approxEqual(t1[1], t2[1]) && approxEqual(t1[2], t2[2]);
+        const matchReversed = approxEqual(t1[0], t2[2]) && approxEqual(t1[1], t2[1]) && approxEqual(t1[2], t2[0]);
+        isCongruent = matchDirect || matchReversed;
+
+        steps.push({
+            description: 'Vi sjekker om to sider og den mellomliggende vinkelen er like (vi sjekker også for speiling):',
+            math: `\\text{T1: } ${t1[0]}, ${t1[1]}^\\circ, ${t1[2]} \\quad \\text{T2: } ${t2[0]}, ${t2[1]}^\\circ, ${t2[2]}`
+        });
+    } else if (method === 'ASA') {
+        // Input: [vinkel1, side_i_mellom, vinkel2]
+        const matchDirect = approxEqual(t1[0], t2[0]) && approxEqual(t1[1], t2[1]) && approxEqual(t1[2], t2[2]);
+        const matchReversed = approxEqual(t1[0], t2[2]) && approxEqual(t1[1], t2[1]) && approxEqual(t1[2], t2[0]);
+        isCongruent = matchDirect || matchReversed;
+
+        steps.push({
+            description: 'Vi sjekker om to vinkler og den mellomliggende siden er like:',
+            math: `\\text{T1: } ${t1[0]}^\\circ, ${t1[1]}, ${t1[2]}^\\circ \\quad \\text{T2: } ${t2[0]}^\\circ, ${t2[1]}, ${t2[2]}^\\circ`
+        });
+    }
+
+    if (isCongruent) {
+        steps.push({
+            description: 'Konklusjon: Trekantene oppfyller kravene til kongruens.',
+            math: '\\Delta T_1 \\cong \\Delta T_2'
+        });
+    } else {
+        steps.push({
+            description: 'Konklusjon: Kravene for kongruens er IKKE oppfylt.',
+            math: '\\Delta T_1 \\not\\cong \\Delta T_2'
+        });
+    }
+
+    return { result: isCongruent ? 'Kongruente' : 'Ikke kongruente', isCongruent, steps };
+}
+
+/**
+ * Løser trekant (Cosinussetningen for å finne side eller vinkel).
+ */
+export function analyzeTriangleSolver(method, val1, val2, val3) {
+    const steps = [];
+    let result = null;
+
+    if (method === 'SAS') {
+        // Gitt to sider b, c og vinkel A (i grader). Finn side a.
+        // val1=b, val2=c, val3=A
+        steps.push({
+            description: 'Vi bruker cosinussetningen for å finne den tredje siden ($a$):',
+            math: 'a^2 = b^2 + c^2 - 2bc \\cdot \\cos(A)'
+        });
+
+        const A_rad = val3 * Math.PI / 180;
+        const a_squared = val1*val1 + val2*val2 - 2*val1*val2*Math.cos(A_rad);
+
+        steps.push({
+            description: 'Setter inn de kjente verdiene:',
+            math: `a^2 = ${val1}^2 + ${val2}^2 - 2(${val1})(${val2}) \\cdot \\cos(${val3}^\\circ)`
+        });
+
+        result = Math.sqrt(a_squared);
+        steps.push({
+            description: 'Regner ut og tar kvadratroten:',
+            math: `a = \\sqrt{${a_squared.toFixed(4)}} = ${result.toFixed(2)}`
+        });
+
+        return { result, steps, type: 'side' };
+
+    } else if (method === 'SSS') {
+        // Gitt tre sider a, b, c (hvor val1=a, val2=b, val3=c). Finn vinkel A motstående side a.
+        steps.push({
+            description: 'Vi omskriver cosinussetningen for å finne vinkel $A$:',
+            math: '\\cos(A) = \\frac{b^2 + c^2 - a^2}{2bc}'
+        });
+
+        const cosA = (val2*val2 + val3*val3 - val1*val1) / (2 * val2 * val3);
+
+        steps.push({
+            description: 'Setter inn sidene:',
+            math: `\\cos(A) = \\frac{${val2}^2 + ${val3}^2 - ${val1}^2}{2(${val2})(${val3})} = ${cosA.toFixed(4)}`
+        });
+
+        if (cosA < -1 || cosA > 1) {
+            steps.push({
+                description: 'Verdien er utenfor gyldig område [-1, 1]. En slik trekant eksisterer ikke.',
+                math: ''
+            });
+            return { result: 'Ugyldig trekant', steps, type: 'error' };
+        }
+
+        const A_rad = Math.acos(cosA);
+        result = A_rad * 180 / Math.PI;
+
+        steps.push({
+            description: 'Finner vinkelen ved hjelp av invers cosinus ($\\arccos$):',
+            math: `A = \\arccos(${cosA.toFixed(4)}) = ${result.toFixed(2)}^\\circ`
+        });
+
+        return { result, steps, type: 'vinkel' };
+    }
+
+    return { result: null, steps, type: 'error' };
+}

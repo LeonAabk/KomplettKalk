@@ -166,3 +166,60 @@ export function analyzeVAT(price, isAdd, vatRate = 25) {
         steps
     };
 }
+
+/**
+ * Valutakalkulator: Ganger et beløp med gitt kurs.
+ */
+export function analyzeCurrency(amount, rate, fromCurr, toCurr) {
+    const steps = [];
+
+    steps.push({
+        description: `Vi skal omgjøre ${amount} ${fromCurr.toUpperCase()} til ${toCurr.toUpperCase()}.`,
+        math: `\\text{Kurs: } ${rate}`
+    });
+
+    const result = amount * rate;
+
+    steps.push({
+        description: 'For å finne beløpet i ny valuta ganger vi opprinnelig beløp med kursen:',
+        math: `${amount} \\text{ ${fromCurr.toUpperCase()}} \\cdot ${rate} = ${result.toFixed(2)} \\text{ ${toCurr.toUpperCase()}}`
+    });
+
+    return { result, steps };
+}
+
+/**
+ * Lønn og Skatt: Beregner nettolønn fra brutto, fradrag og skatteprosent.
+ */
+export function analyzeSalaryTax(gross, taxRate, deduction) {
+    const steps = [];
+
+    steps.push({
+        description: 'Vi starter med bruttolønn (lønn før skatt):',
+        math: `\\text{Bruttolønn} = ${gross} \\text{ kr}`
+    });
+
+    let taxableAmount = gross;
+
+    if (deduction > 0) {
+        taxableAmount = gross - deduction;
+        steps.push({
+            description: 'Vi trekker fra fradraget for å finne det skattbare beløpet (grunnlaget):',
+            math: `${gross} - ${deduction} = ${taxableAmount} \\text{ kr}`
+        });
+    }
+
+    const taxAmount = taxableAmount * (taxRate / 100);
+    steps.push({
+        description: `Vi regner ut skatten, som er ${taxRate}% av det skattbare beløpet:`,
+        math: `\\text{Skatt} = ${taxableAmount} \\cdot \\frac{${taxRate}}{100} = ${taxAmount.toFixed(2)} \\text{ kr}`
+    });
+
+    const netSalary = gross - taxAmount;
+    steps.push({
+        description: 'Nettolønn (det du får utbetalt) er bruttolønn minus skatten:',
+        math: `\\text{Nettolønn} = ${gross} - ${taxAmount.toFixed(2)} = ${netSalary.toFixed(2)} \\text{ kr}`
+    });
+
+    return { result: netSalary, taxAmount, taxableAmount, steps };
+}
