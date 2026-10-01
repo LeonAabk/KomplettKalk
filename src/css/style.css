@@ -116,6 +116,10 @@ body {
     border-top: 4px solid var(--cat-statistikk);
 }
 
+.module-card[data-category="sannsynlighet"] {
+    border-top: 4px solid var(--cat-sannsynlighet);
+}
+
 .module-card[data-category="fysikk"] {
     border-top: 4px solid var(--cat-fysikk);
 }

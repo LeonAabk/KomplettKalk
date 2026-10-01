@@ -794,3 +794,157 @@ export function validateMechEnergy(mStr, vStr, hStr) {
 
     return { isValid: true, hint: null, values: { m, v, h } };
 }
+
+
+export function validateExponentialInput(aStr, bStr, xStr) {
+    const a = parseFloat(aStr);
+    const b = parseFloat(bStr);
+    const x = xStr ? parseFloat(xStr) : null;
+
+    if (isNaN(a) || isNaN(b)) {
+        return {
+            isValid: false,
+            hint: 'Både startverdi (a) og vekstfaktor (b) må være tall.'
+        };
+    }
+
+    if (b < 0) {
+        return {
+            isValid: false,
+            hint: 'Vekstfaktor (b) må være positiv for eksponentielle funksjoner.'
+        };
+    }
+
+    return {
+        isValid: true,
+        hint: null,
+        values: { a, b, x }
+    };
+}
+
+export function validateProportionalityInput(xStr, yStr) {
+    const x = parseFloat(xStr);
+    const y = parseFloat(yStr);
+
+    if (isNaN(x) || isNaN(y)) {
+        return {
+            isValid: false,
+            hint: 'Både x og y må være tall.'
+        };
+    }
+
+    if (x === 0) {
+        return {
+            isValid: false,
+            hint: 'x kan ikke være null ved proporsjonalitet (man kan ikke dele på null).'
+        };
+    }
+
+    return {
+        isValid: true,
+        hint: null,
+        values: { x, y }
+    };
+}
+
+export function validateStdDevInput(dataStr) {
+    if (!dataStr || dataStr.trim() === '') {
+        return {
+            isValid: false,
+            hint: 'Listen kan ikke være tom.'
+        };
+    }
+
+    const dataArray = dataStr.split(',').map(s => parseFloat(s.trim()));
+
+    if (dataArray.some(isNaN)) {
+        return {
+            isValid: false,
+            hint: 'Sørg for at du bare har tall separert med komma (f.eks. 1, 2, 3).'
+        };
+    }
+
+    return {
+        isValid: true,
+        hint: null,
+        values: { dataArray }
+    };
+}
+
+export function validateNewton2Input(fStr, mStr, aStr) {
+    const f = fStr ? parseFloat(fStr) : null;
+    const m = mStr ? parseFloat(mStr) : null;
+    const a = aStr ? parseFloat(aStr) : null;
+
+    const nullCount = (f === null ? 1 : 0) + (m === null ? 1 : 0) + (a === null ? 1 : 0);
+
+    if (nullCount !== 1) {
+        return {
+            isValid: false,
+            hint: 'Du må fylle inn nøyaktig to av tre verdier.'
+        };
+    }
+
+    if ((m !== null && isNaN(m)) || (f !== null && isNaN(f)) || (a !== null && isNaN(a))) {
+        return {
+            isValid: false,
+            hint: 'De utfylte verdiene må være tall.'
+        };
+    }
+
+    if (m !== null && m <= 0) {
+        return {
+            isValid: false,
+            hint: 'Masse må være større enn 0.'
+        };
+    }
+
+    return {
+        isValid: true,
+        hint: null,
+        values: { f, m, a }
+    };
+}
+
+export function validateWorkPowerInput(fStr, sStr, tStr) {
+    const f = parseFloat(fStr);
+    const s = parseFloat(sStr);
+    const t = parseFloat(tStr);
+
+    if (isNaN(f) || isNaN(s) || isNaN(t)) {
+        return {
+            isValid: false,
+            hint: 'Alle felt (F, s, t) må fylles ut med tall.'
+        };
+    }
+
+    if (t <= 0) {
+        return {
+            isValid: false,
+            hint: 'Tid (t) må være større enn 0 for å beregne effekt.'
+        };
+    }
+
+    return {
+        isValid: true,
+        hint: null,
+        values: { f, s, t }
+    };
+}
+
+export function validateSpeedConversionInput(valStr, dir) {
+    const val = parseFloat(valStr);
+
+    if (isNaN(val)) {
+        return {
+            isValid: false,
+            hint: 'Du må skrive inn et tall.'
+        };
+    }
+
+    return {
+        isValid: true,
+        hint: null,
+        values: { val, dir }
+    };
+}

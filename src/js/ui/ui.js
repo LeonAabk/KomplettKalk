@@ -6,16 +6,22 @@ import { validateQuadraticInput, validateLinearInput, validatePercentInput, vali
     validateTriangleSolver,
     validateCurrency,
     validateSalaryTax,
-    validateMechEnergy
+    validateMechEnergy,
+    validateExponentialInput,
+    validateProportionalityInput,
+    validateStdDevInput,
+    validateNewton2Input,
+    validateWorkPowerInput,
+    validateSpeedConversionInput
 } from '../utils/validation.js';
-import { analyzeQuadratic, analyzeLinear, analyzeABC, analyzeVertex, analyzeEquationSystem, analyzeFactoring, analyzeSymmetryLine, analyzeLinearRoot, analyzeAverageRateOfChange, analyzeLog10, analyzeAsymptotes, analyzeRationalEq } from '../modules/algebra.js';
+import { analyzeQuadratic, analyzeLinear, analyzeABC, analyzeVertex, analyzeEquationSystem, analyzeFactoring, analyzeSymmetryLine, analyzeLinearRoot, analyzeAverageRateOfChange, analyzeLog10, analyzeAsymptotes, analyzeRationalEq, analyzeExponential, analyzeProportionality } from '../modules/algebra.js';
 import { analyzePercent, analyzePercentChange, analyzePower, analyzeSquareRoot, analyzeFractions } from '../modules/basic.js';
 import { analyzePythagoras, analyzeArea, analyzeTrigonometry, analyzeVolume, analyzeSimilarity, analyzeSector, analyzeCongruence, analyzeTriangleSolver } from '../modules/geometry.js';
-import { analyzeMean, analyzeMedian, analyzeMode, analyzeRange } from '../modules/statistics.js';
+import { analyzeMean, analyzeMedian, analyzeMode, analyzeRange, analyzeStdDevAndVariance } from '../modules/statistics.js';
 import { analyzeCompoundInterest, analyzeVAT, analyzeMarkup, analyzeCurrency, analyzeSalaryTax } from '../modules/economics.js';
-import { analyzeSpeed, analyzeDensity, analyzeMechEnergy } from '../modules/physics.js';
+import { analyzeSpeed, analyzeDensity, analyzeMechEnergy, analyzeNewton2, analyzeWorkPower } from '../modules/physics.js';
 import { analyzeNPR, analyzeNCR } from '../modules/probability.js';
-import { analyzeUnitConversion } from '../modules/conversion.js';
+import { analyzeUnitConversion, analyzeSpeedConversion } from '../modules/conversion.js';
 import { renderSteps } from '../components/step-by-step.js';
 import { renderGraph, renderEmptyGraph } from '../components/graph.js';
 import { evaluateMath } from '../utils/mathParser.js';
@@ -1438,6 +1444,43 @@ export function initUI() {
         (fd) => validateMechEnergy(fd.get('m'), fd.get('v'), fd.get('h')),
         (vals, fd) => analyzeMechEnergy(vals.m, vals.v, vals.h),
         (res) => `<strong>Total Mekanisk Energi:</strong> ${res.result.toFixed(2)} J`
+    );
+
+
+    setupAdvancedModuleUI('exponential',
+        (fd) => validateExponentialInput(fd.get('a'), fd.get('b'), fd.get('x')),
+        (vals, fd) => analyzeExponential(vals.a, vals.b, vals.x),
+        (res) => `<strong>Resultat:</strong> ${res.result}`
+    );
+
+    setupAdvancedModuleUI('proportionality',
+        (fd) => validateProportionalityInput(fd.get('x'), fd.get('y')),
+        (vals, fd) => analyzeProportionality(vals.x, vals.y),
+        (res) => `<strong>Resultat:</strong> ${res.result}`
+    );
+
+    setupAdvancedModuleUI('stddev',
+        (fd) => validateStdDevInput(fd.get('data')),
+        (vals, fd) => analyzeStdDevAndVariance(vals.dataArray),
+        (res) => `<strong>Resultat:</strong> ${res.result}`
+    );
+
+    setupAdvancedModuleUI('newton2',
+        (fd) => validateNewton2Input(fd.get('f'), fd.get('m'), fd.get('a')),
+        (vals, fd) => analyzeNewton2(vals.f, vals.m, vals.a),
+        (res) => `<strong>Resultat:</strong> ${res.result}`
+    );
+
+    setupAdvancedModuleUI('work-power',
+        (fd) => validateWorkPowerInput(fd.get('f'), fd.get('s'), fd.get('t')),
+        (vals, fd) => analyzeWorkPower(vals.f, vals.s, vals.t),
+        (res) => `<strong>Resultat:</strong> ${res.result}`
+    );
+
+    setupAdvancedModuleUI('speed-conversion',
+        (fd) => validateSpeedConversionInput(fd.get('val'), fd.get('dir')),
+        (vals, fd) => analyzeSpeedConversion(vals.val, vals.dir),
+        (res) => `<strong>Resultat:</strong> ${res.result}`
     );
 
     // Dynamic UI updates for Congruence and Triangle Solver

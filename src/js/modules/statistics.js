@@ -220,3 +220,49 @@ export function analyzeRange(inputStr) {
         steps
     };
 }
+
+
+export function analyzeStdDevAndVariance(dataArray) {
+    const steps = [];
+    const n = dataArray.length;
+
+    // 1. Mean
+    const sum = dataArray.reduce((acc, val) => acc + val, 0);
+    const mean = sum / n;
+
+    steps.push({
+        description: 'Først finner vi gjennomsnittet (\( \bar{x} \)):',
+        math: `\bar{x} = \frac{${dataArray.join(' + ')}}{${n}} = ${mean.toFixed(4)}`
+    });
+
+    // 2. Variance
+    let varianceSumSteps = [];
+    const squaredDiffs = dataArray.map(val => {
+        const diff = val - mean;
+        const sq = diff * diff;
+        varianceSumSteps.push(`(${val} - ${mean.toFixed(2)})^2`);
+        return sq;
+    });
+
+    const varianceSum = squaredDiffs.reduce((acc, val) => acc + val, 0);
+    // Use sample variance (n-1) if n > 1, otherwise population variance (n)
+    const divisor = n > 1 ? n - 1 : n;
+    const variance = varianceSum / divisor;
+
+    steps.push({
+        description: `Deretter regner vi ut variansen (\( s^2 \)) ved å summere kvadratavvikene og dele på ${n > 1 ? 'n-1' : 'n'}:`,
+        math: `s^2 = \frac{${varianceSumSteps[0]} + \dots}{${divisor}} = \frac{${varianceSum.toFixed(4)}}{${divisor}} = ${variance.toFixed(4)}`
+    });
+
+    // 3. Standard Deviation
+    const stdDev = Math.sqrt(variance);
+    steps.push({
+        description: 'Til slutt tar vi kvadratroten av variansen for å finne standardavviket (\( s \)):',
+        math: `s = \sqrt{${variance.toFixed(4)}} = ${stdDev.toFixed(4)}`
+    });
+
+    return {
+        result: `Varians: ${variance.toFixed(4)}, Standardavvik: ${stdDev.toFixed(4)}`,
+        steps: steps
+    };
+}

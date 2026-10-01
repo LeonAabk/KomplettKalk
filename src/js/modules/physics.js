@@ -118,3 +118,68 @@ export function analyzeMechEnergy(m, v, h) {
         steps
     };
 }
+
+
+export function analyzeNewton2(f, m, a) {
+    const steps = [];
+    let result = '';
+
+    steps.push({
+        description: 'Vi bruker Newtons 2. lov:',
+        math: 'F = m \cdot a'
+    });
+
+    if (f === null) {
+        // Calculate Force
+        const fCalc = m * a;
+        steps.push({
+            description: 'Vi mangler kraften (F), så vi setter inn masse og akselerasjon:',
+            math: `F = ${m} \cdot ${a} = ${fCalc.toFixed(4)} \text{ N}`
+        });
+        result = `F = ${fCalc.toFixed(4)} N`;
+    } else if (m === null) {
+        // Calculate Mass
+        const mCalc = f / a;
+        steps.push({
+            description: 'Vi mangler massen (m). Vi snur formelen til m = F / a:',
+            math: `m = \frac{${f}}{${a}} = ${mCalc.toFixed(4)} \text{ kg}`
+        });
+        result = `m = ${mCalc.toFixed(4)} kg`;
+    } else if (a === null) {
+        // Calculate Acceleration
+        const aCalc = f / m;
+        steps.push({
+            description: 'Vi mangler akselerasjonen (a). Vi snur formelen til a = F / m:',
+            math: `a = \frac{${f}}{${m}} = ${aCalc.toFixed(4)} \text{ m/s}^2`
+        });
+        result = `a = ${aCalc.toFixed(4)} m/s²`;
+    }
+
+    return {
+        result: result,
+        steps: steps
+    };
+}
+
+export function analyzeWorkPower(f, s, t) {
+    const steps = [];
+
+    // Arbeid
+    const w = f * s;
+    steps.push({
+        description: 'Arbeid (W) er kraft ganget med strekning:',
+        math: `W = F \cdot s = ${f} \cdot ${s} = ${w.toFixed(4)} \text{ J}`
+    });
+
+    // Effekt
+    const p = w / t;
+    steps.push({
+        description: 'Effekt (P) er arbeid delt på tid:',
+        math: `P = \frac{W}{t} = \frac{${w.toFixed(4)}}{${t}} = ${p.toFixed(4)} \text{ W}`
+    });
+
+    return {
+        result: `Arbeid: ${w.toFixed(4)} J, Effekt: ${p.toFixed(4)} W`,
+        steps: steps
+    };
+}

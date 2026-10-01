@@ -166,3 +166,30 @@ export function analyzeUnitConversion(dimension, value, fromUnit, toUnit) {
         steps
     };
 }
+
+
+export function analyzeSpeedConversion(val, direction) {
+    const steps = [];
+    let result = '';
+
+    if (direction === 'ms_to_kmh') {
+        const kmh = val * 3.6;
+        steps.push({
+            description: 'For å gå fra m/s til km/h, ganger vi med den magiske faktoren 3.6:',
+            math: `${val} \cdot 3.6 = ${kmh.toFixed(4)} \text{ km/h}`
+        });
+        result = `${kmh.toFixed(4)} km/h`;
+    } else if (direction === 'kmh_to_ms') {
+        const ms = val / 3.6;
+        steps.push({
+            description: 'For å gå fra km/h til m/s, deler vi på den magiske faktoren 3.6:',
+            math: `\frac{${val}}{3.6} = ${ms.toFixed(4)} \text{ m/s}`
+        });
+        result = `${ms.toFixed(4)} m/s`;
+    }
+
+    return {
+        result: result,
+        steps: steps
+    };
+}

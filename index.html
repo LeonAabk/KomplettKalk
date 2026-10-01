@@ -1498,7 +1498,191 @@
                 <div id="steps-content-mech-energy"></div>
             </div>
         </section>
-    </main>
+
+            <!-- Exponential Function Module -->
+            <section id="module-exponential" class="educational-module" aria-labelledby="exponential-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="exponential-title">Eksponentiell funksjon</h2>
+                <p>Bruk formelen \(f(x) = a \cdot b^x\).</p>
+
+                <form id="exponential-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="exp-a">Startverdi (a):</label>
+                        <input type="number" id="exp-a" name="a" step="any" required aria-label="Startverdi">
+                    </div>
+                    <div class="input-group">
+                        <label for="exp-b">Vekstfaktor (b):</label>
+                        <input type="number" id="exp-b" name="b" step="any" required aria-label="Vekstfaktor">
+                    </div>
+                    <div class="input-group">
+                        <label for="exp-x">x-verdi (valgfri):</label>
+                        <input type="number" id="exp-x" name="x" step="any" aria-label="x-verdi (valgfri)">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn og tegn</button>
+                    <button type="button" id="btn-show-steps-exponential" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-exponential" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-exponential" class="result-box" aria-live="polite" hidden></div>
+
+                <div id="step-by-step-container-exponential" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-exponential"></div>
+                </div>
+            </section>
+
+            <!-- Proportionality Module -->
+            <section id="module-proportionality" class="educational-module" aria-labelledby="proportionality-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="proportionality-title">Proporsjonalitet</h2>
+                <p>Finn proporsjonalitetskonstanten \(k\).</p>
+
+                <form id="proportionality-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="prop-x">x-verdi:</label>
+                        <input type="number" id="prop-x" name="x" step="any" required aria-label="x-verdi">
+                    </div>
+                    <div class="input-group">
+                        <label for="prop-y">y-verdi:</label>
+                        <input type="number" id="prop-y" name="y" step="any" required aria-label="y-verdi">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn k og tegn</button>
+                    <button type="button" id="btn-show-steps-proportionality" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-proportionality" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-proportionality" class="result-box" aria-live="polite" hidden></div>
+
+                <div id="step-by-step-container-proportionality" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-proportionality"></div>
+                </div>
+            </section>
+
+            <!-- Standard Deviation and Variance Module -->
+            <section id="module-stddev" class="educational-module" aria-labelledby="stddev-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="stddev-title">Standardavvik og Varians</h2>
+
+                <form id="stddev-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="stddev-data">Tall (kommaseparert):</label>
+                        <input type="text" id="stddev-data" name="data" required aria-label="Tall, f.eks. 1, 2, 3">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn</button>
+                    <button type="button" id="btn-show-steps-stddev" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-stddev" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-stddev" class="result-box" aria-live="polite" hidden></div>
+
+                <div id="step-by-step-container-stddev" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-stddev"></div>
+                </div>
+            </section>
+
+            <!-- Newton's 2nd Law Module -->
+            <section id="module-newton2" class="educational-module" aria-labelledby="newton2-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="newton2-title">Newtons 2. lov (F = ma)</h2>
+                <p>Fyll inn to av tre verdier.</p>
+
+                <form id="newton2-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="newton-f">Kraft (F i Newton):</label>
+                        <input type="number" id="newton-f" name="f" step="any" aria-label="Kraft">
+                    </div>
+                    <div class="input-group">
+                        <label for="newton-m">Masse (m i kg):</label>
+                        <input type="number" id="newton-m" name="m" step="any" aria-label="Masse">
+                    </div>
+                    <div class="input-group">
+                        <label for="newton-a">Akselerasjon (a i m/s²):</label>
+                        <input type="number" id="newton-a" name="a" step="any" aria-label="Akselerasjon">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn</button>
+                    <button type="button" id="btn-show-steps-newton2" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-newton2" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-newton2" class="result-box" aria-live="polite" hidden></div>
+
+                <div id="step-by-step-container-newton2" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-newton2"></div>
+                </div>
+            </section>
+
+            <!-- Work and Power Module -->
+            <section id="module-work-power" class="educational-module" aria-labelledby="work-power-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="work-power-title">Arbeid og Effekt</h2>
+
+                <form id="work-power-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="wp-f">Kraft (F i Newton):</label>
+                        <input type="number" id="wp-f" name="f" step="any" required aria-label="Kraft">
+                    </div>
+                    <div class="input-group">
+                        <label for="wp-s">Strekning (s i meter):</label>
+                        <input type="number" id="wp-s" name="s" step="any" required aria-label="Strekning">
+                    </div>
+                    <div class="input-group">
+                        <label for="wp-t">Tid (t i sekunder):</label>
+                        <input type="number" id="wp-t" name="t" step="any" required aria-label="Tid">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Beregn Arbeid og Effekt</button>
+                    <button type="button" id="btn-show-steps-work-power" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-work-power" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-work-power" class="result-box" aria-live="polite" hidden></div>
+
+                <div id="step-by-step-container-work-power" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-work-power"></div>
+                </div>
+            </section>
+
+            <!-- Speed Conversion Module -->
+            <section id="module-speed-conversion" class="educational-module" aria-labelledby="speed-conversion-title" style="display: none;">
+                <button class="btn-secondary btn-back-dashboard" style="margin-bottom: 1rem;">&larr; Tilbake til oversikt</button>
+                <h2 id="speed-conversion-title">Fartskonvertering</h2>
+
+                <form id="speed-conversion-form" class="math-form" novalidate>
+                    <div class="input-group">
+                        <label for="sc-val">Verdi:</label>
+                        <input type="number" id="sc-val" name="val" step="any" required aria-label="Verdi for konvertering">
+                    </div>
+                    <div class="input-group">
+                        <label for="sc-dir">Retning:</label>
+                        <select id="sc-dir" name="dir">
+                            <option value="ms_to_kmh">m/s til km/h</option>
+                            <option value="kmh_to_ms">km/h til m/s</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Konverter</button>
+                    <button type="button" id="btn-show-steps-speed-conversion" class="btn-secondary" aria-expanded="false" disabled>Vis utregning</button>
+                </form>
+
+                <div id="validation-hint-speed-conversion" class="hint-box" aria-live="polite" hidden></div>
+                <div id="result-speed-conversion" class="result-box" aria-live="polite" hidden></div>
+
+                <div id="step-by-step-container-speed-conversion" class="steps-box" aria-live="polite" hidden>
+                    <h3>Utregning:</h3>
+                    <div id="steps-content-speed-conversion"></div>
+                </div>
+            </section>
+
+        </main>
+
 
 
         <!-- Quick-Graph Sidebar -->
