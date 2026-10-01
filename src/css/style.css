@@ -393,5 +393,22 @@ button:disabled {
     .sidebar-nav ul {
         display: flex;
         gap: var(--spacing-md);
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .sidebar-nav ul::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .assistant-sidebar,
+    #unit-circle-canvas {
+        max-width: 100%;
     }
 }
