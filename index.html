@@ -1686,8 +1686,18 @@
 
 
         <!-- Quick-Graph Sidebar -->
-        <aside class="quick-graph-sidebar" aria-labelledby="graph-title">
-            <h2 id="graph-title">Hurtig-Graf</h2>
+        <!-- Assistant Sidebar -->
+        <aside class="assistant-sidebar" aria-labelledby="assistant-title">
+            <h2 id="assistant-title" style="display:none;">Assistent</h2>
+            <nav class="assistant-tabs" aria-label="Assistent faner">
+                <button class="tab-btn active" data-tab="tab-graph">Hurtig-Graf</button>
+                <button class="tab-btn" data-tab="tab-unit-circle">Enhetssirkel</button>
+                <button class="tab-btn" data-tab="tab-scratchpad">Kladdeark</button>
+                <button class="tab-btn" data-tab="tab-reference">Referanse</button>
+            </nav>
+
+            <!-- Fane: Hurtig-Graf -->
+            <div id="tab-graph" class="assistant-tab-pane active">
             <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
                 <input type="text" id="quick-function-input" placeholder="f.eks. x*x" style="flex: 1; padding: 0.75rem; border: 1px solid var(--input-border); border-radius: var(--border-radius); background-color: var(--input-bg); color: var(--text-primary);">
                 <button id="btn-draw-quick" class="btn-primary">Tegn</button>
@@ -1697,6 +1707,28 @@
             </div>
             <div id="graph-details" class="graph-details" aria-live="polite">
                 <!-- Data for top/bottom point, roots will be rendered here -->
+            </div>
+            </div>
+
+            <!-- Fane: Enhetssirkel -->
+            <div id="tab-unit-circle" class="assistant-tab-pane">
+                <canvas id="unit-circle-canvas" width="320" height="320" aria-label="Enhetssirkel" style="max-width: 100%;"></canvas>
+            </div>
+
+            <!-- Fane: Kladdeark -->
+            <div id="tab-scratchpad" class="assistant-tab-pane">
+                <textarea id="scratchpad-input" placeholder="Skriv dine notater og mellomregninger her... (Lagres automatisk)" aria-label="Kladdeark"></textarea>
+            </div>
+
+            <!-- Fane: Hurtig-referanse -->
+            <div id="tab-reference" class="assistant-tab-pane">
+                <ul class="reference-list">
+                    <li><strong>Pi:</strong> \(\pi \approx 3.14159\)</li>
+                    <li><strong>Eulers tall:</strong> \(e \approx 2.71828\)</li>
+                    <li><strong>Tyngdeakselerasjon:</strong> \(g \approx 9.81 \, \text{m/s}^2\)</li>
+                    <li><strong>Lysfarten:</strong> \(c \approx 3.0 \times 10^8 \, \text{m/s}\)</li>
+                    <li><strong>Gullsnittet:</strong> \(\varphi \approx 1.61803\)</li>
+                </ul>
             </div>
         </aside>
     </div>

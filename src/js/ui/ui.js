@@ -59,7 +59,6 @@ export function initUI() {
     // Dashboard Elements
     const dashboardGrid = document.getElementById('dashboard-grid');
     const globalSearch = document.getElementById('global-search');
-    const quickGraphSidebar = document.querySelector('.quick-graph-sidebar');
     const appContainer = document.querySelector('.app-container');
     const navUl = document.querySelector('.sidebar-nav ul');
 
@@ -89,19 +88,9 @@ export function initUI() {
                 const targetModule = document.getElementById(item.id);
                 if (targetModule) {
                     targetModule.style.display = 'block';
-
-                    if (item.category === 'geometri' || item.category === 'grunnleggende' || item.category === 'statistikk' || item.category === 'okonomi' || item.category === 'konvertering' || item.category === 'fysikk' || item.category === 'sannsynlighet') {
-                        if (quickGraphSidebar) quickGraphSidebar.style.display = 'none';
-                        if (appContainer) appContainer.classList.add('hide-right-sidebar');
-                    } else {
-                        if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-                        if (appContainer) appContainer.classList.remove('hide-right-sidebar');
-                    }
                 } else {
                     alert('Denne modulen mangler HTML-struktur!');
                     dashboardGrid.style.display = 'grid';
-                    if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-                    if (appContainer) appContainer.classList.remove('hide-right-sidebar');
                 }
             });
 
@@ -120,8 +109,6 @@ export function initUI() {
                 mod.style.display = 'none';
             });
             dashboardGrid.style.display = 'grid';
-            if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-            if (appContainer) appContainer.classList.remove('hide-right-sidebar');
         });
     });
 
@@ -193,9 +180,58 @@ export function initUI() {
                     mod.style.display = 'none';
                 });
                 dashboardGrid.style.display = 'grid';
-                if (quickGraphSidebar) quickGraphSidebar.style.display = 'flex';
-                if (appContainer) appContainer.classList.remove('hide-right-sidebar');
             });
+        });
+    }
+
+    // Tab Switching for Assistant Sidebar
+    const tabBtns = document.querySelectorAll('.assistant-tabs .tab-btn');
+    const tabPanes = document.querySelectorAll('.assistant-tab-pane');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active from all
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+
+            // Add active to clicked
+            btn.classList.add('active');
+            const targetPaneId = btn.getAttribute('data-tab');
+            const targetPane = document.getElementById(targetPaneId);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+        });
+    });
+
+    // Scratchpad Auto-save
+    const scratchpadInput = document.getElementById('scratchpad-input');
+    if (scratchpadInput) {
+        const savedNotes = localStorage.getItem('scratchpadContent');
+        if (savedNotes) {
+            scratchpadInput.value = savedNotes;
+        }
+        scratchpadInput.addEventListener('input', (e) => {
+            localStorage.setItem('scratchpadContent', e.target.value);
+        });
+    }
+
+    // Unit Circle Drawing
+    const unitCircleCanvas = document.getElementById('unit-circle-canvas');
+    if (unitCircleCanvas) {
+        drawUnitCircle(unitCircleCanvas);
+    }
+
+    // Render KaTeX for Reference Tab
+    const referenceTab = document.getElementById('tab-reference');
+    if (referenceTab && typeof window.renderMathInElement !== 'undefined') {
+        window.renderMathInElement(referenceTab, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ],
+            throwOnError: false
         });
     }
 
@@ -1561,4 +1597,120 @@ function updateGraphDetails(container, result) {
     }
 
     container.innerHTML = html;
+}
+
+function drawUnitCircle(canvas) {
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    const cx = width / 2;
+    const cy = height / 2;
+    const r = Math.min(cx, cy) * 0.7; // Radius is 70% of half-width to leave room for text
+
+    // Get styles from CSS variables if possible, fallback to hardcoded
+    const style = getComputedStyle(document.body);
+    const textPrimary = style.getPropertyValue('--text-primary').trim() || '#ededed';
+    const borderCol = style.getPropertyValue('--border-color').trim() || '#52525b';
+    const accentCol = style.getPropertyValue('--accent-primary').trim() || '#3b82f6';
+    const textSecondary = style.getPropertyValue('--text-secondary').trim() || '#a1a1aa';
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Draw axes
+    ctx.beginPath();
+    ctx.strokeStyle = borderCol;
+    ctx.lineWidth = 1;
+    // X axis
+    ctx.moveTo(0, cy);
+    ctx.lineTo(width, cy);
+    // Y axis
+    ctx.moveTo(cx, 0);
+    ctx.lineTo(cx, height);
+    ctx.stroke();
+
+    // Draw circle
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+    ctx.strokeStyle = textPrimary;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.font = '12px var(--font-family, sans-serif)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const angles = [
+        // 1st quadrant
+        { deg: 0, rad: '0', xLabel: '(1, 0)' },
+        { deg: 30, rad: 'π/6', xLabel: '(√3/2, 1/2)' },
+        { deg: 45, rad: 'π/4', xLabel: '(√2/2, √2/2)' },
+        { deg: 60, rad: 'π/3', xLabel: '(1/2, √3/2)' },
+        { deg: 90, rad: 'π/2', xLabel: '(0, 1)' },
+        // 2nd quadrant
+        { deg: 120, rad: '2π/3', xLabel: '(-1/2, √3/2)' },
+        { deg: 135, rad: '3π/4', xLabel: '(-√2/2, √2/2)' },
+        { deg: 150, rad: '5π/6', xLabel: '(-√3/2, 1/2)' },
+        { deg: 180, rad: 'π', xLabel: '(-1, 0)' },
+        // 3rd quadrant
+        { deg: 210, rad: '7π/6', xLabel: '(-√3/2, -1/2)' },
+        { deg: 225, rad: '5π/4', xLabel: '(-√2/2, -√2/2)' },
+        { deg: 240, rad: '4π/3', xLabel: '(-1/2, -√3/2)' },
+        { deg: 270, rad: '3π/2', xLabel: '(0, -1)' },
+        // 4th quadrant
+        { deg: 300, rad: '5π/3', xLabel: '(1/2, -√3/2)' },
+        { deg: 315, rad: '7π/4', xLabel: '(√2/2, -√2/2)' },
+        { deg: 330, rad: '11π/6', xLabel: '(√3/2, -1/2)' }
+    ];
+
+    // Using smaller font for coordinates if needed
+    ctx.font = '10px var(--font-family, sans-serif)';
+
+    angles.forEach(a => {
+        const rad = -a.deg * (Math.PI / 180); // Negative because canvas Y goes down
+        const px = cx + r * Math.cos(rad);
+        const py = cy + r * Math.sin(rad);
+
+        // Draw line from center to point (only for non-axis points to avoid redrawing axes)
+        if (a.deg % 90 !== 0) {
+            ctx.beginPath();
+            ctx.setLineDash([2, 3]);
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(px, py);
+            ctx.strokeStyle = textSecondary;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // Draw dot
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = accentCol;
+        ctx.fill();
+
+        // Position text based on angle
+        let textDist = r + 20;
+        if (a.deg === 0 || a.deg === 180) {
+            textDist = r + 25;
+        } else if (a.deg === 90 || a.deg === 270) {
+            textDist = r + 15;
+        } else {
+            textDist = r + 30; // More space for complex non-axis labels
+        }
+
+        const tx = cx + textDist * Math.cos(rad);
+        const ty = cy + textDist * Math.sin(rad);
+
+        ctx.fillStyle = textPrimary;
+
+        if (a.deg % 90 === 0) {
+            ctx.fillText(`${a.deg}° / ${a.rad}`, tx, ty - 6);
+            ctx.fillStyle = textSecondary;
+            ctx.fillText(`${a.xLabel}`, tx, ty + 6);
+        } else {
+            ctx.fillText(`${a.deg}° / ${a.rad}`, tx, ty - 6);
+            ctx.fillStyle = textSecondary;
+            ctx.fillText(`${a.xLabel}`, tx, ty + 6);
+        }
+    });
 }
