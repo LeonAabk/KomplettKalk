@@ -61,10 +61,6 @@ body {
     min-height: calc(100vh - 70px); /* Adjust based on header height */
 }
 
-.app-container.hide-right-sidebar {
-    grid-template-columns: 200px 1fr;
-}
-
 /* Dashboard Grid */
 .dashboard-grid {
     display: grid;
@@ -298,8 +294,8 @@ button:disabled {
     font-size: 1.1em;
 }
 
-/* Sidebar Graph */
-.quick-graph-sidebar {
+/* Assistant Sidebar */
+.assistant-sidebar {
     background-color: var(--bg-secondary);
     padding: var(--spacing-lg);
     border-radius: var(--border-radius);
@@ -309,8 +305,68 @@ button:disabled {
     gap: var(--spacing-md);
 }
 
-.hide-right-sidebar .quick-graph-sidebar {
-    display: none !important;
+.assistant-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.assistant-tabs .tab-btn {
+    background-color: var(--bg-tertiary);
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 9999px; /* Pill shape */
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.assistant-tabs .tab-btn:hover {
+    background-color: var(--border-color);
+}
+
+.assistant-tabs .tab-btn.active {
+    background-color: var(--accent-primary);
+    color: #fff;
+}
+
+.assistant-tab-pane {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+}
+
+.assistant-tab-pane.active {
+    display: flex;
+}
+
+#scratchpad-input {
+    width: 100%;
+    flex: 1;
+    min-height: 250px;
+    padding: var(--spacing-md);
+    border: 1px solid var(--input-border);
+    border-radius: var(--border-radius);
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    resize: vertical;
+    font-family: inherit;
+    font-size: var(--font-size-base);
+}
+
+.reference-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.reference-list li {
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background-color: var(--bg-primary);
+    border-radius: var(--border-radius);
 }
 
 .chart-container {
@@ -330,7 +386,7 @@ button:disabled {
 
 /* Responsive */
 @media (max-width: 900px) {
-    .app-container, .app-container.hide-right-sidebar {
+    .app-container {
         grid-template-columns: 1fr;
     }
 
