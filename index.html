@@ -974,6 +974,262 @@
                 <div id="steps-content-similarity" class="steps-content"></div>
             </div>
         </section>
+        <!-- Fart, Strekning, Tid -->
+        <section id="module-physics-speed" class="educational-module" aria-labelledby="physics-speed-title" style="display: none;">
+            <div class="module-header">
+                <h2 id="physics-speed-title">Fart, Strekning, Tid</h2>
+                <button class="btn-close" aria-label="Lukk modul">×</button>
+            </div>
+            <p class="module-description">Fyll inn to av verdiene, så regner vi ut den manglende.</p>
+            <form id="physics-speed-form" class="calculator-form" novalidate>
+                <fieldset>
+                    <legend>Fyll inn 2 av 3 verdier</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="speed-s">Strekning (s)</label>
+                            <input type="number" id="speed-s" name="s" step="any" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="speed-v">Fart (v)</label>
+                            <input type="number" id="speed-v" name="v" step="any" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="speed-t">Tid (t)</label>
+                            <input type="number" id="speed-t" name="t" step="any" min="0">
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="validation-hint-physics-speed" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Ukjent</button>
+            </form>
+            <div id="result-physics-speed" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-physics-speed" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-physics-speed">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-physics-speed" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-physics-speed" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- Massetetthet -->
+        <section id="module-physics-density" class="educational-module" aria-labelledby="physics-density-title" style="display: none;">
+            <div class="module-header">
+                <h2 id="physics-density-title">Massetetthet</h2>
+                <button class="btn-close" aria-label="Lukk modul">×</button>
+            </div>
+            <p class="module-description">Beregn massetetthet (&#961;) ut fra masse og volum.</p>
+            <form id="physics-density-form" class="calculator-form" novalidate>
+                <fieldset>
+                    <legend>Verdier</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="density-m">Masse (m)</label>
+                            <input type="number" id="density-m" name="m" step="any" min="0" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="density-v">Volum (V)</label>
+                            <input type="number" id="density-v" name="v" step="any" min="0" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="validation-hint-physics-density" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Massetetthet</button>
+            </form>
+            <div id="result-physics-density" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-physics-density" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-physics-density">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-physics-density" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-physics-density" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- Kombinatorikk (Ordnet) -->
+        <section id="module-prob-npr" class="educational-module" aria-labelledby="prob-npr-title" style="display: none;">
+            <div class="module-header">
+                <h2 id="prob-npr-title">Kombinatorikk (Ordnet Utvalg / nPr)</h2>
+                <button class="btn-close" aria-label="Lukk modul">×</button>
+            </div>
+            <p class="module-description">Beregn antall mulige ordnede utvalg.</p>
+            <form id="prob-npr-form" class="calculator-form" novalidate>
+                <fieldset>
+                    <legend>Verdier</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="npr-n">Totalt antall (n)</label>
+                            <input type="number" id="npr-n" name="n" step="1" min="0" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="npr-r">Antall som trekkes (r)</label>
+                            <input type="number" id="npr-r" name="r" step="1" min="0" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="validation-hint-prob-npr" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn nPr</button>
+            </form>
+            <div id="result-prob-npr" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-prob-npr" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-prob-npr">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-prob-npr" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-prob-npr" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- Kombinatorikk (Uordnet) -->
+        <section id="module-prob-ncr" class="educational-module" aria-labelledby="prob-ncr-title" style="display: none;">
+            <div class="module-header">
+                <h2 id="prob-ncr-title">Kombinatorikk (Uordnet Utvalg / nCr)</h2>
+                <button class="btn-close" aria-label="Lukk modul">×</button>
+            </div>
+            <p class="module-description">Beregn antall mulige uordnede utvalg (kombinasjoner).</p>
+            <form id="prob-ncr-form" class="calculator-form" novalidate>
+                <fieldset>
+                    <legend>Verdier</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="ncr-n">Totalt antall (n)</label>
+                            <input type="number" id="ncr-n" name="n" step="1" min="0" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="ncr-r">Antall som trekkes (r)</label>
+                            <input type="number" id="ncr-r" name="r" step="1" min="0" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="validation-hint-prob-ncr" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn nCr</button>
+            </form>
+            <div id="result-prob-ncr" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-prob-ncr" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-prob-ncr">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-prob-ncr" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-prob-ncr" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- Varekalkyle -->
+        <section id="module-econ-markup" class="educational-module" aria-labelledby="econ-markup-title" style="display: none;">
+            <div class="module-header">
+                <h2 id="econ-markup-title">Varekalkyle</h2>
+                <button class="btn-close" aria-label="Lukk modul">×</button>
+            </div>
+            <p class="module-description">Beregn selvkost og utsalgspris ekskl. MVA.</p>
+            <form id="econ-markup-form" class="calculator-form" novalidate>
+                <fieldset>
+                    <legend>Verdier</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="markup-cost">Inntakskost</label>
+                            <input type="number" id="markup-cost" name="cost" step="any" min="0" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="markup-freight">Frakt/Toll</label>
+                            <input type="number" id="markup-freight" name="freight" step="any" min="0" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="markup-pct">Avanse (%)</label>
+                            <input type="number" id="markup-pct" name="markup" step="any" min="0" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="validation-hint-econ-markup" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Varekalkyle</button>
+            </form>
+            <div id="result-econ-markup" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-econ-markup" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-econ-markup">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-econ-markup" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-econ-markup" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- Sirkelsektor -->
+        <section id="module-geom-sector" class="educational-module" aria-labelledby="geom-sector-title" style="display: none;">
+            <div class="module-header">
+                <h2 id="geom-sector-title">Sirkelsektor</h2>
+                <button class="btn-close" aria-label="Lukk modul">×</button>
+            </div>
+            <p class="module-description">Beregn areal og buelengde av en sirkelsektor.</p>
+            <form id="geom-sector-form" class="calculator-form" novalidate>
+                <fieldset>
+                    <legend>Verdier</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="sector-r">Radius (r)</label>
+                            <input type="number" id="sector-r" name="r" step="any" min="0" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="sector-v">Vinkel (grader)</label>
+                            <input type="number" id="sector-v" name="v" step="any" min="0" max="360" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="validation-hint-geom-sector" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Sirkelsektor</button>
+            </form>
+            <div id="result-geom-sector" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-geom-sector" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-geom-sector">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-geom-sector" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-geom-sector" class="steps-content"></div>
+            </div>
+        </section>
+
+        <!-- Tierlogaritme -->
+        <section id="module-alg-log10" class="educational-module" aria-labelledby="alg-log10-title" style="display: none;">
+            <div class="module-header">
+                <h2 id="alg-log10-title">Tierlogaritme</h2>
+                <button class="btn-close" aria-label="Lukk modul">×</button>
+            </div>
+            <p class="module-description">Beregn tierlogaritmen og se potenssammenhengen.</p>
+            <form id="alg-log10-form" class="calculator-form" novalidate>
+                <fieldset>
+                    <legend>Verdier</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="log10-x">Tall (x)</label>
+                            <input type="number" id="log10-x" name="x" step="any" min="0.0000001" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="validation-hint-alg-log10" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Logaritme</button>
+            </form>
+            <div id="result-alg-log10" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-alg-log10" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-alg-log10">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-alg-log10" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-alg-log10" class="steps-content"></div>
+            </div>
+        </section>
+
     </main>
 
         <!-- Quick-Graph Sidebar -->

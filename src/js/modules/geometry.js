@@ -62,6 +62,51 @@ export function analyzePythagoras(a, b, c) {
 }
 
 /**
+ * Beregner areal og buelengde av en sirkelsektor.
+ * @param {number} r - Radius
+ * @param {number} v - Vinkel i grader
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeSector(r, v) {
+    const steps = [];
+
+    steps.push({
+        description: `En sirkelsektor er en del av en sirkel begrenset av to radier og en sirkelbue. Vinkelen $v$ er ${v}^{\\circ}.`,
+        math: ''
+    });
+
+    const area = (Math.PI * r * r * v) / 360;
+
+    steps.push({
+        description: `Arealet av en sirkelsektor regnes ut ved å ta andelen av hele sirkelens areal:`,
+        math: `A = \\frac{\\pi \\cdot r^2 \\cdot v}{360}`
+    });
+
+    steps.push({
+        description: `Vi setter inn $r = ${r}$ og $v = ${v}$:`,
+        math: `A = \\frac{\\pi \\cdot ${r}^2 \\cdot ${v}}{360} \\approx ${area.toFixed(2)}`
+    });
+
+    const arcLength = (2 * Math.PI * r * v) / 360;
+
+    steps.push({
+        description: `Buelengden ($b$) regnes ut ved å ta andelen av hele sirkelens omkrets:`,
+        math: `b = \\frac{2 \\cdot \\pi \\cdot r \\cdot v}{360}`
+    });
+
+    steps.push({
+        description: `Vi setter inn verdiene for $r$ og $v$:`,
+        math: `b = \\frac{2 \\cdot \\pi \\cdot ${r} \\cdot ${v}}{360} \\approx ${arcLength.toFixed(2)}`
+    });
+
+    return {
+        area,
+        arcLength,
+        steps
+    };
+}
+
+/**
  * Beregner areal for 2D-figurer
  * @param {string} shape - Type figur ('circle', 'rectangle', 'triangle')
  * @param {number} val1 - Første verdi (f.eks radius, grunnlinje eller lengde)

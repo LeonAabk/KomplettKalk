@@ -51,6 +51,55 @@ export function analyzeCompoundInterest(principal, rate, years) {
 }
 
 /**
+ * Beregner varekalkyle
+ * @param {number} inntakskost - Inntakskost
+ * @param {number} frakt - Frakt og toll
+ * @param {number} avanseProsent - Avansetillegg i prosent
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeMarkup(inntakskost, frakt, avanseProsent) {
+    const steps = [];
+
+    steps.push({
+        description: `Varekalkylen bygges opp trinnvis. Først beregner vi selvkost.`,
+        math: `\\text{Selvkost} = \\text{Inntakskost} + \\text{Frakt/Toll}`
+    });
+
+    const selvkost = inntakskost + frakt;
+
+    steps.push({
+        description: `Vi setter inn verdiene for inntakskost (${inntakskost} kr) og frakt (${frakt} kr):`,
+        math: `\\text{Selvkost} = ${inntakskost} + ${frakt} = ${selvkost} \\text{ kr}`
+    });
+
+    steps.push({
+        description: `Deretter beregner vi avansen, som er ${avanseProsent}% av selvkost:`,
+        math: `\\text{Avanse} = ${selvkost} \\cdot \\frac{${avanseProsent}}{100}`
+    });
+
+    const avanseKroner = selvkost * (avanseProsent / 100);
+
+    steps.push({
+        description: `Avansen i kroner blir:`,
+        math: `\\text{Avanse} = ${avanseKroner.toFixed(2)} \\text{ kr}`
+    });
+
+    const utsalgspris = selvkost + avanseKroner;
+
+    steps.push({
+        description: `Til slutt finner vi salgsprisen eksklusiv merverdiavgift ved å legge avansen til selvkost:`,
+        math: `\\text{Utsalgspris} = ${selvkost} + ${avanseKroner.toFixed(2)} = ${utsalgspris.toFixed(2)} \\text{ kr}`
+    });
+
+    return {
+        selvkost,
+        avanseKroner,
+        utsalgspris,
+        steps
+    };
+}
+
+/**
  * Beregner MVA (Merverdiavgift)
  * @param {number} price - Pris
  * @param {boolean} isAdd - Legg til (true) eller trekk fra (false)

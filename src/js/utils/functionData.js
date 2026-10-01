@@ -173,5 +173,54 @@ export const functionData = [
         category: 'geometri',
         description: 'Finn manglende sider i formlike trekanter.',
         icon: '📐'
+    },
+    {
+        id: 'module-physics-speed',
+        title: 'Fart, Strekning, Tid',
+        category: 'fysikk',
+        description: 'Regn ut fart, strekning eller tid når to av tre er kjent.',
+        icon: '⚡'
+    },
+    {
+        id: 'module-physics-density',
+        title: 'Massetetthet',
+        category: 'fysikk',
+        description: 'Regn ut massetetthet gitt masse og volum.',
+        icon: '⚖️'
+    },
+    {
+        id: 'module-prob-npr',
+        title: 'Kombinatorikk (Ordnet)',
+        category: 'sannsynlighet',
+        description: 'nPr: Ordnet utvalg uten tilbakelegging.',
+        icon: '🎲'
+    },
+    {
+        id: 'module-prob-ncr',
+        title: 'Kombinatorikk (Uordnet)',
+        category: 'sannsynlighet',
+        description: 'nCr: Uordnet utvalg uten tilbakelegging.',
+        icon: '🎱'
+    },
+    {
+        id: 'module-econ-markup',
+        title: 'Varekalkyle',
+        category: 'okonomi',
+        description: 'Regn ut selvkost og utsalgspris fra inntakskost, frakt og avanse.',
+        icon: '📈'
+    },
+    {
+        id: 'module-geom-sector',
+        title: 'Sirkelsektor',
+        category: 'geometri',
+        description: 'Areal og buelengde av en sirkelsektor.',
+        icon: '🍕'
+    },
+    {
+        id: 'module-alg-log10',
+        title: 'Tierlogaritme',
+        category: 'algebra',
+        description: 'Løs log10(x) og vis potenssammenheng.',
+        icon: '🔢'
     }
 ];

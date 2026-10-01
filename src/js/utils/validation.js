@@ -500,3 +500,187 @@ export function validateSimilarity(s1Str, l1Str, s2Str, l2Str) {
 
     return { isValid: true, values: { s1, l1, s2, l2 }, hint: null };
 }
+
+export function validatePhysicsSpeed(sStr, vStr, tStr) {
+    const s = parseFloat(sStr);
+    const v = parseFloat(vStr);
+    const t = parseFloat(tStr);
+
+    let emptyCount = 0;
+    if (isNaN(s)) emptyCount++;
+    if (isNaN(v)) emptyCount++;
+    if (isNaN(t)) emptyCount++;
+
+    if (emptyCount !== 1) {
+        return {
+            isValid: false,
+            hint: 'Du må fylle inn nøyaktig to av verdiene (fart, strekning, tid) for at vi skal kunne regne ut den tredje.'
+        };
+    }
+
+    if (!isNaN(t) && t === 0 && isNaN(v)) {
+        return {
+            isValid: false,
+            hint: 'Tiden kan ikke være 0 når vi skal regne ut fart (deling på null).'
+        };
+    }
+
+    if (!isNaN(v) && v === 0 && isNaN(t)) {
+        return {
+            isValid: false,
+            hint: 'Farten kan ikke være 0 når vi skal regne ut tid (deling på null).'
+        };
+    }
+
+    return {
+        isValid: true,
+        values: { s, v, t },
+        hint: null
+    };
+}
+
+export function validatePhysicsDensity(mStr, vStr) {
+    const m = parseFloat(mStr);
+    const v = parseFloat(vStr);
+
+    if (isNaN(m) || isNaN(v)) {
+        return {
+            isValid: false,
+            hint: 'Både masse og volum må fylles ut.'
+        };
+    }
+
+    if (v === 0) {
+        return {
+            isValid: false,
+            hint: 'Volum kan ikke være 0 (deling på null).'
+        };
+    }
+
+    if (m < 0 || v < 0) {
+        return {
+            isValid: false,
+            hint: 'Masse og volum kan ikke være negative.'
+        };
+    }
+
+    return {
+        isValid: true,
+        values: { m, v },
+        hint: null
+    };
+}
+
+export function validateProbPermComb(nStr, rStr) {
+    const n = parseInt(nStr);
+    const r = parseInt(rStr);
+
+    if (isNaN(n) || isNaN(r)) {
+        return {
+            isValid: false,
+            hint: 'Både n (totalt antall) og r (antall trekk) må fylles ut med heltall.'
+        };
+    }
+
+    if (n < 0 || r < 0) {
+        return {
+            isValid: false,
+            hint: 'n og r må være positive heltall.'
+        };
+    }
+
+    if (r > n) {
+        return {
+            isValid: false,
+            hint: 'r (antall trekk) kan ikke være større enn n (totalt antall).'
+        };
+    }
+
+    return {
+        isValid: true,
+        values: { n, r },
+        hint: null
+    };
+}
+
+export function validateEconMarkup(costStr, freightStr, markupStr) {
+    const cost = parseFloat(costStr);
+    const freight = parseFloat(freightStr);
+    const markup = parseFloat(markupStr);
+
+    if (isNaN(cost) || isNaN(freight) || isNaN(markup)) {
+        return {
+            isValid: false,
+            hint: 'Inntakskost, frakt og avanseprosent må fylles ut med tall.'
+        };
+    }
+
+    if (cost < 0 || freight < 0 || markup < 0) {
+        return {
+            isValid: false,
+            hint: 'Verdiene kan ikke være negative.'
+        };
+    }
+
+    return {
+        isValid: true,
+        values: { cost, freight, markup },
+        hint: null
+    };
+}
+
+export function validateGeomSector(rStr, vStr) {
+    const r = parseFloat(rStr);
+    const v = parseFloat(vStr);
+
+    if (isNaN(r) || isNaN(v)) {
+        return {
+            isValid: false,
+            hint: 'Radius og vinkel må fylles ut.'
+        };
+    }
+
+    if (r <= 0) {
+        return {
+            isValid: false,
+            hint: 'Radius må være større enn 0.'
+        };
+    }
+
+    if (v <= 0 || v > 360) {
+        return {
+            isValid: false,
+            hint: 'Vinkelen må være mellom 0 og 360 grader.'
+        };
+    }
+
+    return {
+        isValid: true,
+        values: { r, v },
+        hint: null
+    };
+}
+
+export function validateAlgLog10(xStr) {
+    const x = parseFloat(xStr);
+
+    if (isNaN(x)) {
+        return {
+            isValid: false,
+            hint: 'Du må skrive inn et gyldig tall.'
+        };
+    }
+
+    if (x <= 0) {
+        return {
+            isValid: false,
+            hint: 'Du kan bare ta logaritmen av strengt positive tall (større enn 0).'
+        };
+    }
+
+    return {
+        isValid: true,
+        values: { x },
+        hint: null
+    };
+}

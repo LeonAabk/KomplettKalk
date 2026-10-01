@@ -1,9 +1,11 @@
-import { validateQuadraticInput, validateLinearInput, validatePercentInput, validatePythagorasInput, validateAreaInput, validateTrigonometryInput, validateABCInput, validateVertexInput, validatePowerInput, validateSquareRootInput, validateStatisticsInput, validateEquationSystemInput, validateVolumeInput, validateFractionInput, validateCompoundInterest, validateVAT, validateUnitConversion, validateSymmetryLine, validateLinearRoot, validateAverageRateOfChange, validateSimilarity } from '../utils/validation.js';
-import { analyzeQuadratic, generateQuadraticDataPoints, analyzeLinear, generateLinearDataPoints, analyzeABC, analyzeVertex, analyzeEquationSystem, analyzeFactoring, analyzeSymmetryLine, analyzeLinearRoot, analyzeAverageRateOfChange } from '../modules/algebra.js';
+import { validateQuadraticInput, validateLinearInput, validatePercentInput, validatePythagorasInput, validateAreaInput, validateTrigonometryInput, validateABCInput, validateVertexInput, validatePowerInput, validateSquareRootInput, validateStatisticsInput, validateEquationSystemInput, validateVolumeInput, validateFractionInput, validateCompoundInterest, validateVAT, validateUnitConversion, validateSymmetryLine, validateLinearRoot, validateAverageRateOfChange, validateSimilarity, validatePhysicsSpeed, validatePhysicsDensity, validateProbPermComb, validateEconMarkup, validateGeomSector, validateAlgLog10 } from '../utils/validation.js';
+import { analyzeQuadratic, generateQuadraticDataPoints, analyzeLinear, generateLinearDataPoints, analyzeABC, analyzeVertex, analyzeEquationSystem, analyzeFactoring, analyzeSymmetryLine, analyzeLinearRoot, analyzeAverageRateOfChange, analyzeLog10 } from '../modules/algebra.js';
 import { analyzePercent, analyzePercentChange, analyzePower, analyzeSquareRoot, analyzeFractions } from '../modules/basic.js';
-import { analyzePythagoras, analyzeArea, analyzeTrigonometry, analyzeVolume, analyzeSimilarity } from '../modules/geometry.js';
+import { analyzePythagoras, analyzeArea, analyzeTrigonometry, analyzeVolume, analyzeSimilarity, analyzeSector } from '../modules/geometry.js';
 import { analyzeMean, analyzeMedian, analyzeMode, analyzeRange } from '../modules/statistics.js';
-import { analyzeCompoundInterest, analyzeVAT } from '../modules/economics.js';
+import { analyzeCompoundInterest, analyzeVAT, analyzeMarkup } from '../modules/economics.js';
+import { analyzeSpeed, analyzeDensity } from '../modules/physics.js';
+import { analyzeNPR, analyzeNCR } from '../modules/probability.js';
 import { analyzeUnitConversion } from '../modules/conversion.js';
 import { renderSteps } from '../components/step-by-step.js';
 import { renderGraph, renderEmptyGraph } from '../components/graph.js';
@@ -73,7 +75,7 @@ export function initUI() {
                 if (targetModule) {
                     targetModule.style.display = 'block';
 
-                    if (item.category === 'geometri' || item.category === 'grunnleggende' || item.category === 'statistikk' || item.category === 'okonomi' || item.category === 'konvertering') {
+                    if (item.category === 'geometri' || item.category === 'grunnleggende' || item.category === 'statistikk' || item.category === 'okonomi' || item.category === 'konvertering' || item.category === 'fysikk' || item.category === 'sannsynlighet') {
                         if (quickGraphSidebar) quickGraphSidebar.style.display = 'none';
                         if (appContainer) appContainer.classList.add('hide-right-sidebar');
                     } else {
@@ -1338,6 +1340,51 @@ export function initUI() {
         (fd) => validateSimilarity(fd.get('s1'), fd.get('l1'), fd.get('s2'), fd.get('l2')),
         (vals, fd) => analyzeSimilarity(vals.s1, vals.l1, vals.s2, vals.l2),
         (res) => `<strong>Ukjent side:</strong> ${res.result.toFixed(2)}`
+    );
+
+    setupAdvancedModuleUI('physics-speed',
+        (fd) => validatePhysicsSpeed(fd.get('s'), fd.get('v'), fd.get('t')),
+        (vals, fd) => analyzeSpeed(isNaN(vals.s) ? null : vals.s, isNaN(vals.v) ? null : vals.v, isNaN(vals.t) ? null : vals.t),
+        (res) => {
+            const labelMap = { s: 'Strekning (s)', v: 'Fart (v)', t: 'Tid (t)' };
+            return `<strong>${labelMap[res.missing]}:</strong> ${res.result.toFixed(2)}`;
+        }
+    );
+
+    setupAdvancedModuleUI('physics-density',
+        (fd) => validatePhysicsDensity(fd.get('m'), fd.get('v')),
+        (vals, fd) => analyzeDensity(vals.m, vals.v),
+        (res) => `<strong>Massetetthet (&rho;):</strong> ${res.result.toFixed(2)}`
+    );
+
+    setupAdvancedModuleUI('prob-npr',
+        (fd) => validateProbPermComb(fd.get('n'), fd.get('r')),
+        (vals, fd) => analyzeNPR(vals.n, vals.r),
+        (res) => `<strong>nPr:</strong> ${res.result}`
+    );
+
+    setupAdvancedModuleUI('prob-ncr',
+        (fd) => validateProbPermComb(fd.get('n'), fd.get('r')),
+        (vals, fd) => analyzeNCR(vals.n, vals.r),
+        (res) => `<strong>nCr:</strong> ${res.result}`
+    );
+
+    setupAdvancedModuleUI('econ-markup',
+        (fd) => validateEconMarkup(fd.get('cost'), fd.get('freight'), fd.get('markup')),
+        (vals, fd) => analyzeMarkup(vals.cost, vals.freight, vals.markup),
+        (res) => `<strong>Selvkost:</strong> ${res.selvkost.toFixed(2)} kr<br><strong>Utsalgspris eks. MVA:</strong> ${res.utsalgspris.toFixed(2)} kr`
+    );
+
+    setupAdvancedModuleUI('geom-sector',
+        (fd) => validateGeomSector(fd.get('r'), fd.get('v')),
+        (vals, fd) => analyzeSector(vals.r, vals.v),
+        (res) => `<strong>Areal:</strong> ${res.area.toFixed(2)}<br><strong>Buelengde:</strong> ${res.arcLength.toFixed(2)}`
+    );
+
+    setupAdvancedModuleUI('alg-log10',
+        (fd) => validateAlgLog10(fd.get('x')),
+        (vals, fd) => analyzeLog10(vals.x),
+        (res) => `<strong>Svar:</strong> ${res.result.toFixed(4)}`
     );
 
 
