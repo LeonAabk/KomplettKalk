@@ -272,5 +272,47 @@ export const functionData = [
         category: 'fysikk',
         description: 'Beregn kinetisk og potensiell energi.',
         icon: '⚡'
+    },
+    {
+        id: 'module-exponential',
+        title: 'Eksponentiell funksjon',
+        category: 'algebra',
+        description: 'Bruk formelen f(x) = a * b^x.',
+        icon: '📈'
+    },
+    {
+        id: 'module-proportionality',
+        title: 'Proporsjonalitet',
+        category: 'algebra',
+        description: 'Finn proporsjonalitetskonstanten k.',
+        icon: '📏'
+    },
+    {
+        id: 'module-stddev',
+        title: 'Standardavvik og Varians',
+        category: 'statistikk',
+        description: 'Beregn standardavvik og varians for en rekke tall.',
+        icon: '📊'
+    },
+    {
+        id: 'module-newton2',
+        title: 'Newtons 2. lov',
+        category: 'fysikk',
+        description: 'F = ma. Beregn kraft, masse eller akselerasjon.',
+        icon: '⚡'
+    },
+    {
+        id: 'module-work-power',
+        title: 'Arbeid og Effekt',
+        category: 'fysikk',
+        description: 'Beregn arbeid (W) og effekt (P).',
+        icon: '⚡'
+    },
+    {
+        id: 'module-speed-conversion',
+        title: 'Fartskonvertering',
+        category: 'konvertering',
+        description: 'Konverter mellom km/h og m/s.',
+        icon: '🔄'
     }
 ];

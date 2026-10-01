@@ -736,3 +736,69 @@ export function analyzeRationalEq(a, b, c) {
 
     return { result: x, x, steps };
 }
+
+
+export function analyzeExponential(a, b, x) {
+    const steps = [];
+
+    steps.push({
+        description: 'Eksponentiell funksjon har formen:',
+        math: `f(x) = a \cdot b^x`
+    });
+
+    steps.push({
+        description: 'Setter inn verdiene for startverdi (a) og vekstfaktor (b):',
+        math: `f(x) = ${a} \cdot ${b}^x`
+    });
+
+    let resultMsg = 'Funksjonen er definert. Grafen viser utviklingen.';
+
+    if (x !== null && !isNaN(x)) {
+        const y = a * Math.pow(b, x);
+        steps.push({
+            description: `Beregner funksjonsverdien for x = ${x}:`,
+            math: `f(${x}) = ${a} \cdot ${b}^{${x}} = ${y.toFixed(4)}`
+        });
+        resultMsg = `For x = ${x} er y = ${y.toFixed(4)}`;
+    }
+
+    return {
+        result: resultMsg,
+        steps: steps,
+        graph: {
+            type: 'function',
+            fn: `${a} * ${b}^x`,
+            title: `f(x) = ${a} \cdot ${b}^x`
+        }
+    };
+}
+
+export function analyzeProportionality(x, y) {
+    const steps = [];
+    const k = y / x;
+
+    steps.push({
+        description: 'For å finne proporsjonalitetskonstanten k bruker vi formelen:',
+        math: `k = \frac{y}{x}`
+    });
+
+    steps.push({
+        description: 'Setter inn x og y:',
+        math: `k = \frac{${y}}{${x}} = ${k.toFixed(4)}`
+    });
+
+    steps.push({
+        description: 'Den proporsjonale funksjonen blir da:',
+        math: `y = ${k.toFixed(4)}x`
+    });
+
+    return {
+        result: `k = ${k.toFixed(4)}`,
+        steps: steps,
+        graph: {
+            type: 'function',
+            fn: `${k}*x`,
+            title: `y = ${k.toFixed(4)}x`
+        }
+    };
+}
