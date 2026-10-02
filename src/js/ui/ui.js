@@ -12,15 +12,19 @@ import { validateQuadraticInput, validateLinearInput, validatePercentInput, vali
     validateStdDevInput,
     validateNewton2Input,
     validateWorkPowerInput,
-    validateSpeedConversionInput
+    validateSpeedConversionInput,
+    validateSurfaceAreaInput,
+    validateDepreciationInput,
+    validateAnnuityLoanInput,
+    validateBinomialInput
 } from '../utils/validation.js';
 import { analyzeQuadratic, analyzeLinear, analyzeABC, analyzeVertex, analyzeEquationSystem, analyzeFactoring, analyzeSymmetryLine, analyzeLinearRoot, analyzeAverageRateOfChange, analyzeLog10, analyzeAsymptotes, analyzeRationalEq, analyzeExponential, analyzeProportionality } from '../modules/algebra.js';
 import { analyzePercent, analyzePercentChange, analyzePower, analyzeSquareRoot, analyzeFractions } from '../modules/basic.js';
-import { analyzePythagoras, analyzeArea, analyzeTrigonometry, analyzeVolume, analyzeSimilarity, analyzeSector, analyzeCongruence, analyzeTriangleSolver } from '../modules/geometry.js';
+import { analyzePythagoras, analyzeArea, analyzeTrigonometry, analyzeVolume, analyzeSimilarity, analyzeSector, analyzeCongruence, analyzeTriangleSolver, analyzeSurfaceArea } from '../modules/geometry.js';
 import { analyzeMean, analyzeMedian, analyzeMode, analyzeRange, analyzeStdDevAndVariance } from '../modules/statistics.js';
-import { analyzeCompoundInterest, analyzeVAT, analyzeMarkup, analyzeCurrency, analyzeSalaryTax } from '../modules/economics.js';
+import { analyzeCompoundInterest, analyzeVAT, analyzeMarkup, analyzeCurrency, analyzeSalaryTax, analyzeDepreciation, analyzeAnnuityLoan } from '../modules/economics.js';
 import { analyzeSpeed, analyzeDensity, analyzeMechEnergy, analyzeNewton2, analyzeWorkPower } from '../modules/physics.js';
-import { analyzeNPR, analyzeNCR } from '../modules/probability.js';
+import { analyzeNPR, analyzeNCR, analyzeBinomial } from '../modules/probability.js';
 import { analyzeUnitConversion, analyzeSpeedConversion } from '../modules/conversion.js';
 import { renderSteps } from '../components/step-by-step.js';
 import { renderGraph, renderEmptyGraph } from '../components/graph.js';
@@ -1420,10 +1424,28 @@ export function initUI() {
         (res) => `<strong>nCr:</strong> ${res.result}`
     );
 
+    setupAdvancedModuleUI('binomial',
+        (fd) => validateBinomialInput(fd.get('n'), fd.get('p'), fd.get('k')),
+        (vals, fd) => analyzeBinomial(vals.n, vals.p, vals.k),
+        (res) => `<strong>P(X=${document.getElementById('binom-k') ? document.getElementById('binom-k').value : 'k'}):</strong> ${res.result.toFixed(4)}`
+    );
+
     setupAdvancedModuleUI('econ-markup',
         (fd) => validateEconMarkup(fd.get('cost'), fd.get('freight'), fd.get('markup')),
         (vals, fd) => analyzeMarkup(vals.cost, vals.freight, vals.markup),
         (res) => `<strong>Selvkost:</strong> ${res.selvkost.toFixed(2)} kr<br><strong>Utsalgspris eks. MVA:</strong> ${res.utsalgspris.toFixed(2)} kr`
+    );
+
+    setupAdvancedModuleUI('depreciation',
+        (fd) => validateDepreciationInput(fd.get('value'), fd.get('rate')),
+        (vals, fd) => analyzeDepreciation(vals.value, vals.rate),
+        (res) => `<strong>Verditap:</strong> ${res.result.toFixed(2)} kr<br><strong>Bokført verdi etter år 1:</strong> ${res.newValue.toFixed(2)} kr`
+    );
+
+    setupAdvancedModuleUI('annuity-loan',
+        (fd) => validateAnnuityLoanInput(fd.get('loan'), fd.get('rate'), fd.get('terms')),
+        (vals, fd) => analyzeAnnuityLoan(vals.loan, vals.rate, vals.terms),
+        (res) => `<strong>Terminbeløp:</strong> ${res.result.toFixed(2)} kr`
     );
 
     setupAdvancedModuleUI('geom-sector',
@@ -1517,6 +1539,36 @@ export function initUI() {
         (fd) => validateSpeedConversionInput(fd.get('val'), fd.get('dir')),
         (vals, fd) => analyzeSpeedConversion(vals.val, vals.dir),
         (res) => `<strong>Resultat:</strong> ${res.result}`
+    );
+
+    // Dynamic UI updates for Surface Area
+    const surfaceAreaShape = document.getElementById('surface-area-shape');
+    if (surfaceAreaShape) {
+        const input2Group = document.getElementById('surf-input2-group');
+        const label2 = document.getElementById('surf-label-2');
+        const val2Input = document.getElementById('surf-val2');
+
+        surfaceAreaShape.addEventListener('change', (e) => {
+            const shape = e.target.value;
+            if (shape === 'sphere') {
+                input2Group.style.display = 'none';
+                val2Input.required = false;
+            } else if (shape === 'cylinder') {
+                input2Group.style.display = 'block';
+                label2.textContent = 'Høyde (h)';
+                val2Input.required = true;
+            } else if (shape === 'cone') {
+                input2Group.style.display = 'block';
+                label2.textContent = 'Sidekant (s)';
+                val2Input.required = true;
+            }
+        });
+    }
+
+    setupAdvancedModuleUI('surface-area',
+        (fd) => validateSurfaceAreaInput(fd.get('shape'), fd.get('val1'), fd.get('val2')),
+        (vals, fd) => analyzeSurfaceArea(vals.shape, vals.val1, vals.val2),
+        (res) => `<strong>Overflateareal:</strong> ${res.result.toFixed(2)}`
     );
 
     // Dynamic UI updates for Congruence and Triangle Solver

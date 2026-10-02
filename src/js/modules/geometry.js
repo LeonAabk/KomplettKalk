@@ -164,6 +164,86 @@ export function analyzeArea(shape, val1, val2) {
 }
 
 /**
+ * Beregner overflateareal for 3D-figurer
+ * @param {string} shape - Type figur ('sphere', 'cylinder', 'cone')
+ * @param {number} val1 - Radius (r)
+ * @param {number|null} val2 - Høyde (h) eller sidekant (s)
+ * @returns {Object} Resultat og steps
+ */
+export function analyzeSurfaceArea(shape, val1, val2) {
+    const steps = [];
+    let result = 0;
+
+    if (shape === 'sphere') {
+        steps.push({
+            description: `Overflatearealet av en kule regnes ut med formelen:`,
+            math: `O = 4 \\cdot \\pi \\cdot r^2`
+        });
+
+        const r2 = val1 ** 2;
+        result = 4 * Math.PI * r2;
+
+        steps.push({
+            description: `Vi setter inn radius ($r = ${val1}$):`,
+            math: `O = 4 \\cdot \\pi \\cdot ${val1}^2 = 4 \\cdot \\pi \\cdot ${r2} \\approx ${result.toFixed(2)}`
+        });
+    } else if (shape === 'cylinder') {
+        steps.push({
+            description: `Overflatearealet av en sylinder består av to sirkler (topp og bunn) og en rektangulær sideflate. Formelen er:`,
+            math: `O = 2 \\cdot \\pi \\cdot r^2 + 2 \\cdot \\pi \\cdot r \\cdot h`
+        });
+
+        const endCaps = 2 * Math.PI * (val1 ** 2);
+        const sideArea = 2 * Math.PI * val1 * val2;
+        result = endCaps + sideArea;
+
+        steps.push({
+            description: `Vi regner først ut arealet av topp og bunn ($r = ${val1}$):`,
+            math: `2 \\cdot \\pi \\cdot ${val1}^2 \\approx ${endCaps.toFixed(2)}`
+        });
+
+        steps.push({
+            description: `Deretter regner vi ut arealet av sideflaten ($h = ${val2}$):`,
+            math: `2 \\cdot \\pi \\cdot ${val1} \\cdot ${val2} \\approx ${sideArea.toFixed(2)}`
+        });
+
+        steps.push({
+            description: `Til slutt legger vi disse sammen:`,
+            math: `O = ${endCaps.toFixed(2)} + ${sideArea.toFixed(2)} \\approx ${result.toFixed(2)}`
+        });
+    } else if (shape === 'cone') {
+        steps.push({
+            description: `Overflatearealet av en kjegle består av grunnflaten og den krumme overflaten. Formelen er:`,
+            math: `O = \\pi \\cdot r^2 + \\pi \\cdot r \\cdot s`
+        });
+
+        const baseArea = Math.PI * (val1 ** 2);
+        const sideArea = Math.PI * val1 * val2;
+        result = baseArea + sideArea;
+
+        steps.push({
+            description: `Vi regner først ut grunnflaten ($r = ${val1}$):`,
+            math: `\\pi \\cdot ${val1}^2 \\approx ${baseArea.toFixed(2)}`
+        });
+
+        steps.push({
+            description: `Deretter regner vi ut arealet av den krumme flaten (sidekant $s = ${val2}$):`,
+            math: `\\pi \\cdot ${val1} \\cdot ${val2} \\approx ${sideArea.toFixed(2)}`
+        });
+
+        steps.push({
+            description: `Til slutt legger vi disse sammen:`,
+            math: `O = ${baseArea.toFixed(2)} + ${sideArea.toFixed(2)} \\approx ${result.toFixed(2)}`
+        });
+    }
+
+    return {
+        result,
+        steps
+    };
+}
+
+/**
  * Bruker trigonometri (rettvinklet trekant) for å finne en ukjent side.
  * @param {number} angle - Vinkelen i grader
  * @param {string} givenType - Hvilken side som er gitt ('opp', 'adj', 'hyp')

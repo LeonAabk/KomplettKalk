@@ -624,6 +624,49 @@
             </div>
         </section>
 
+        <!-- OVERFLATEAREAL -->
+        <section id="module-surface-area" class="educational-module" aria-labelledby="surface-area-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="surface-area-title">Overflateareal (3D-figurer)</h2>
+            </div>
+            <p>Velg figur for å beregne overflatearealet.</p>
+            <form id="surface-area-form" class="math-form" aria-label="Skjema for overflateareal">
+                <div class="input-group">
+                    <label for="surface-area-shape">Velg figur</label>
+                    <select id="surface-area-shape" name="shape" required>
+                        <option value="sphere">Kule</option>
+                        <option value="cylinder">Sylinder</option>
+                        <option value="cone">Kjegle</option>
+                    </select>
+                </div>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label id="surf-label-1" for="surf-val1">Radius (r)</label>
+                        <input type="number" id="surf-val1" name="val1" step="any" min="0" required>
+                    </div>
+                    <div class="input-group" id="surf-input2-group" style="display: none;">
+                        <label id="surf-label-2" for="surf-val2">Høyde/Side (val2)</label>
+                        <input type="number" id="surf-val2" name="val2" step="any" min="0">
+                    </div>
+                </div>
+                <div id="validation-hint-surface-area" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Overflateareal</button>
+            </form>
+            <div id="result-surface-area" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-surface-area" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-surface-area">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-surface-area" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-surface-area" class="steps-content"></div>
+            </div>
+        </section>
+
         <!-- BRØKREGNING -->
         <section id="module-fractions" class="educational-module" aria-labelledby="fractions-title" style="display: none;">
             <div class="module-header">
@@ -1122,11 +1165,133 @@
             </div>
         </section>
 
+        <!-- Binomisk Sannsynlighet -->
+        <section id="module-binomial" class="educational-module" aria-labelledby="binomial-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="binomial-title">Binomisk Sannsynlighet</h2>
+            </div>
+            <p class="module-description">Beregn sannsynligheten for k suksesser i n uavhengige forsøk.</p>
+            <form id="binomial-form" class="calculator-form" novalidate>
+                <fieldset>
+                    <legend>Verdier</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="binom-n">Antall forsøk (n)</label>
+                            <input type="number" id="binom-n" name="n" step="1" min="1" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="binom-p">Sannsynlighet (p)</label>
+                            <input type="number" id="binom-p" name="p" step="any" min="0" max="1" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="binom-k">Antall suksesser (k)</label>
+                            <input type="number" id="binom-k" name="k" step="1" min="0" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="validation-hint-binomial" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Sannsynlighet</button>
+            </form>
+            <div id="result-binomial" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-binomial" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-binomial">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-binomial" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-binomial" class="steps-content"></div>
+            </div>
+        </section>
+
         <!-- Varekalkyle -->
+        <section id="module-depreciation" class="educational-module" aria-labelledby="depreciation-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="depreciation-title">Avskrivning (Saldoskjema)</h2>
+            </div>
+            <p class="module-description">Beregn verditapet det første året.</p>
+            <form id="depreciation-form" class="calculator-form" novalidate>
+                <fieldset>
+                    <legend>Verdier</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="depr-value">Anskaffelsesverdi</label>
+                            <input type="number" id="depr-value" name="value" step="any" min="0" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="depr-rate">Avskrivningssats (%)</label>
+                            <input type="number" id="depr-rate" name="rate" step="any" min="0" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="validation-hint-depreciation" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Verditap</button>
+            </form>
+            <div id="result-depreciation" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-depreciation" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-depreciation">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-depreciation" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-depreciation" class="steps-content"></div>
+            </div>
+        </section>
+
+        <section id="module-annuity-loan" class="educational-module" aria-labelledby="annuity-loan-title" style="display: none;">
+            <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
+                <h2 id="annuity-loan-title">Annuitetslån (Terminbeløp)</h2>
+            </div>
+            <p class="module-description">Beregn terminbeløpet for et annuitetslån.</p>
+            <form id="annuity-loan-form" class="calculator-form" novalidate>
+                <fieldset>
+                    <legend>Verdier</legend>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="loan-amount">Lånebeløp (K)</label>
+                            <input type="number" id="loan-amount" name="loan" step="any" min="0" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="loan-rate">Rente per termin (r) i %</label>
+                            <input type="number" id="loan-rate" name="rate" step="any" min="0" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="loan-terms">Antall terminer (n)</label>
+                            <input type="number" id="loan-terms" name="terms" step="1" min="1" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="validation-hint-annuity-loan" class="validation-hint" aria-live="polite" hidden></div>
+                <button type="submit" class="btn-primary">Beregn Terminbeløp</button>
+            </form>
+            <div id="result-annuity-loan" class="result-box" aria-live="polite" hidden></div>
+            <div class="action-buttons">
+                <button id="btn-show-steps-annuity-loan" class="btn-secondary" disabled aria-expanded="false" aria-controls="step-by-step-container-annuity-loan">
+                    Vis utregning
+                </button>
+            </div>
+            <div id="step-by-step-container-annuity-loan" class="step-container" hidden aria-live="polite">
+                <h3>Trinnvis Utregning</h3>
+                <div id="steps-content-annuity-loan" class="steps-content"></div>
+            </div>
+        </section>
+
         <section id="module-econ-markup" class="educational-module" aria-labelledby="econ-markup-title" style="display: none;">
             <div class="module-header">
+                <button class="btn-back-dashboard" aria-label="Tilbake til oversikt">
+                    <span aria-hidden="true">&larr;</span> Tilbake
+                </button>
                 <h2 id="econ-markup-title">Varekalkyle</h2>
-                <button class="btn-close" aria-label="Lukk modul">×</button>
             </div>
             <p class="module-description">Beregn selvkost og utsalgspris ekskl. MVA.</p>
             <form id="econ-markup-form" class="calculator-form" novalidate>
@@ -1721,13 +1886,33 @@
             </div>
 
             <!-- Fane: Hurtig-referanse -->
-            <div id="tab-reference" class="assistant-tab-pane">
-                <ul class="reference-list">
-                    <li><strong>Pi:</strong> \(\pi \approx 3.14159\)</li>
-                    <li><strong>Eulers tall:</strong> \(e \approx 2.71828\)</li>
-                    <li><strong>Tyngdeakselerasjon:</strong> \(g \approx 9.81 \, \text{m/s}^2\)</li>
-                    <li><strong>Lysfarten:</strong> \(c \approx 3.0 \times 10^8 \, \text{m/s}\)</li>
-                    <li><strong>Gullsnittet:</strong> \(\varphi \approx 1.61803\)</li>
+            <div id="tab-reference" class="assistant-tab-pane" style="overflow-y: auto; max-height: 100%;">
+                <ul class="reference-list" style="padding-bottom: 2rem;">
+                    <li><strong>ABC-formelen:</strong><br> $$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$</li>
+                    <li><strong>Potensregler:</strong>
+                        <ul style="margin-top: 0.5rem; margin-bottom: 0.5rem; list-style-type: disc; margin-left: 1.5rem;">
+                            <li>\(a^m \cdot a^n = a^{m+n}\)</li>
+                            <li>\(\frac{a^m}{a^n} = a^{m-n}\)</li>
+                            <li>\((a^m)^n = a^{m \cdot n}\)</li>
+                            <li>\(a^0 = 1 \quad (a \neq 0)\)</li>
+                            <li>\(a^{-n} = \frac{1}{a^n}\)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Logaritmeregler:</strong>
+                        <ul style="margin-top: 0.5rem; margin-bottom: 0.5rem; list-style-type: disc; margin-left: 1.5rem;">
+                            <li>\(\log(a \cdot b) = \log(a) + \log(b)\)</li>
+                            <li>\(\log(\frac{a}{b}) = \log(a) - \log(b)\)</li>
+                            <li>\(\log(a^x) = x \cdot \log(a)\)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Derivasjonsregler:</strong>
+                        <ul style="margin-top: 0.5rem; margin-bottom: 0.5rem; list-style-type: disc; margin-left: 1.5rem;">
+                            <li>\((k)' = 0\) (konstant)</li>
+                            <li>\((x^n)' = n \cdot x^{n-1}\)</li>
+                            <li>\((k \cdot u)' = k \cdot u'\)</li>
+                            <li>\((u \pm v)' = u' \pm v'\)</li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </aside>
