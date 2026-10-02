@@ -223,3 +223,95 @@ export function analyzeSalaryTax(gross, taxRate, deduction) {
 
     return { result: netSalary, taxAmount, taxableAmount, steps };
 }
+
+/**
+ * Avskrivning (Saldoskjema) for første år.
+ * @param {number} value - Anskaffelsesverdi
+ * @param {number} rate - Avskrivningssats (%)
+ * @returns {Object} Resultat (verditap) og steps
+ */
+export function analyzeDepreciation(value, rate) {
+    const steps = [];
+
+    steps.push({
+        description: `Vi skal regne ut verditapet for det første året med saldoskjema. Formelen er:`,
+        math: `\\text{Verditap} = \\text{Anskaffelsesverdi} \\cdot \\frac{\\text{Avskrivningssats}}{100}`
+    });
+
+    const loss = value * (rate / 100);
+
+    steps.push({
+        description: `Vi setter inn verdiene:`,
+        math: `\\text{Verditap} = ${value} \\cdot \\frac{${rate}}{100} = ${loss.toFixed(2)}`
+    });
+
+    const newValue = value - loss;
+
+    steps.push({
+        description: `Bokført verdi etter år 1 er da:`,
+        math: `${value} - ${loss.toFixed(2)} = ${newValue.toFixed(2)}`
+    });
+
+    return {
+        result: loss,
+        newValue,
+        steps
+    };
+}
+
+/**
+ * Annuitetslån (Terminbeløp).
+ * T = K * r / (1 - (1+r)^-n)
+ * @param {number} loan - Lånebeløp (K)
+ * @param {number} ratePercent - Rente per termin (%)
+ * @param {number} terms - Antall terminer (n)
+ * @returns {Object} Resultat (terminbeløp) og steps
+ */
+export function analyzeAnnuityLoan(loan, ratePercent, terms) {
+    const steps = [];
+
+    const r = ratePercent / 100;
+
+    steps.push({
+        description: `Formelen for å finne terminbeløpet ($T$) for et annuitetslån er:`,
+        math: `T = K \\cdot \\frac{r}{1 - (1+r)^{-n}}`
+    });
+
+    steps.push({
+        description: `Hvor:\n$K = ${loan}$ (Lånebeløp)\n$r = ${ratePercent}\\% = ${r}$ (rente per termin)\n$n = ${terms}$ (antall terminer)`,
+        math: ''
+    });
+
+    // Hvis renten er 0
+    if (r === 0) {
+        const result = loan / terms;
+        steps.push({
+            description: `Siden renten er 0%, deler vi bare lånebeløpet på antall terminer:`,
+            math: `T = \\frac{${loan}}{${terms}} = ${result.toFixed(2)}`
+        });
+        return { result, steps };
+    }
+
+    const denominator = 1 - Math.pow(1 + r, -terms);
+    const result = loan * (r / denominator);
+
+    steps.push({
+        description: `Vi setter inn tallene i formelen:`,
+        math: `T = ${loan} \\cdot \\frac{${r}}{1 - (1 + ${r})^{-${terms}}}`
+    });
+
+    steps.push({
+        description: `Vi regner ut nevneren:`,
+        math: `1 - (1.0${ratePercent})^{-${terms}} \\approx ${denominator.toFixed(4)}`
+    });
+
+    steps.push({
+        description: `Til slutt regner vi ut terminbeløpet:`,
+        math: `T = ${loan} \\cdot \\frac{${r}}{${denominator.toFixed(4)}} \\approx ${result.toFixed(2)}`
+    });
+
+    return {
+        result,
+        steps
+    };
+}

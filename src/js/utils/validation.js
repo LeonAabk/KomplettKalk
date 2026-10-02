@@ -71,6 +71,33 @@ export function validateAreaInput(shape, val1Str, val2Str) {
 }
 
 /**
+ * Validerer input for overflateareal
+ */
+export function validateSurfaceAreaInput(shape, val1Str, val2Str) {
+    const val1 = parseFloat(val1Str);
+
+    if (isNaN(val1) || val1 <= 0) {
+        return {
+            isValid: false,
+            hint: 'Radius må være et positivt tall.'
+        };
+    }
+
+    if (shape === 'cylinder' || shape === 'cone') {
+        const val2 = parseFloat(val2Str);
+        if (isNaN(val2) || val2 <= 0) {
+            return {
+                isValid: false,
+                hint: shape === 'cylinder' ? 'Du må oppgi en gyldig positiv verdi for høyde.' : 'Du må oppgi en gyldig positiv verdi for sidekant (s).'
+            };
+        }
+        return { isValid: true, values: { shape, val1, val2 }, hint: null };
+    }
+
+    return { isValid: true, values: { shape, val1, val2: null }, hint: null };
+}
+
+/**
  * Validerer input for trigonometri
  */
 export function validateTrigonometryInput(angleStr, givenValueStr) {
@@ -140,6 +167,59 @@ export function validateSquareRootInput(numStr) {
     // Oppgaven ba om gode pedagogiske meldinger, så kanskje la basic.js ta seg av den matematiske forklaringen.
 
     return { isValid: true, values: { number }, hint: null };
+}
+
+export function validateBinomialInput(nStr, pStr, kStr) {
+    const n = parseInt(nStr, 10);
+    const p = parseFloat(pStr);
+    const k = parseInt(kStr, 10);
+
+    if (isNaN(n) || n < 1) {
+        return { isValid: false, hint: 'Antall forsøk (n) må være minst 1.' };
+    }
+    if (isNaN(p) || p < 0 || p > 1) {
+        return { isValid: false, hint: 'Sannsynlighet (p) må være mellom 0 og 1.' };
+    }
+    if (isNaN(k) || k < 0) {
+        return { isValid: false, hint: 'Antall suksesser (k) må være et positivt tall (eller 0).' };
+    }
+    if (k > n) {
+        return { isValid: false, hint: 'Du kan ikke ha flere suksesser (k) enn antall forsøk (n).' };
+    }
+
+    return { isValid: true, values: { n, p, k }, hint: null };
+}
+
+export function validateDepreciationInput(valueStr, rateStr) {
+    const value = parseFloat(valueStr);
+    const rate = parseFloat(rateStr);
+
+    if (isNaN(value) || value <= 0) {
+        return { isValid: false, hint: 'Anskaffelsesverdi må være et positivt tall.' };
+    }
+    if (isNaN(rate) || rate < 0 || rate > 100) {
+        return { isValid: false, hint: 'Avskrivningssats må være et tall mellom 0 og 100 (%).' };
+    }
+
+    return { isValid: true, values: { value, rate }, hint: null };
+}
+
+export function validateAnnuityLoanInput(loanStr, rateStr, termsStr) {
+    const loan = parseFloat(loanStr);
+    const rate = parseFloat(rateStr);
+    const terms = parseInt(termsStr, 10);
+
+    if (isNaN(loan) || loan <= 0) {
+        return { isValid: false, hint: 'Lånebeløp må være et positivt tall.' };
+    }
+    if (isNaN(rate) || rate < 0) {
+        return { isValid: false, hint: 'Rente må være et positivt tall.' };
+    }
+    if (isNaN(terms) || terms <= 0) {
+        return { isValid: false, hint: 'Antall terminer må være et positivt heltall.' };
+    }
+
+    return { isValid: true, values: { loan, rate, terms }, hint: null };
 }
 
 /**

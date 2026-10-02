@@ -119,6 +119,13 @@ export const functionData = [
         icon: '🧊'
     },
     {
+        id: 'module-surface-area',
+        title: 'Overflateareal',
+        category: 'geometri',
+        description: 'Beregn overflateareal av kule, sylinder eller kjegle.',
+        icon: '🌐'
+    },
+    {
         id: 'module-fractions',
         title: 'Brøkregning',
         category: 'grunnleggende',
@@ -203,11 +210,32 @@ export const functionData = [
         icon: '🎱'
     },
     {
+        id: 'module-binomial',
+        title: 'Binomisk Sannsynlighet',
+        category: 'sannsynlighet',
+        description: 'Beregn sannsynligheten P(X=k) for binomiske forsøk.',
+        icon: '🎯'
+    },
+    {
         id: 'module-econ-markup',
         title: 'Varekalkyle',
         category: 'okonomi',
         description: 'Regn ut selvkost og utsalgspris fra inntakskost, frakt og avanse.',
         icon: '📈'
+    },
+    {
+        id: 'module-depreciation',
+        title: 'Avskrivning (Saldoskjema)',
+        category: 'okonomi',
+        description: 'Beregn verditapet for første år med saldoskjema.',
+        icon: '📉'
+    },
+    {
+        id: 'module-annuity-loan',
+        title: 'Annuitetslån',
+        category: 'okonomi',
+        description: 'Finn terminbeløpet trinnvis med formelen for annuitetslån.',
+        icon: '💳'
     },
     {
         id: 'module-geom-sector',
