@@ -1,5 +1,6 @@
 import { initTheme } from './ui/theme.js';
 import { initUI } from './ui/ui.js';
+import { initCatalog } from './ui/catalog-ui.js';
 import { initExtras } from './ui/extras.js';
 
 /**
@@ -9,6 +10,9 @@ import { initExtras } from './ui/extras.js';
 document.addEventListener('DOMContentLoaded', () => {
     // Initialiser temahåndtering
     initTheme();
+
+    // Legg inn flere kalkulatorer fra katalogen (før UI bygger dashboardet)
+    initCatalog();
 
     // Initialiser UI og bind event listeners
     initUI();
