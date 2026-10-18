@@ -36,7 +36,7 @@ python3 -m http.server 8123
 `steps` er en liste med `{ description, math?, title?, note? }`.
 - `description`: forklaring. Støtter inline matte med `$…$`, og `\n` gir linjeskift.
 - `math`: LaTeX som vises som egen formel (KaTeX display).
-- `note`: «hvorfor»-forklaring/tips, vises som grønn boks under formelen.
+- `note`: «hvorfor»-forklaring/tips, vises som blå margnotat under formelen.
 - Siste steg vises automatisk som «Resultat». Bruk avrundede tall (se `r()` i `algebra.js`).
 
 ## Graf
