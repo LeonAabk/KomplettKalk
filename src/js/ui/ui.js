@@ -30,7 +30,7 @@ import { renderSteps } from '../components/step-by-step.js';
 import { renderGraph, renderEmptyGraph, clearGraph } from '../components/graph.js';
 import { renderRightTriangle } from '../components/shapes.js';
 import { evaluateMath } from '../utils/mathParser.js';
-import { functionData } from '../utils/functionData.js';
+import { functionData, CATEGORY_NAMES } from '../utils/functionData.js';
 
 
 /**
@@ -54,7 +54,14 @@ export function initUI() {
     const btnDrawQuick = document.getElementById('btn-draw-quick');
 
     // Tegn tomt koordinatsystem ved oppstart
+    const showGraphHint = () => {
+        const hint = document.createElement('p');
+        hint.className = 'graph-hint';
+        hint.textContent = 'Skriv inn en funksjon, f.eks. x^2 - 4, eller regn ut en andregrads- eller lineær funksjon.';
+        graphDetails.replaceChildren(hint);
+    };
     renderEmptyGraph(graphEl);
+    showGraphHint();
 
     // Dashboard Elements
     const dashboardGrid = document.getElementById('dashboard-grid');
@@ -76,6 +83,7 @@ export function initUI() {
     }
 
     function showDashboard() {
+        document.body.dataset.view = 'dashboard';
         document.querySelectorAll('.educational-module').forEach(mod => {
             mod.style.display = 'none';
         });
@@ -91,6 +99,7 @@ export function initUI() {
             alert('Denne modulen mangler HTML-struktur!');
             return;
         }
+        document.body.dataset.view = 'module';
         dashboardGrid.style.display = 'none';
         emptyState.hidden = true;
         document.querySelectorAll('.educational-module').forEach(mod => {
@@ -118,6 +127,28 @@ export function initUI() {
         }
     });
 
+    // Formelen er ikonet: KaTeX hvis den er lastet, ellers emoji
+    function fitFormula(el) {
+        const inner = el.firstElementChild;
+        if (!inner) return;
+        el.style.fontSize = '';
+        const avail = el.clientWidth - 16;
+        const need = inner.scrollWidth;
+        if (avail > 0 && need > avail) {
+            el.style.fontSize = `${Math.max(avail / need, 0.62)}em`;
+        }
+    }
+
+    function renderFormula(el, item) {
+        if (window.katex && item.formula) {
+            try {
+                window.katex.render(item.formula, el, { throwOnError: true, displayMode: false });
+                return;
+            } catch (e) { /* faller tilbake til ikon */ }
+        }
+        el.textContent = item.icon;
+    }
+
     // Dynamisk generering av dashboard-kort
     function renderDashboardCards() {
         dashboardGrid.innerHTML = '';
@@ -129,12 +160,23 @@ export function initUI() {
             card.setAttribute('role', 'button');
             card.tabIndex = 0;
 
-            card.innerHTML = `
-                <div class="module-card-icon" aria-hidden="true">${item.icon}</div>
-                <h3>${item.title}</h3>
-                <p>${item.description}</p>
-            `;
+            const formula = document.createElement('div');
+            formula.className = 'module-card-formula';
+            formula.setAttribute('aria-hidden', 'true');
+            renderFormula(formula, item);
 
+            const body = document.createElement('div');
+            body.className = 'module-card-body';
+            const title = document.createElement('h3');
+            title.textContent = item.title;
+            const desc = document.createElement('p');
+            desc.textContent = item.description;
+            const cat = document.createElement('span');
+            cat.className = 'module-card-cat';
+            cat.textContent = CATEGORY_NAMES[item.category] || item.category;
+            body.append(title, desc, cat);
+
+            card.append(formula, body);
             card.addEventListener('click', () => openModule(item.id));
             card.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -148,6 +190,20 @@ export function initUI() {
     }
 
     renderDashboardCards();
+    document.body.dataset.view = 'dashboard';
+
+    // Tilpass formlene til kortbredden når fonter og layout er klare
+    const fitAllFormulas = () => dashboardGrid.querySelectorAll('.module-card-formula').forEach(fitFormula);
+    requestAnimationFrame(fitAllFormulas);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAllFormulas);
+    let fitTimer = 0;
+    window.addEventListener('resize', () => {
+        clearTimeout(fitTimer);
+        fitTimer = setTimeout(fitAllFormulas, 150);
+    });
+
+    const heroSub = document.getElementById('hero-sub');
+    if (heroSub) heroSub.textContent = `${functionData.length} kalkulatorer som viser utregningen steg for steg.`;
     let moduleCards = document.querySelectorAll('.module-card');
 
     // Tilbake-/lukk-knapper (inkluderer "×"-knappene, som tidligere manglet handler)
@@ -171,36 +227,46 @@ export function initUI() {
                 card.style.display = text.includes(searchTerm) ? 'flex' : 'none';
             });
             updateEmptyState();
+            requestAnimationFrame(fitAllFormulas);
         });
         globalSearch.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') globalSearch.blur(); // lukker tastaturet på mobil
         });
     }
 
-    // Dynamisk generering av Sidemeny
+    // Dynamisk generering av Sidemeny (med antall emner per kategori)
     if (navUl) {
         navUl.innerHTML = '';
 
-        // Finn unike kategorier
-        const uniqueCategories = [...new Set(functionData.map(item => item.category))];
+        const counts = {};
+        functionData.forEach(item => { counts[item.category] = (counts[item.category] || 0) + 1; });
 
-        // Alle emner øverst
-        const alleLi = document.createElement('li');
-        alleLi.innerHTML = '<a href="#alle" class="active">Alle Emner</a>';
-        navUl.appendChild(alleLi);
-
-        // Kategori-navn oversettelse
-        const categoryNames = {
-            'okonomi': 'Økonomi',
-            'grunnleggende': 'Grunnleggende'
+        const addLink = (href, label, count, category) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = href;
+            if (category) a.dataset.category = category;
+            if (category) {
+                const dot = document.createElement('span');
+                dot.className = 'nav-dot';
+                dot.setAttribute('aria-hidden', 'true');
+                a.appendChild(dot);
+            }
+            const text = document.createElement('span');
+            text.className = 'nav-label';
+            text.textContent = label;
+            const num = document.createElement('span');
+            num.className = 'nav-count';
+            num.textContent = count;
+            a.append(text, num);
+            li.appendChild(a);
+            navUl.appendChild(li);
+            return a;
         };
 
-        // Legg til de andre kategoriene
-        uniqueCategories.forEach(cat => {
-            const li = document.createElement('li');
-            let displayName = categoryNames[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
-            li.innerHTML = `<a href="#${cat}">${displayName}</a>`;
-            navUl.appendChild(li);
+        addLink('#alle', 'Alle emner', functionData.length).classList.add('active');
+        Object.keys(counts).forEach(cat => {
+            addLink(`#${cat}`, CATEGORY_NAMES[cat] || cat, counts[cat], cat);
         });
 
         // Filtreringslogikk for nye lenker
@@ -208,25 +274,19 @@ export function initUI() {
         newSidebarLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Update active state
                 newSidebarLinks.forEach(l => l.classList.remove('active'));
                 link.classList.add('active');
 
-                const category = link.getAttribute('href').substring(1); // remove '#'
+                const category = link.getAttribute('href').substring(1);
 
-                // Filtrer kort
-                const moduleCards = document.querySelectorAll('.module-card');
-                moduleCards.forEach(card => {
-                    if (category === 'alle' || card.getAttribute('data-category') === category) {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = 'none';
-                    }
+                document.querySelectorAll('.module-card').forEach(card => {
+                    card.style.display = (category === 'alle' || card.getAttribute('data-category') === category) ? 'flex' : 'none';
                 });
 
                 // Sørg for at dashboardet vises og moduler skjules
                 if (globalSearch) globalSearch.value = '';
                 showDashboard();
+                requestAnimationFrame(fitAllFormulas);
             });
         });
     }
@@ -276,7 +336,7 @@ export function initUI() {
         sheetFab.className = 'sheet-fab';
         sheetFab.setAttribute('aria-controls', sidebar.id);
         sheetFab.setAttribute('aria-expanded', 'false');
-        sheetFab.innerHTML = '<span aria-hidden="true">📈</span> Graf';
+        sheetFab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18M4 17c4 0 5-12 8-12s4 12 8 12"/></svg><span>Graf</span>';
 
         document.body.append(sheetBackdrop, sheetFab);
 
@@ -331,6 +391,8 @@ export function initUI() {
     const unitCircleCanvas = document.getElementById('unit-circle-canvas');
     if (unitCircleCanvas) {
         drawUnitCircle(unitCircleCanvas);
+        // Canvas bruker faste farger ved tegning, så den må tegnes på nytt ved temabytte
+        window.addEventListener('themeChanged', () => drawUnitCircle(unitCircleCanvas));
     }
 
     // Render KaTeX for Reference Tab
@@ -351,7 +413,7 @@ export function initUI() {
         const funcStr = quickInput.value.trim();
         if (!funcStr) {
             clearGraph(graphEl);
-            graphDetails.replaceChildren();
+            showGraphHint();
             return;
         }
 
