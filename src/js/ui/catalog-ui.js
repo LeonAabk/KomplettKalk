@@ -2,7 +2,10 @@
  * Bygger skjema, resultatboks og utregning for emnene i modules/catalog.js
  * og legger dem inn i dashboardet. Må kjøres FØR initUI().
  */
-import { catalog } from '../modules/catalog.js';
+import { catalog as catalog1 } from '../modules/catalog.js';
+import { catalog2 } from '../modules/catalog2.js';
+
+const catalog = [...catalog1, ...catalog2];
 import { functionData } from '../utils/functionData.js';
 import { renderSteps } from '../components/step-by-step.js';
 
@@ -13,7 +16,7 @@ function esc(s) {
 /** "3, 5,7 8;9" og "2,5 4" (komma som desimal) → tall */
 function parseList(str) {
     const out = [];
-    for (const tok of str.split(/[;\s]+/).filter(Boolean)) {
+    for (const tok of str.split(/[;:\s]+/).filter(Boolean)) {
         const t = tok.replace(/,+$/, '');
         const parts = (t.match(/,/g) || []).length > 1 ? t.split(',') : [t.replace(',', '.')];
         for (const p of parts) out.push(parseFloat(p.replace(',', '.')));
@@ -32,7 +35,8 @@ function fieldHtml(id, f) {
     }
     const min = f.min !== undefined ? ` min="${f.min}"` : '';
     const req = f.optional ? '' : ' required';
-    return `<div class="input-group"><label for="${fid}">${esc(f.label)}</label><input type="number" id="${fid}" name="${f.name}" step="any" inputmode="decimal"${min}${req}></div>`;
+    const val = f.value !== undefined ? ` value="${esc(f.value)}"` : '';
+    return `<div class="input-group"><label for="${fid}">${esc(f.label)}</label><input type="number" id="${fid}" name="${f.name}" step="any" inputmode="decimal"${min}${val}${req}></div>`;
 }
 
 function buildSection(t) {
