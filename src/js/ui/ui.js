@@ -28,6 +28,7 @@ import { analyzeNPR, analyzeNCR, analyzeBinomial } from '../modules/probability.
 import { analyzeUnitConversion, analyzeSpeedConversion } from '../modules/conversion.js';
 import { renderSteps } from '../components/step-by-step.js';
 import { renderGraph, renderEmptyGraph, clearGraph } from '../components/graph.js';
+import { renderRightTriangle } from '../components/shapes.js';
 import { evaluateMath } from '../utils/mathParser.js';
 import { functionData } from '../utils/functionData.js';
 
@@ -660,6 +661,7 @@ export function initUI() {
     const pythStepsContainer = document.getElementById('step-by-step-container-pythagoras');
     const pythStepsContent = document.getElementById('steps-content-pythagoras');
     const pythResultBox = document.getElementById('result-pythagoras');
+    const pythDiagram = document.getElementById('diagram-pythagoras');
 
     if (pythForm) {
         pythForm.addEventListener('submit', (e) => {
@@ -672,6 +674,7 @@ export function initUI() {
                 pythStepsBtn.disabled = true;
                 pythStepsContainer.hidden = true;
                 pythResultBox.hidden = true;
+                pythDiagram.hidden = true;
                 return;
             }
             hideHint(pythHintBox);
@@ -684,6 +687,11 @@ export function initUI() {
 
             pythResultBox.innerHTML = `<strong>Resultat:</strong> Den manglende siden (${result.missing}) er ${Number.isInteger(result.result) ? result.result : result.result.toFixed(2)}`;
             pythResultBox.hidden = false;
+
+            const sides = { a, b, c };
+            sides[result.missing] = result.result;
+            pythDiagram.hidden = false;
+            renderRightTriangle(pythDiagram, { ...sides, missing: result.missing });
 
             if (!pythStepsContainer.hidden) {
                 renderSteps(result.steps, pythStepsContent);
