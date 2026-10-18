@@ -1,115 +1,147 @@
+/* ==========================================================================
+   Designtokens
+   Lys modus = rutepapir (kulepenn-blå, markeringstusj-gul, rettepenn-rød)
+   Mørk modus = tavle (kritt-hvit, kritt-blå, kritt-gul)
+   Gamle variabelnavn (--bg-primary osv.) peker på de nye, slik at eldre
+   inline-stiler i index.html fortsatt virker.
+   ========================================================================== */
+
 :root {
-    /* Light Theme (Default) */
-    --bg-primary: #f8fafc;
-    --bg-secondary: #ffffff;
-    --bg-tertiary: #e2e8f0;
+    /* Papir og flater */
+    --paper: #fbfcfe;
+    --grid-line: rgba(36, 56, 214, 0.075);
+    --surface: #ffffff;
+    --surface-2: #f1f4f9;
+    --line: #d3dbe8;
+    --line-strong: #aeb9cc;
 
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-color: var(--text-primary); /* alias brukt av enkelte inline-stiler */
+    /* Tekst (blekk) */
+    --ink: #141b2d;
+    --ink-2: #4a5570;
+    --ink-3: #6b768f;
 
-    --accent-primary: #3b82f6;
-    --accent-primary-hover: #2563eb;
-    --accent-secondary: #10b981;
-    --accent-soft: rgba(59, 130, 246, 0.10);
+    /* Kulepenn: handling og lenker */
+    --pen: #2438d6;
+    --pen-hover: #1b2cb0;
+    --pen-soft: rgba(36, 56, 214, 0.09);
+    --on-pen: #ffffff;
 
-    --border-color: #cbd5e1;
+    /* Markeringstusj: svaret */
+    --marker: #ffe066;
+    --marker-soft: #fff4b8;
+    --marker-edge: #f2c200;
 
-    --error-color: #ef4444;
-    --error-bg: #fee2e2;
-    --hint-color: #b45309;
-    --hint-bg: #fef3c7;
+    /* Rettepenn: feil og hint */
+    --red-pen: #c81e2d;
+    --red-soft: #fdecee;
+    --red-text: #a3141f;
 
-    /* Category Colors */
-    --cat-algebra: #3b82f6;
-    --cat-geometri: #10b981;
-    --cat-grunnleggende: #eab308;
-    --cat-okonomi: #a855f7;
-    --cat-konvertering: #f97316;
-    --cat-statistikk: #06b6d4;
-    --cat-fysikk: #800020;
-    --cat-sannsynlighet: #ec4899;
+    --green: #0b7a55;
 
-    /* Input Fields */
-    --input-bg: #ffffff;
-    --input-border: #cbd5e1;
+    /* Kategorier */
+    --cat-algebra: #3552e0;
+    --cat-geometri: #0e9f6e;
+    --cat-grunnleggende: #c79100;
+    --cat-okonomi: #8e44d8;
+    --cat-konvertering: #e8590c;
+    --cat-statistikk: #0c9db5;
+    --cat-fysikk: #a31d3b;
+    --cat-sannsynlighet: #d6336c;
 
-    /* Graf */
-    --graph-bg: #f8fafc;
-    --graph-grid: #e2e8f0;
-    --graph-axis: #64748b;
-    --graph-curve: #2563eb;
-    --graph-vertex: #d97706;
-    --graph-root: #dc2626;
-    --graph-yint: #059669;
-    --graph-sym: #94a3b8;
+    /* Graf og figurer */
+    --graph-bg: #ffffff;
+    --graph-grid: #e6ecf5;
+    --graph-axis: #5b6784;
+    --graph-curve: var(--pen);
+    --graph-vertex: #e67700;
+    --graph-root: var(--red-pen);
+    --graph-yint: var(--green);
+    --graph-sym: #94a0ba;
 
-    /* Typography */
-    --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    /* Typografi */
+    --font-ui: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-display: 'Literata', Georgia, 'Times New Roman', serif;
     --font-size-base: 16px;
     --font-size-sm: 0.875rem;
     --font-size-lg: 1.125rem;
     --font-size-xl: 1.25rem;
 
-    /* Spacing & Layout */
+    /* Rom og former */
+    --gutter: clamp(16px, 4vw, 32px);
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
     --spacing-md: 1rem;
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --tap-size: 48px;
+    --shadow-sheet: 0 -10px 40px -8px rgba(20, 27, 45, 0.35);
 
-    --border-radius: 8px;
-    --radius-lg: 14px;
-    --tap-size: 48px; /* minimum trykkflate på touch */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 -8px 30px -6px rgba(0, 0, 0, 0.28);
+    /* Gamle navn → nye */
+    --font-family: var(--font-ui);
+    --bg-primary: var(--paper);
+    --bg-secondary: var(--surface);
+    --bg-tertiary: var(--surface-2);
+    --text-primary: var(--ink);
+    --text-secondary: var(--ink-2);
+    --text-color: var(--ink);
+    --accent-primary: var(--pen);
+    --accent-primary-hover: var(--pen-hover);
+    --accent-secondary: var(--green);
+    --accent-soft: var(--pen-soft);
+    --border-color: var(--line);
+    --border-radius: var(--radius-sm);
+    --error-color: var(--red-pen);
+    --error-bg: var(--red-soft);
+    --hint-color: var(--red-text);
+    --hint-bg: var(--red-soft);
+    --input-bg: var(--surface);
+    --input-border: var(--line-strong);
 }
 
 [data-theme="dark"] {
-    /* Dark Theme */
-    --bg-primary: #000000;
-    --bg-secondary: #0a0a0a;
-    --bg-tertiary: #171717;
+    --paper: #131d1a;
+    --grid-line: rgba(232, 240, 228, 0.05);
+    --surface: #1a2824;
+    --surface-2: #21332e;
+    --line: #2e433d;
+    --line-strong: #4c6560;
 
-    --text-primary: #ededed;
-    --text-secondary: #a1a1aa;
+    --ink: #ecf1e8;
+    --ink-2: #b3c0b6;
+    --ink-3: #8a9c92;
 
-    --accent-primary: #3b82f6;
-    --accent-primary-hover: #60a5fa;
-    --accent-secondary: #10b981;
-    --accent-soft: rgba(96, 165, 250, 0.14);
+    --pen: #8db1ff;
+    --pen-hover: #afc8ff;
+    --pen-soft: rgba(141, 177, 255, 0.14);
+    --on-pen: #0e1a33;
 
-    --border-color: #27272a;
+    --marker: #f4d35e;
+    --marker-soft: rgba(244, 211, 94, 0.15);
+    --marker-edge: #e9c84a;
 
-    --error-color: #ef4444;
-    --error-bg: #450a0a;
-    --hint-color: #eab308;
-    --hint-bg: #422006;
+    --red-pen: #ff8f85;
+    --red-soft: rgba(255, 143, 133, 0.12);
+    --red-text: #ffb3ab;
 
-    /* Category Colors */
-    --cat-algebra: #3b82f6;
-    --cat-geometri: #10b981;
-    --cat-grunnleggende: #eab308;
-    --cat-okonomi: #a855f7;
-    --cat-konvertering: #f97316;
-    --cat-statistikk: #06b6d4;
-    --cat-fysikk: #c2415d;
-    --cat-sannsynlighet: #ec4899;
+    --green: #6fdda8;
 
-    /* Input Fields */
-    --input-bg: #27272a;
-    --input-border: #52525b;
+    --cat-algebra: #8db1ff;
+    --cat-geometri: #5fd6a5;
+    --cat-grunnleggende: #f2c94c;
+    --cat-okonomi: #c79bff;
+    --cat-konvertering: #ff9f6b;
+    --cat-statistikk: #66d4e8;
+    --cat-fysikk: #f0728f;
+    --cat-sannsynlighet: #ff7eb0;
 
-    /* Graf */
-    --graph-bg: #000000;
-    --graph-grid: #27272a;
-    --graph-axis: #a1a1aa;
-    --graph-curve: #60a5fa;
-    --graph-vertex: #fbbf24;
-    --graph-root: #f87171;
-    --graph-yint: #34d399;
-    --graph-sym: #71717a;
+    --graph-bg: #101916;
+    --graph-grid: #25372f;
+    --graph-axis: #9fb1a6;
+    --graph-vertex: #ffd866;
+    --graph-sym: #7c9087;
 
-    --shadow-lg: 0 -8px 30px -6px rgba(0, 0, 0, 0.8);
+    --shadow-sheet: 0 -10px 40px -8px rgba(0, 0, 0, 0.7);
 }

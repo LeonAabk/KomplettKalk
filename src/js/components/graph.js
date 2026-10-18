@@ -323,12 +323,6 @@ function draw(container) {
     svg.appendChild(ticksG);
 
     if (state.empty) {
-        svg.appendChild(svgEl('text', {
-            class: 'g-empty-hint', x: w / 2, y: h / 2 - 4
-        }, 'Skriv inn en funksjon, eller'));
-        svg.appendChild(svgEl('text', {
-            class: 'g-empty-hint', x: w / 2, y: h / 2 + 14
-        }, 'regn ut en andregrads-/lineær funksjon'));
         mount(container, svg, describe(state));
         return;
     }

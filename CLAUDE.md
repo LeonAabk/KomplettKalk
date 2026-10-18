@@ -36,13 +36,24 @@ python3 -m http.server 8123
 `steps` er en liste med `{ description, math?, title?, note? }`.
 - `description`: forklaring. Støtter inline matte med `$…$`, og `\n` gir linjeskift.
 - `math`: LaTeX som vises som egen formel (KaTeX display).
-- `note`: «hvorfor»-forklaring/tips, vises som grønn boks under formelen.
+- `note`: «hvorfor»-forklaring/tips, vises som blå margnotat under formelen.
 - Siste steg vises automatisk som «Resultat». Bruk avrundede tall (se `r()` i `algebra.js`).
 
 ## Graf
 `renderGraph(el, punkter, vertex, røtter, { yIntercept, symmetry, fn, name })`.
 Fargene styres av `--graph-*`-variabler i `theme.css`, så grafen følger tema uten ny tegning.
 På mobil (≤ 900 px) er assistent-panelet et bunnark; `openSheet('tab-graph')` åpner det.
+
+## Design
+Lys modus = rutepapir, mørk modus = tavle. Alle farger og mål ligger som tokens i `theme.css`
+(gamle navn som `--bg-primary` peker på de nye). Roller: kulepenn-blå (`--pen`) for handling,
+markeringstusj-gul (`--marker`) for svaret, rettepenn-rød (`--red-pen`) for feil.
+- Fonter (Google Fonts): Atkinson Hyperlegible (grensesnitt) og Literata (overskrifter).
+- Emnekort viser formelen som ikon: hvert emne i `functionData.js` har `formula` (KaTeX).
+  `icon` (emoji) er bare reserve hvis KaTeX ikke lastes. Valider nye formler med `katex.renderToString(..., {strict:'error'})`.
+- Kategorier har navn i `CATEGORY_NAMES` og farge via `--cat-<kategori>`.
+- `body[data-view]` er `dashboard` eller `module`; hero-seksjonen skjules i `module`.
+- Svaret (`.result-box`, siste steg) er alltid gult. Ikke bruk gult til andre ting.
 
 ## Mobil
 Mål på 320, 360, 390 og 768 px. Ingen horisontal scrolling (sjekk `document.documentElement.scrollWidth`).
