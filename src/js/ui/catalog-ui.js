@@ -4,8 +4,9 @@
  */
 import { catalog as catalog1 } from '../modules/catalog.js';
 import { catalog2 } from '../modules/catalog2.js';
+import { catalog3 } from '../modules/catalog3.js';
 
-const catalog = [...catalog1, ...catalog2];
+const catalog = [...catalog1, ...catalog2, ...catalog3];
 import { functionData } from '../utils/functionData.js';
 import { renderSteps } from '../components/step-by-step.js';
 
