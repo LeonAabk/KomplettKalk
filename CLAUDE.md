@@ -1,0 +1,54 @@
+# KomplettKalk (Matematikk-Assistent)
+
+Norsk matematikkassistent som kjører helt i nettleseren. Ingen backend og ingen byggesteg:
+ren HTML, CSS og ES-moduler. All brukertekst er på norsk (bokmål).
+
+## Kjøre lokalt
+ES-moduler fungerer ikke fra `file://`, så serv mappen over HTTP:
+
+```
+python3 -m http.server 8123
+# åpne http://localhost:8123/index.html
+```
+
+`index.html` i roten er selve siden. KaTeX lastes fra CDN (`cdn.jsdelivr.net`).
+
+## Struktur
+- `index.html` – all markup: dashboard, 49 `<section id="module-…">` og assistent-panelet.
+- `src/js/main.js` – inngangspunkt (`initTheme`, `initUI`).
+- `src/js/ui/ui.js` – kobler skjemaer, dashboard, søk, faner, bunnark og graf.
+- `src/js/modules/*.js` – ren regnelogikk per tema. Hver `analyzeXxx(...)` returnerer
+  resultat + `steps`.
+- `src/js/utils/validation.js` – én `validateXxx` per emne.
+- `src/js/utils/functionData.js` – listen over emner (id, tittel, kategori, beskrivelse, ikon).
+- `src/js/components/graph.js` – SVG-graf (ingen Chart.js). `renderGraph`, `renderEmptyGraph`, `clearGraph`.
+- `src/js/components/step-by-step.js` – `renderSteps(steps, container)`.
+- `src/css/theme.css` – variabler for lys/mørk modus. `src/css/style.css` – resten.
+
+## Legge til et nytt emne
+1. Legg en oppføring i `functionData.js` (id må være `module-<navn>`).
+2. Legg en `<section id="module-<navn>" class="educational-module">` i `index.html`
+   (kopier en eksisterende, f.eks. `module-compound-interest`).
+3. Skriv `analyze…` i riktig fil under `modules/` og `validate…` i `validation.js`.
+4. Koble det i `ui.js` med `setupAdvancedModuleUI('<navn>', validate, analyze, formatResultat)`.
+
+## Steg-format
+`steps` er en liste med `{ description, math?, title?, note? }`.
+- `description`: forklaring. Støtter inline matte med `$…$`, og `\n` gir linjeskift.
+- `math`: LaTeX som vises som egen formel (KaTeX display).
+- `note`: «hvorfor»-forklaring/tips, vises som grønn boks under formelen.
+- Siste steg vises automatisk som «Resultat». Bruk avrundede tall (se `r()` i `algebra.js`).
+
+## Graf
+`renderGraph(el, punkter, vertex, røtter, { yIntercept, symmetry, fn, name })`.
+Fargene styres av `--graph-*`-variabler i `theme.css`, så grafen følger tema uten ny tegning.
+På mobil (≤ 900 px) er assistent-panelet et bunnark; `openSheet('tab-graph')` åpner det.
+
+## Mobil
+Mål på 320, 360, 390 og 768 px. Ingen horisontal scrolling (sjekk `document.documentElement.scrollWidth`).
+Inputfelt har 16 px skrift (hindrer zoom på iOS), trykkflater er minst 44–48 px.
+Moduler åpnes via `history.pushState`, så Tilbake-knappen går til oversikten.
+
+## Testing
+Playwright ligger i `devDependencies`, men det er ingen sjekkede inn tester ennå.
+Se etter konsollfeil og overflow på alle emner etter endringer i CSS eller `index.html`.
