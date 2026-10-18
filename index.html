@@ -2,7 +2,9 @@
 <html lang="no" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="color-scheme" content="light dark">
     <title>Matematikk-Assistent</title>
 
     <!-- CSS -->
@@ -11,9 +13,6 @@
 
     <!-- KaTeX CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" crossorigin="anonymous">
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
     <!-- KaTeX JS -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -1863,13 +1862,12 @@
 
             <!-- Fane: Hurtig-Graf -->
             <div id="tab-graph" class="assistant-tab-pane active">
-            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-                <input type="text" id="quick-function-input" placeholder="f.eks. x*x" style="flex: 1; padding: 0.75rem; border: 1px solid var(--input-border); border-radius: var(--border-radius); background-color: var(--input-bg); color: var(--text-primary);">
+            <div class="quick-row">
+                <input type="text" id="quick-function-input" placeholder="f.eks. x*x" aria-label="Funksjon, f.eks. x*x"
+                       inputmode="text" enterkeyhint="go" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
                 <button id="btn-draw-quick" class="btn-primary">Tegn</button>
             </div>
-            <div class="chart-container">
-                <canvas id="quick-graph-canvas" aria-label="Graf av funksjonen"></canvas>
-            </div>
+            <div id="quick-graph" class="graph-view" aria-label="Graf av funksjonen"></div>
             <div id="graph-details" class="graph-details" aria-live="polite">
                 <!-- Data for top/bottom point, roots will be rendered here -->
             </div>
@@ -1877,7 +1875,7 @@
 
             <!-- Fane: Enhetssirkel -->
             <div id="tab-unit-circle" class="assistant-tab-pane">
-                <canvas id="unit-circle-canvas" width="320" height="320" aria-label="Enhetssirkel" style="max-width: 100%;"></canvas>
+                <canvas id="unit-circle-canvas" width="320" height="320" aria-label="Enhetssirkel"></canvas>
             </div>
 
             <!-- Fane: Kladdeark -->

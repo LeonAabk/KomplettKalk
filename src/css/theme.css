@@ -6,16 +6,18 @@
 
     --text-primary: #0f172a;
     --text-secondary: #475569;
+    --text-color: var(--text-primary); /* alias brukt av enkelte inline-stiler */
 
     --accent-primary: #3b82f6;
     --accent-primary-hover: #2563eb;
     --accent-secondary: #10b981;
+    --accent-soft: rgba(59, 130, 246, 0.10);
 
     --border-color: #cbd5e1;
 
     --error-color: #ef4444;
     --error-bg: #fee2e2;
-    --hint-color: #f59e0b;
+    --hint-color: #b45309;
     --hint-bg: #fef3c7;
 
     /* Category Colors */
@@ -32,6 +34,16 @@
     --input-bg: #ffffff;
     --input-border: #cbd5e1;
 
+    /* Graf */
+    --graph-bg: #f8fafc;
+    --graph-grid: #e2e8f0;
+    --graph-axis: #64748b;
+    --graph-curve: #2563eb;
+    --graph-vertex: #d97706;
+    --graph-root: #dc2626;
+    --graph-yint: #059669;
+    --graph-sym: #94a3b8;
+
     /* Typography */
     --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     --font-size-base: 16px;
@@ -47,8 +59,11 @@
     --spacing-xl: 2rem;
 
     --border-radius: 8px;
+    --radius-lg: 14px;
+    --tap-size: 48px; /* minimum trykkflate på touch */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 -8px 30px -6px rgba(0, 0, 0, 0.28);
 }
 
 [data-theme="dark"] {
@@ -63,6 +78,7 @@
     --accent-primary: #3b82f6;
     --accent-primary-hover: #60a5fa;
     --accent-secondary: #10b981;
+    --accent-soft: rgba(96, 165, 250, 0.14);
 
     --border-color: #27272a;
 
@@ -78,10 +94,22 @@
     --cat-okonomi: #a855f7;
     --cat-konvertering: #f97316;
     --cat-statistikk: #06b6d4;
-    --cat-fysikk: #800020;
+    --cat-fysikk: #c2415d;
     --cat-sannsynlighet: #ec4899;
 
     /* Input Fields */
     --input-bg: #27272a;
     --input-border: #52525b;
+
+    /* Graf */
+    --graph-bg: #000000;
+    --graph-grid: #27272a;
+    --graph-axis: #a1a1aa;
+    --graph-curve: #60a5fa;
+    --graph-vertex: #fbbf24;
+    --graph-root: #f87171;
+    --graph-yint: #34d399;
+    --graph-sym: #71717a;
+
+    --shadow-lg: 0 -8px 30px -6px rgba(0, 0, 0, 0.8);
 }

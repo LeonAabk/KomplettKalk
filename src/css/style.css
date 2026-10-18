@@ -1,8 +1,19 @@
-/* Reset and Base Styles */
+/* ==========================================================================
+   Matematikk-Assistent – hovedstilark
+   Struktur: 1 Base · 2 Header · 3 Layout · 4 Dashboard · 5 Moduler/skjema
+             6 Resultat & trinn · 7 Graf · 8 Assistent-panel · 9 Mobil
+   ========================================================================== */
+
+/* ---------- 1. Base ---------- */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 body {
@@ -12,14 +23,32 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
+    -webkit-tap-highlight-color: transparent;
+    overflow-wrap: break-word;
 }
 
-/* Header */
+button,
+input,
+select,
+textarea {
+    font: inherit;
+    touch-action: manipulation;
+}
+
+:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* ---------- 2. Header ---------- */
 .app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: var(--spacing-md);
     padding: var(--spacing-md) var(--spacing-xl);
+    padding-left: max(var(--spacing-xl), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-xl), env(safe-area-inset-right));
     background-color: var(--bg-secondary);
     border-bottom: 1px solid var(--border-color);
     box-shadow: var(--shadow-sm);
@@ -28,20 +57,25 @@ body {
 .app-header h1 {
     font-size: var(--font-size-xl);
     color: var(--accent-primary);
+    line-height: 1.2;
 }
 
 .header-controls {
     display: flex;
     gap: var(--spacing-md);
     align-items: center;
+    min-width: 0;
 }
 
 .header-controls input {
     padding: var(--spacing-sm) var(--spacing-md);
+    min-height: 44px;
     border: 1px solid var(--input-border);
     border-radius: var(--border-radius);
     background-color: var(--input-bg);
     color: var(--text-primary);
+    font-size: 16px; /* 16px hindrer at iOS zoomer inn ved fokus */
+    min-width: 0;
 }
 
 #theme-toggle {
@@ -49,94 +83,29 @@ body {
     border: none;
     font-size: var(--font-size-xl);
     cursor: pointer;
-    padding: var(--spacing-xs);
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
 }
 
-/* Layout */
-.app-container {
-    display: grid;
-    grid-template-columns: 200px 1fr 300px;
-    gap: var(--spacing-lg);
-    padding: var(--spacing-lg) var(--spacing-xl);
-    min-height: calc(100vh - 70px); /* Adjust based on header height */
-}
-
-/* Dashboard Grid */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--spacing-lg);
-}
-
-.module-card {
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-lg);
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.module-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    border-color: var(--accent-primary);
+#theme-toggle:hover {
     background-color: var(--bg-tertiary);
 }
 
-.module-card[data-category="algebra"] {
-    border-top: 4px solid var(--cat-algebra);
+/* ---------- 3. Layout ---------- */
+.app-container {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr) 340px;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg) var(--spacing-xl);
+    min-height: calc(100vh - 70px);
 }
 
-.module-card[data-category="geometri"] {
-    border-top: 4px solid var(--cat-geometri);
+/* Hindrer at lange/nowrap-elementer presser grid-kolonnene utover skjermen */
+.app-container > * {
+    min-width: 0;
 }
 
-.module-card[data-category="grunnleggende"] {
-    border-top: 4px solid var(--cat-grunnleggende);
-}
-
-.module-card[data-category="okonomi"] {
-    border-top: 4px solid var(--cat-okonomi);
-}
-
-.module-card[data-category="konvertering"] {
-    border-top: 4px solid var(--cat-konvertering);
-}
-
-.module-card[data-category="statistikk"] {
-    border-top: 4px solid var(--cat-statistikk);
-}
-
-.module-card[data-category="sannsynlighet"] {
-    border-top: 4px solid var(--cat-sannsynlighet);
-}
-
-.module-card[data-category="fysikk"] {
-    border-top: 4px solid var(--cat-fysikk);
-}
-
-.module-card-icon {
-    font-size: 3rem;
-    margin-bottom: var(--spacing-sm);
-    color: var(--accent-primary);
-}
-
-.module-card h3 {
-    margin-bottom: var(--spacing-xs);
-    color: var(--text-primary);
-}
-
-.module-card p {
-    color: var(--text-secondary);
-    font-size: var(--font-size-sm);
-}
-
-/* Navigation */
 .sidebar-nav ul {
     list-style: none;
 }
@@ -154,13 +123,13 @@ body {
     transition: background-color 0.2s;
 }
 
-.sidebar-nav a:hover, .sidebar-nav a.active {
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
     background-color: var(--bg-secondary);
     color: var(--accent-primary);
     font-weight: bold;
 }
 
-/* Main Dashboard */
 .main-dashboard {
     background-color: var(--bg-secondary);
     padding: var(--spacing-xl);
@@ -168,17 +137,146 @@ body {
     box-shadow: var(--shadow-md);
 }
 
-.educational-module h2 {
+/* ---------- 4. Dashboard ---------- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.module-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 0;
+}
+
+@media (hover: hover) {
+    .module-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        border-color: var(--accent-primary);
+        background-color: var(--bg-tertiary);
+    }
+}
+
+.module-card:active {
+    transform: scale(0.98);
+    background-color: var(--bg-tertiary);
+}
+
+.module-card[data-category="algebra"] { border-top: 4px solid var(--cat-algebra); }
+.module-card[data-category="geometri"] { border-top: 4px solid var(--cat-geometri); }
+.module-card[data-category="grunnleggende"] { border-top: 4px solid var(--cat-grunnleggende); }
+.module-card[data-category="okonomi"] { border-top: 4px solid var(--cat-okonomi); }
+.module-card[data-category="konvertering"] { border-top: 4px solid var(--cat-konvertering); }
+.module-card[data-category="statistikk"] { border-top: 4px solid var(--cat-statistikk); }
+.module-card[data-category="sannsynlighet"] { border-top: 4px solid var(--cat-sannsynlighet); }
+.module-card[data-category="fysikk"] { border-top: 4px solid var(--cat-fysikk); }
+
+.module-card-icon {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-sm);
+    color: var(--accent-primary);
+}
+
+.module-card h3 {
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-primary);
+    font-size: 1.05rem;
+    line-height: 1.3;
+}
+
+.module-card p {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: 1.45;
+}
+
+.dashboard-empty {
+    padding: var(--spacing-xl) var(--spacing-md);
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* ---------- 5. Moduler og skjema ---------- */
+.educational-module > p,
+.module-description {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.module-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm) var(--spacing-md);
     margin-bottom: var(--spacing-md);
 }
 
-/* Form Styles */
-.math-form {
+.module-header h2,
+.educational-module > h2 {
+    font-size: 1.5rem;
+    line-height: 1.25;
+    margin: 0;
+    flex: 1 1 14rem;
+    min-width: 0;
+}
+
+.educational-module > h2 {
+    margin-bottom: var(--spacing-md);
+}
+
+.btn-back-dashboard,
+.btn-close {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.4rem 1rem;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 9999px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-close {
+    justify-content: center;
+    min-width: 44px;
+    padding: 0.4rem;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.btn-back-dashboard:hover,
+.btn-close:hover {
+    background-color: var(--border-color);
+}
+
+.math-form,
+.calculator-form {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
     margin: var(--spacing-lg) 0;
-    max-width: 400px;
+    max-width: 520px;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+    gap: var(--spacing-sm) var(--spacing-md);
 }
 
 .input-group {
@@ -187,38 +285,73 @@ body {
     align-items: flex-start;
     gap: var(--spacing-xs);
     margin-bottom: var(--spacing-sm);
+    min-width: 0;
 }
 
 .input-group label {
-    font-weight: bold;
+    font-weight: 600;
 }
 
-.input-group input {
+.input-group input,
+.input-group select,
+.math-select,
+.math-form select,
+.calculator-form select {
     width: 100%;
-    padding: 0.75rem;
+    min-height: var(--tap-size);
+    padding: 0.65rem 0.75rem;
     border: 1px solid var(--input-border);
     border-radius: var(--border-radius);
     background-color: var(--input-bg);
     color: var(--text-primary);
-    font-size: var(--font-size-base);
+    font-size: 16px; /* hindrer zoom på iOS */
     transition: box-shadow 0.2s, border-color 0.2s;
 }
 
-.input-group select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--input-border);
-    border-radius: var(--border-radius);
-    background-color: var(--input-bg);
-    color: var(--text-primary);
-    font-size: var(--font-size-base);
-    transition: box-shadow 0.2s, border-color 0.2s;
-}
-
-.input-group input:focus {
+.input-group input:focus,
+.input-group select:focus,
+.math-select:focus {
     outline: none;
     border-color: var(--accent-primary);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.formula-display {
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    background-color: var(--accent-soft);
+    border-radius: var(--border-radius);
+    text-align: center;
+    font-size: 1.1rem;
+    overflow-x: auto;
+}
+
+/* Brøkregning: teller/nevner-bokser */
+.fractions-inputs {
+    flex-wrap: wrap;
+}
+
+.fractions-inputs input {
+    width: 100%;
+    min-height: var(--tap-size);
+    padding: 0.4rem;
+    text-align: center;
+    font-size: 16px;
+    border: 1px solid var(--input-border);
+    border-radius: var(--border-radius);
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+}
+
+.fractions-inputs hr {
+    border: 0;
+    border-top: 3px solid var(--text-primary) !important;
+    margin: 6px 0 !important;
+}
+
+.fractions-inputs select {
+    min-height: var(--tap-size);
+    font-size: 1.5rem !important;
 }
 
 button {
@@ -228,12 +361,21 @@ button {
     cursor: pointer;
     font-size: var(--font-size-base);
     font-weight: bold;
-    transition: background-color 0.2s, opacity 0.2s;
+    transition: background-color 0.2s, opacity 0.2s, transform 0.1s;
+}
+
+button:active:not(:disabled) {
+    transform: scale(0.98);
 }
 
 button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.btn-primary,
+.btn-secondary {
+    min-height: var(--tap-size);
 }
 
 .btn-primary {
@@ -255,46 +397,329 @@ button:disabled {
     background-color: var(--border-color);
 }
 
-/* Feedback & Steps */
-.hint-box {
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+    max-width: 520px;
+}
+
+.action-buttons > button {
+    flex: 1 1 auto;
+}
+
+/* ---------- 6. Resultat, hint og trinnvis utregning ---------- */
+.hint-box,
+.validation-hint {
     margin-top: var(--spacing-md);
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
     background-color: var(--hint-bg);
     color: var(--hint-color);
     border: 1px solid var(--hint-color);
+    font-weight: 500;
 }
 
-.steps-box {
-    margin-top: var(--spacing-xl);
+.hint-box[hidden],
+.validation-hint[hidden],
+.result-box[hidden],
+.steps-box[hidden],
+.step-container[hidden] {
+    display: none;
+}
+
+.result-box {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--accent-soft);
+    border: 1px solid var(--accent-primary);
+    border-left-width: 6px;
+    border-radius: var(--border-radius);
+    font-size: 1.15rem;
+    line-height: 1.7;
+    max-width: 640px;
+    animation: pop-in 0.25s ease-out;
+}
+
+.result-box strong {
+    color: var(--accent-primary);
+}
+
+@keyframes pop-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+}
+
+.steps-box,
+.step-container {
+    margin-top: var(--spacing-lg);
     padding: var(--spacing-lg);
     background-color: var(--bg-tertiary);
     border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-lg);
+}
+
+.steps-box > h3,
+.step-container > h3 {
+    margin-bottom: var(--spacing-md);
+    font-size: 1.15rem;
+}
+
+.steps-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    counter-reset: none;
 }
 
 .step-item {
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid var(--border-color);
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: var(--spacing-sm) var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    position: relative;
 }
 
-.step-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+/* Trinnlinje mellom nummerbadgene */
+.step-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--spacing-md) + 1rem - 1px);
+    top: calc(var(--spacing-md) + 2rem);
+    bottom: calc(-1 * var(--spacing-md));
+    width: 2px;
+    background: var(--border-color);
+    z-index: 0;
+}
+
+.step-num {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--accent-primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 1;
+}
+
+.step-body {
+    min-width: 0;
+}
+
+.step-title {
+    font-size: 1rem;
+    margin-bottom: 0.15rem;
 }
 
 .step-description {
-    margin-bottom: var(--spacing-sm);
     color: var(--text-secondary);
+    white-space: pre-line; /* gjør at \n i beskrivelser blir linjeskift */
+    margin-bottom: var(--spacing-sm);
 }
 
 .step-math {
     font-size: 1.1em;
+    padding: 0.25rem 0.5rem;
+    background-color: var(--bg-primary);
+    border-radius: var(--border-radius);
 }
 
-/* Assistant Sidebar */
+.step-math .katex-display {
+    margin: 0.4em 0;
+}
+
+.step-note {
+    margin-top: var(--spacing-sm);
+    padding: 0.5rem 0.75rem;
+    border-left: 3px solid var(--accent-secondary);
+    background-color: rgba(16, 185, 129, 0.10);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    white-space: pre-line;
+}
+
+.step-final {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.step-final .step-num {
+    background-color: var(--accent-secondary);
+}
+
+.step-tag {
+    display: inline-block;
+    margin-bottom: 0.25rem;
+    padding: 0.05rem 0.55rem;
+    border-radius: 9999px;
+    background-color: var(--accent-secondary);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+/* Lange formler skal kunne rulles sideveis i stedet for å sprenge siden */
+.katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.1em 0;
+}
+
+/* ---------- 7. Graf ---------- */
+.chart-container,
+.graph-view {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1; /* kvadratisk i sidepanelet */
+    background-color: var(--graph-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.graph-view svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: pan-y; /* lar siden rulle loddrett mens du drar sideveis i grafen */
+    cursor: crosshair;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.g-grid { stroke: var(--graph-grid); stroke-width: 1; }
+.g-axis { stroke: var(--graph-axis); stroke-width: 1.6; }
+.g-arrow { fill: var(--graph-axis); }
+
+.g-tick,
+.g-axis-title,
+.g-label {
+    paint-order: stroke;
+    stroke: var(--graph-bg);
+    stroke-width: 3.5px;
+    stroke-linejoin: round;
+}
+
+.g-tick { font-size: 11px; fill: var(--text-secondary); }
+.g-axis-title { font-size: 12px; font-style: italic; fill: var(--graph-axis); }
+.g-label { font-size: 12px; font-weight: 700; fill: var(--text-primary); }
+
+.g-curve {
+    fill: none;
+    stroke: var(--graph-curve);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.g-sym {
+    stroke: var(--graph-sym);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 5;
+}
+
+.g-pt { stroke: var(--graph-bg); stroke-width: 2; }
+.g-pt-vertex { fill: var(--graph-vertex); }
+.g-pt-root { fill: var(--graph-root); }
+.g-pt-yint { fill: var(--graph-yint); }
+
+.g-cursor {
+    fill: var(--graph-bg);
+    stroke: var(--graph-curve);
+    stroke-width: 2.6;
+}
+
+.g-cursor-line {
+    stroke: var(--graph-curve);
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+    opacity: 0.6;
+}
+
+.g-tip-bg { fill: var(--text-primary); opacity: 0.94; }
+.g-tip-text { fill: var(--bg-secondary); font-size: 12px; font-weight: 700; }
+
+.g-empty-hint {
+    fill: var(--text-secondary);
+    font-size: 13px;
+    text-anchor: middle;
+}
+
+.graph-details {
+    margin-top: var(--spacing-md);
+    font-size: var(--font-size-sm);
+}
+
+.graph-details p {
+    margin-bottom: var(--spacing-xs);
+}
+
+.graph-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: var(--spacing-sm);
+}
+
+.graph-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    min-width: 0;
+}
+
+.graph-stat-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-secondary);
+}
+
+.graph-stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
+}
+
+.stat-dot {
+    width: 10px;
+    height: 10px;
+    flex: none;
+    background-color: var(--graph-curve);
+    border-radius: 50%;
+}
+
+.stat-dot.vertex { background-color: var(--graph-vertex); border-radius: 2px; transform: rotate(45deg); }
+.stat-dot.root { background-color: var(--graph-root); }
+.stat-dot.yint { background-color: var(--graph-yint); border-radius: 2px; }
+.stat-dot.sym { background: none; border-left: 2px dashed var(--graph-sym); border-radius: 0; width: 2px; height: 12px; }
+
+.graph-error {
+    color: var(--error-color);
+}
+
+/* ---------- 8. Assistent-panel ---------- */
 .assistant-sidebar {
     background-color: var(--bg-secondary);
     padding: var(--spacing-lg);
@@ -303,6 +728,11 @@ button:disabled {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
+    align-self: start;
+    position: sticky;
+    top: var(--spacing-md);
+    max-height: calc(100vh - 2 * var(--spacing-md));
+    overflow-y: auto;
 }
 
 .assistant-tabs {
@@ -315,11 +745,13 @@ button:disabled {
 .assistant-tabs .tab-btn {
     background-color: var(--bg-tertiary);
     border: none;
-    padding: 0.4rem 0.8rem;
+    padding: 0.4rem 0.9rem;
+    min-height: 40px;
     border-radius: 9999px; /* Pill shape */
     cursor: pointer;
     font-size: var(--font-size-sm);
     color: var(--text-secondary);
+    white-space: nowrap;
     transition: background-color 0.2s, color 0.2s;
 }
 
@@ -335,11 +767,28 @@ button:disabled {
 .assistant-tab-pane {
     display: none;
     flex-direction: column;
-    height: 100%;
 }
 
 .assistant-tab-pane.active {
     display: flex;
+}
+
+.quick-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.quick-row input {
+    flex: 1;
+    min-width: 0;
+    min-height: var(--tap-size);
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--input-border);
+    border-radius: var(--border-radius);
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    font-size: 16px;
 }
 
 #scratchpad-input {
@@ -353,7 +802,13 @@ button:disabled {
     color: var(--text-primary);
     resize: vertical;
     font-family: inherit;
-    font-size: var(--font-size-base);
+    font-size: 16px;
+}
+
+#unit-circle-canvas {
+    max-width: 100%;
+    height: auto;
+    align-self: center;
 }
 
 .reference-list {
@@ -367,48 +822,345 @@ button:disabled {
     padding: var(--spacing-sm);
     background-color: var(--bg-primary);
     border-radius: var(--border-radius);
+    overflow-x: auto;
 }
 
-.chart-container {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1; /* Make it square */
+/* Elementer som bare brukes i mobilens bunnark er skjult på desktop */
+.sheet-fab,
+.sheet-backdrop,
+.sheet-grip {
+    display: none;
 }
 
-.graph-details {
-    margin-top: var(--spacing-md);
-    font-size: var(--font-size-sm);
+/* ---------- 9. Responsivt ---------- */
+@media (max-width: 1100px) {
+    .app-container {
+        grid-template-columns: 180px minmax(0, 1fr) 300px;
+        padding: var(--spacing-lg);
+    }
 }
 
-.graph-details p {
-    margin-bottom: var(--spacing-xs);
-}
-
-/* Responsive */
+/* Nettbrett og mobil: én kolonne, assistenten blir et bunnark */
 @media (max-width: 900px) {
     .app-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
+        padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+        padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+        padding-bottom: calc(88px + env(safe-area-inset-bottom)); /* plass til flytende knapp */
+        min-height: 0;
     }
 
+    .app-header {
+        flex-wrap: wrap;
+        padding: var(--spacing-sm) var(--spacing-md);
+        padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+        padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+        row-gap: var(--spacing-sm);
+    }
+
+    .app-header h1 {
+        font-size: 1.15rem;
+        flex: 1 1 auto;
+    }
+
+    .header-controls {
+        display: contents; /* lar søkefeltet og tema-knappen ordnes direkte i headeren */
+    }
+
+    #theme-toggle {
+        order: 2;
+    }
+
+    .header-controls input {
+        order: 3;
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    /* Kategorier som sveipbare piller */
     .sidebar-nav ul {
         display: flex;
-        gap: var(--spacing-md);
+        gap: var(--spacing-sm);
         overflow-x: auto;
-        white-space: nowrap;
+        padding: 2px 2px var(--spacing-sm);
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
     }
 
     .sidebar-nav ul::-webkit-scrollbar {
         display: none;
     }
-}
 
-@media (max-width: 768px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
+    .sidebar-nav li {
+        margin: 0;
+        flex: none;
+        scroll-snap-align: start;
     }
 
-    .assistant-sidebar,
-    #unit-circle-canvas {
-        max-width: 100%;
+    .sidebar-nav a {
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        padding: 0.4rem 1rem;
+        white-space: nowrap;
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 9999px;
+    }
+
+    .sidebar-nav a.active {
+        background-color: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: #fff;
+    }
+
+    .main-dashboard {
+        padding: var(--spacing-md);
+        box-shadow: none;
+        border: 1px solid var(--border-color);
+    }
+
+    /* Bunnark */
+    .assistant-sidebar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        z-index: 60;
+        max-height: 85dvh;
+        max-height: 85vh;
+        padding: var(--spacing-sm) var(--spacing-md) calc(var(--spacing-md) + env(safe-area-inset-bottom));
+        border-radius: 18px 18px 0 0;
+        box-shadow: var(--shadow-lg);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        transform: translateY(105%);
+        visibility: hidden;
+        transition: transform 0.28s ease, visibility 0s linear 0.28s;
+    }
+
+    .assistant-sidebar.is-open {
+        transform: none;
+        visibility: visible;
+        transition: transform 0.28s ease, visibility 0s;
+    }
+
+    .sheet-grip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: calc(-1 * var(--spacing-sm));
+        z-index: 2;
+        margin: 0 calc(-1 * var(--spacing-md));
+        padding: var(--spacing-sm) var(--spacing-md);
+        background-color: var(--bg-secondary);
+    }
+
+    .sheet-grip::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 6px;
+        width: 40px;
+        height: 4px;
+        margin-left: -20px;
+        border-radius: 2px;
+        background-color: var(--border-color);
+    }
+
+    .sheet-grip-title {
+        font-weight: 700;
+        padding-top: 0.6rem;
+    }
+
+    .sheet-close {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0;
+        font-size: 1.5rem;
+        line-height: 1;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border-radius: 50%;
+    }
+
+    .assistant-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        padding-bottom: 2px;
+    }
+
+    .assistant-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .assistant-tabs .tab-btn {
+        flex: none;
+    }
+
+    .sheet-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 55;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.28s ease;
+    }
+
+    .sheet-backdrop.is-open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .sheet-fab {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: fixed;
+        right: max(1rem, env(safe-area-inset-right));
+        bottom: calc(1rem + env(safe-area-inset-bottom));
+        z-index: 50;
+        min-height: 56px;
+        padding: 0 1.25rem;
+        border-radius: 9999px;
+        background-color: var(--accent-primary);
+        color: #fff;
+        font-size: 1rem;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .sheet-fab.has-update::after {
+        content: '';
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: var(--graph-vertex);
+        border: 2px solid var(--accent-primary);
+    }
+
+    .chart-container,
+    .graph-view {
+        aspect-ratio: 4 / 3;
+    }
+
+    #scratchpad-input {
+        min-height: 40vh;
+    }
+}
+
+/* Mobil */
+@media (max-width: 600px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--spacing-sm);
+    }
+
+    .module-card {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+
+    .module-card-icon {
+        font-size: 2rem;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .module-card h3 {
+        font-size: 0.95rem;
+    }
+
+    .module-card p {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 0.8rem;
+    }
+
+    .module-header h2,
+    .educational-module > h2 {
+        font-size: 1.25rem;
+    }
+
+    .math-form,
+    .calculator-form,
+    .action-buttons,
+    .result-box {
+        max-width: none;
+    }
+
+    .math-form .btn-primary,
+    .calculator-form .btn-primary,
+    .action-buttons > button {
+        width: 100%;
+    }
+
+    .result-box {
+        font-size: 1.05rem;
+        padding: var(--spacing-md);
+    }
+
+    .steps-box,
+    .step-container {
+        padding: var(--spacing-sm);
+        margin-left: calc(-1 * var(--spacing-xs));
+        margin-right: calc(-1 * var(--spacing-xs));
+    }
+
+    .step-item {
+        grid-template-columns: 1.75rem minmax(0, 1fr);
+        padding: var(--spacing-sm);
+        gap: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .step-num {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.8rem;
+    }
+
+    .step-item:not(:last-child)::after {
+        left: calc(var(--spacing-sm) + 0.875rem - 1px);
+        top: calc(var(--spacing-sm) + 1.75rem);
+        bottom: calc(-1 * var(--spacing-md));
+    }
+
+    .step-math {
+        font-size: 0.92em;
+        padding: 0.2rem 0.25rem;
+    }
+
+    .graph-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Svært smale skjermer */
+@media (max-width: 360px) {
+    .dashboard-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .module-card p {
+        -webkit-line-clamp: 2;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
     }
 }

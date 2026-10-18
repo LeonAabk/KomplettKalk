@@ -2,6 +2,15 @@
  * Modul for Algebra - inneholder ren forretningslogikk for matematiske operasjoner.
  */
 
+/** Runder av og fjerner flyttallsstøy (0.30000000000000004 → 0.3). */
+function r(n, digits = 4) {
+    const v = Number(n.toFixed(digits));
+    return Object.is(v, -0) ? 0 : v;
+}
+
+/** Tall med fortegn til LaTeX: 3 → "+ 3", -3 → "- 3". */
+const sgn = (n) => (n >= 0 ? '+ ' : '- ') + r(Math.abs(n));
+
 /**
  * Løser en andregradsligning og finner topp/bunnpunkt.
  * Returnerer et objekt med resultater og trinnvis utregning.
@@ -13,32 +22,39 @@
  */
 export function analyzeQuadratic(a, b, c) {
     const steps = [];
+    const f = (x) => a * x * x + b * x + c;
 
     // 1. Definer funksjonen
     steps.push({
         description: 'Vi starter med andregradsfunksjonen på standardform:',
-        math: `f(x) = ${a}x^2 ${b >= 0 ? '+' : ''}${b}x ${c >= 0 ? '+' : ''}${c}`
+        math: `f(x) = ${r(a)}x^2 ${sgn(b)}x ${sgn(c)}`,
+        note: `Standardform er f(x) = ax² + bx + c. Her er a = ${r(a)}, b = ${r(b)} og c = ${r(c)}.`
     });
 
     // 2. Sjekk om det er et topp- eller bunnpunkt
     const isTopPoint = a < 0;
     steps.push({
-        description: `Siden a = ${a}, er a ${isTopPoint ? '<' : '>'} 0. Grafen smiler ${isTopPoint ? 'surt (∩)' : 'blidt (∪)'}, så vi har et ${isTopPoint ? 'toppunkt' : 'bunnpunkt'}.`,
-        math: `a = ${a}`
+        description: `Siden a = ${r(a)}, er a ${isTopPoint ? '<' : '>'} 0. Grafen smiler ${isTopPoint ? 'surt (∩)' : 'blidt (∪)'}, så vi har et ${isTopPoint ? 'toppunkt' : 'bunnpunkt'}.`,
+        math: `a = ${r(a)}`,
+        note: isTopPoint
+            ? 'Når a er negativ åpner parabelen nedover (∩). Da er toppunktet det høyeste punktet på grafen.'
+            : 'Når a er positiv åpner parabelen oppover (∪). Da er bunnpunktet det laveste punktet på grafen.'
     });
 
     // 3. Finn x-koordinaten til topp/bunnpunktet
     const xVertex = -b / (2 * a);
     steps.push({
-        description: 'Vi finner x-koordinaten til symmetriaksen (og ekstremalpunktet) med formelen x = \\frac{-b}{2a}:',
-        math: `x_T = \\frac{-(${b})}{2 \\cdot ${a}} = ${xVertex}`
+        description: 'Vi finner x-koordinaten til symmetriaksen (og ekstremalpunktet) med formelen $x = \\frac{-b}{2a}$:',
+        math: `x_T = \\frac{-(${r(b)})}{2 \\cdot ${r(a)}} = ${r(xVertex)}`,
+        note: 'Parabelen er symmetrisk om en loddrett linje. Topp-/bunnpunktet ligger alltid på denne symmetrilinjen, midt mellom nullpunktene (hvis de finnes).'
     });
 
     // 4. Finn y-koordinaten
-    const yVertex = a * (xVertex ** 2) + b * xVertex + c;
+    const yVertex = f(xVertex);
     steps.push({
-        description: `Vi setter inn x = ${xVertex} i funksjonen for å finne y-koordinaten:`,
-        math: `y_T = f(${xVertex}) = ${a}(${xVertex})^2 ${b >= 0 ? '+' : ''}${b}(${xVertex}) ${c >= 0 ? '+' : ''}${c} = ${yVertex}`
+        description: `Vi setter inn x = ${r(xVertex)} i funksjonen for å finne y-koordinaten:`,
+        math: `y_T = f(${r(xVertex)}) = ${r(a)}(${r(xVertex)})^2 ${sgn(b)}(${r(xVertex)}) ${sgn(c)} = ${r(yVertex)}`,
+        note: `${isTopPoint ? 'Toppunktet' : 'Bunnpunktet'} er altså (${r(xVertex)}, ${r(yVertex)}).`
     });
 
     const vertex = { x: xVertex, y: yVertex, type: isTopPoint ? 'Toppunkt' : 'Bunnpunkt' };
@@ -47,7 +63,8 @@ export function analyzeQuadratic(a, b, c) {
     const discriminant = (b ** 2) - (4 * a * c);
     steps.push({
         description: 'For å finne nullpunktene (røttene) bruker vi abc-formelen. Først regner vi ut diskriminanten (Δ):',
-        math: `\\Delta = b^2 - 4ac = (${b})^2 - 4 \\cdot ${a} \\cdot ${c} = ${discriminant}`
+        math: `\\Delta = b^2 - 4ac = (${r(b)})^2 - 4 \\cdot ${r(a)} \\cdot ${r(c)} = ${r(discriminant)}`,
+        note: 'Diskriminanten avgjør hvor mange nullpunkter vi får: Δ > 0 gir to, Δ = 0 gir ett, og Δ < 0 gir ingen.'
     });
 
     let roots = [];
@@ -59,29 +76,47 @@ export function analyzeQuadratic(a, b, c) {
 
         steps.push({
             description: `Siden diskriminanten (Δ > 0) er positiv, har vi to nullpunkter:`,
-            math: `x = \\frac{-b \\pm \\sqrt{\\Delta}}{2a} = \\frac{-(${b}) \\pm \\sqrt{${discriminant}}}{2 \\cdot ${a}}`
+            math: `x = \\frac{-b \\pm \\sqrt{\\Delta}}{2a} = \\frac{-(${r(b)}) \\pm \\sqrt{${r(discriminant)}}}{2 \\cdot ${r(a)}}`
         });
         steps.push({
             description: `De to nullpunktene er:`,
-            math: `x_1 = ${roots[0].toFixed(2)}, \\quad x_2 = ${roots[1].toFixed(2)}`
+            math: `x_1 = ${r(roots[0])}, \\quad x_2 = ${r(roots[1])}`
+        });
+        steps.push({
+            description: 'Kontroll: setter vi nullpunktene tilbake i funksjonen, skal vi få 0.',
+            math: `f(${r(roots[0])}) = ${r(f(roots[0]), 6)}, \\quad f(${r(roots[1])}) = ${r(f(roots[1]), 6)}`,
+            note: 'Det er en rask måte å sjekke at du ikke har gjort en regnefeil.'
         });
     } else if (discriminant === 0) {
         const root = -b / (2 * a);
         roots = [root];
         steps.push({
             description: `Siden diskriminanten (Δ = 0) er null, tangerer grafen x-aksen, og vi har ett nullpunkt:`,
-            math: `x = \\frac{-b}{2a} = ${root}`
+            math: `x = \\frac{-b}{2a} = ${r(root)}`,
+            note: 'Nullpunktet ligger akkurat i topp-/bunnpunktet, så parabelen bare "tar på" x-aksen.'
         });
     } else {
         steps.push({
             description: `Siden diskriminanten (Δ < 0) er negativ, har funksjonen ingen reelle nullpunkter. Grafen krysser ikke x-aksen.`,
-            math: `\\Delta < 0 \\implies x \\notin \\mathbb{R}`
+            math: `\\Delta < 0 \\implies x \\notin \\mathbb{R}`,
+            note: 'Vi kan ikke ta kvadratroten av et negativt tall blant de reelle tallene.'
         });
     }
+
+    // 6. Oppsummering
+    const rootsText = roots.length === 2
+        ? `$x_1 = ${r(roots[0])}$ og $x_2 = ${r(roots[1])}$`
+        : roots.length === 1
+            ? `$x = ${r(roots[0])}$`
+            : 'ingen';
+    steps.push({
+        description: `Oppsummering av funksjonen:\n• ${isTopPoint ? 'Toppunkt' : 'Bunnpunkt'}: $(${r(xVertex)},\\, ${r(yVertex)})$\n• Symmetrilinje: $x = ${r(xVertex)}$\n• Nullpunkter: ${rootsText}\n• Skjæring med y-aksen: $(0,\\, ${r(c)})$`
+    });
 
     return {
         vertex,
         roots,
+        yIntercept: { x: 0, y: c },
         steps
     };
 }
@@ -274,11 +309,13 @@ export function analyzeLinear(a, b) {
     // 2. Forklar stigningstall og konstantledd
     steps.push({
         description: `Stigningstallet er ${a}. Dette betyr at for hver enhet vi går til høyre på x-aksen, går grafen ${Math.abs(a)} enheter ${a >= 0 ? 'opp' : 'ned'}.`,
-        math: `a = ${a}`
+        math: `a = ${a}`,
+        note: 'Stigningstallet forteller hvor bratt linjen er. Er det positivt, stiger linjen mot høyre. Er det negativt, faller den.'
     });
     steps.push({
         description: `Konstantleddet er ${b}. Dette er der grafen skjærer y-aksen.`,
-        math: `b = ${b}`
+        math: `b = ${b}`,
+        note: 'Konstantleddet b er y-verdien når x = 0, altså startpunktet på y-aksen.'
     });
 
     // 3. Finn skjæringspunkt med y-aksen
@@ -294,11 +331,12 @@ export function analyzeLinear(a, b) {
         root = -b / a;
         steps.push({
             description: `Vi finner nullpunktet ved å sette f(x) = 0:`,
-            math: `${a}x ${b >= 0 ? '+' : ''}${b} = 0`
+            math: `${a}x ${b >= 0 ? '+' : ''}${b} = 0`,
+            note: 'Nullpunktet er der grafen krysser x-aksen, altså der y = 0.'
         });
         steps.push({
             description: `Flytter ${b} over og deler på ${a}:`,
-            math: `x = \\frac{-(${b})}{${a}} = ${root}`
+            math: `x = \\frac{-(${b})}{${a}} = ${r(root)}`
         });
     } else {
         if (b === 0) {

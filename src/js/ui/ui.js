@@ -18,7 +18,7 @@ import { validateQuadraticInput, validateLinearInput, validatePercentInput, vali
     validateAnnuityLoanInput,
     validateBinomialInput
 } from '../utils/validation.js';
-import { analyzeQuadratic, analyzeLinear, analyzeABC, analyzeVertex, analyzeEquationSystem, analyzeFactoring, analyzeSymmetryLine, analyzeLinearRoot, analyzeAverageRateOfChange, analyzeLog10, analyzeAsymptotes, analyzeRationalEq, analyzeExponential, analyzeProportionality } from '../modules/algebra.js';
+import { analyzeQuadratic, generateQuadraticDataPoints, generateLinearDataPoints, analyzeLinear, analyzeABC, analyzeVertex, analyzeEquationSystem, analyzeFactoring, analyzeSymmetryLine, analyzeLinearRoot, analyzeAverageRateOfChange, analyzeLog10, analyzeAsymptotes, analyzeRationalEq, analyzeExponential, analyzeProportionality } from '../modules/algebra.js';
 import { analyzePercent, analyzePercentChange, analyzePower, analyzeSquareRoot, analyzeFractions } from '../modules/basic.js';
 import { analyzePythagoras, analyzeArea, analyzeTrigonometry, analyzeVolume, analyzeSimilarity, analyzeSector, analyzeCongruence, analyzeTriangleSolver, analyzeSurfaceArea } from '../modules/geometry.js';
 import { analyzeMean, analyzeMedian, analyzeMode, analyzeRange, analyzeStdDevAndVariance } from '../modules/statistics.js';
@@ -27,7 +27,7 @@ import { analyzeSpeed, analyzeDensity, analyzeMechEnergy, analyzeNewton2, analyz
 import { analyzeNPR, analyzeNCR, analyzeBinomial } from '../modules/probability.js';
 import { analyzeUnitConversion, analyzeSpeedConversion } from '../modules/conversion.js';
 import { renderSteps } from '../components/step-by-step.js';
-import { renderGraph, renderEmptyGraph } from '../components/graph.js';
+import { renderGraph, renderEmptyGraph, clearGraph } from '../components/graph.js';
 import { evaluateMath } from '../utils/mathParser.js';
 import { functionData } from '../utils/functionData.js';
 
@@ -47,24 +47,75 @@ export function initUI() {
     const showStepsBtn = document.getElementById('btn-show-steps');
     const stepsContainer = document.getElementById('step-by-step-container');
     const stepsContent = document.getElementById('steps-content');
-    const canvas = document.getElementById('quick-graph-canvas');
+    const graphEl = document.getElementById('quick-graph');
     const graphDetails = document.getElementById('graph-details');
     const quickInput = document.getElementById('quick-function-input');
     const btnDrawQuick = document.getElementById('btn-draw-quick');
 
-    // Render empty graph on startup
-    if (window.Chart) {
-        renderEmptyGraph(canvas);
-    } else {
-        // Retry if Chart.js is not fully loaded (since it's loaded via defer)
-        setTimeout(() => renderEmptyGraph(canvas), 500);
-    }
+    // Tegn tomt koordinatsystem ved oppstart
+    renderEmptyGraph(graphEl);
 
     // Dashboard Elements
     const dashboardGrid = document.getElementById('dashboard-grid');
     const globalSearch = document.getElementById('global-search');
-    const appContainer = document.querySelector('.app-container');
     const navUl = document.querySelector('.sidebar-nav ul');
+    const mobileQuery = window.matchMedia('(max-width: 900px)');
+
+    // Tom-tilstand når søk/filter ikke gir treff
+    const emptyState = document.createElement('p');
+    emptyState.className = 'dashboard-empty';
+    emptyState.textContent = 'Fant ingen emner. Prøv et annet søk.';
+    emptyState.hidden = true;
+    dashboardGrid.after(emptyState);
+
+    function updateEmptyState() {
+        const anyVisible = [...dashboardGrid.querySelectorAll('.module-card')]
+            .some(card => card.style.display !== 'none');
+        emptyState.hidden = anyVisible || dashboardGrid.style.display === 'none';
+    }
+
+    function showDashboard() {
+        document.querySelectorAll('.educational-module').forEach(mod => {
+            mod.style.display = 'none';
+        });
+        dashboardGrid.style.display = 'grid';
+        updateEmptyState();
+    }
+
+    // Åpner et emne. Bruker nettleserhistorikken slik at Tilbake-knappen
+    // på mobilen går tilbake til oversikten i stedet for å forlate siden.
+    function openModule(id, { push = true } = {}) {
+        const targetModule = document.getElementById(id);
+        if (!targetModule) {
+            alert('Denne modulen mangler HTML-struktur!');
+            return;
+        }
+        dashboardGrid.style.display = 'none';
+        emptyState.hidden = true;
+        document.querySelectorAll('.educational-module').forEach(mod => {
+            mod.style.display = 'none';
+        });
+        targetModule.style.display = 'block';
+        if (push) history.pushState({ module: id }, '', `#${id}`);
+        window.scrollTo({ top: 0 });
+    }
+
+    function goBackToDashboard() {
+        if (history.state && history.state.module) {
+            history.back(); // popstate viser oversikten
+        } else {
+            showDashboard();
+        }
+        window.scrollTo({ top: 0 });
+    }
+
+    window.addEventListener('popstate', (e) => {
+        if (e.state && e.state.module) {
+            openModule(e.state.module, { push: false });
+        } else {
+            showDashboard();
+        }
+    });
 
     // Dynamisk generering av dashboard-kort
     function renderDashboardCards() {
@@ -74,27 +125,20 @@ export function initUI() {
             card.className = 'module-card';
             card.setAttribute('data-category', item.category);
             card.setAttribute('data-target', item.id);
+            card.setAttribute('role', 'button');
+            card.tabIndex = 0;
 
             card.innerHTML = `
-                <div class="module-card-icon">${item.icon}</div>
+                <div class="module-card-icon" aria-hidden="true">${item.icon}</div>
                 <h3>${item.title}</h3>
                 <p>${item.description}</p>
             `;
 
-            card.addEventListener('click', () => {
-                // Skjul dashboard og vis valgt modul
-                dashboardGrid.style.display = 'none';
-                // Skjul alle andre moduler
-                document.querySelectorAll('.educational-module').forEach(mod => {
-                    mod.style.display = 'none';
-                });
-
-                const targetModule = document.getElementById(item.id);
-                if (targetModule) {
-                    targetModule.style.display = 'block';
-                } else {
-                    alert('Denne modulen mangler HTML-struktur!');
-                    dashboardGrid.style.display = 'grid';
+            card.addEventListener('click', () => openModule(item.id));
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openModule(item.id);
                 }
             });
 
@@ -105,30 +149,30 @@ export function initUI() {
     renderDashboardCards();
     let moduleCards = document.querySelectorAll('.module-card');
 
-    // Tilbake til oversikt-knapper
-    const backButtons = document.querySelectorAll('.btn-back-dashboard, #btn-back-dashboard');
-    backButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.educational-module').forEach(mod => {
-                mod.style.display = 'none';
-            });
-            dashboardGrid.style.display = 'grid';
-        });
+    // Tilbake-/lukk-knapper (inkluderer "×"-knappene, som tidligere manglet handler)
+    document.querySelectorAll('.btn-back-dashboard, #btn-back-dashboard, .btn-close').forEach(btn => {
+        btn.addEventListener('click', goBackToDashboard);
     });
 
     if (globalSearch) {
         globalSearch.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
+            const searchTerm = e.target.value.trim().toLowerCase();
             moduleCards = document.querySelectorAll('.module-card');
+
+            // Søk viser alltid oversikten og ser på alle kategorier
+            if (dashboardGrid.style.display === 'none') showDashboard();
+            navUl?.querySelectorAll('a').forEach(a => {
+                a.classList.toggle('active', a.getAttribute('href') === '#alle');
+            });
 
             moduleCards.forEach(card => {
                 const text = card.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
+                card.style.display = text.includes(searchTerm) ? 'flex' : 'none';
             });
+            updateEmptyState();
+        });
+        globalSearch.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') globalSearch.blur(); // lukker tastaturet på mobil
         });
     }
 
@@ -180,10 +224,8 @@ export function initUI() {
                 });
 
                 // Sørg for at dashboardet vises og moduler skjules
-                document.querySelectorAll('.educational-module').forEach(mod => {
-                    mod.style.display = 'none';
-                });
-                dashboardGrid.style.display = 'grid';
+                if (globalSearch) globalSearch.value = '';
+                showDashboard();
             });
         });
     }
@@ -207,6 +249,70 @@ export function initUI() {
             }
         });
     });
+
+    // ---------------- Bunnark for graf og verktøy (mobil) ----------------
+    const sidebar = document.querySelector('.assistant-sidebar');
+    let sheetFab = null;
+    let sheetBackdrop = null;
+    let sheetClose = null;
+
+    function setupSheet() {
+        if (!sidebar) return;
+        sidebar.id = sidebar.id || 'assistant-sidebar';
+
+        const grip = document.createElement('div');
+        grip.className = 'sheet-grip';
+        grip.innerHTML = '<span class="sheet-grip-title">Graf &amp; verktøy</span>' +
+            '<button type="button" class="sheet-close" aria-label="Lukk graf og verktøy">&times;</button>';
+        sidebar.prepend(grip);
+        sheetClose = grip.querySelector('.sheet-close');
+
+        sheetBackdrop = document.createElement('div');
+        sheetBackdrop.className = 'sheet-backdrop';
+
+        sheetFab = document.createElement('button');
+        sheetFab.type = 'button';
+        sheetFab.className = 'sheet-fab';
+        sheetFab.setAttribute('aria-controls', sidebar.id);
+        sheetFab.setAttribute('aria-expanded', 'false');
+        sheetFab.innerHTML = '<span aria-hidden="true">📈</span> Graf';
+
+        document.body.append(sheetBackdrop, sheetFab);
+
+        sheetFab.addEventListener('click', () => openSheet());
+        sheetBackdrop.addEventListener('click', closeSheet);
+        sheetClose.addEventListener('click', closeSheet);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSheet();
+        });
+        mobileQuery.addEventListener('change', (e) => {
+            if (!e.matches) closeSheet(false);
+        });
+    }
+
+    // Åpner bunnarket på mobil (på desktop er panelet alltid synlig)
+    function openSheet(tabId) {
+        if (!mobileQuery.matches || !sidebar) return;
+        if (tabId) {
+            document.querySelector(`.assistant-tabs .tab-btn[data-tab="${tabId}"]`)?.click();
+        }
+        sidebar.classList.add('is-open');
+        sheetBackdrop.classList.add('is-open');
+        sheetFab.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+        sheetClose.focus({ preventScroll: true });
+    }
+
+    function closeSheet(restoreFocus = true) {
+        if (!sidebar || !sidebar.classList.contains('is-open')) return;
+        sidebar.classList.remove('is-open');
+        sheetBackdrop.classList.remove('is-open');
+        sheetFab.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        if (restoreFocus) sheetFab.focus({ preventScroll: true });
+    }
+
+    setupSheet();
 
     // Scratchpad Auto-save
     const scratchpadInput = document.getElementById('scratchpad-input');
@@ -240,28 +346,54 @@ export function initUI() {
     }
 
     // Hurtig-Graf logikk
-    if (btnDrawQuick && quickInput) {
-        btnDrawQuick.addEventListener('click', () => {
-            const funcStr = quickInput.value.trim();
-            if (!funcStr) {
-                renderEmptyGraph(canvas);
-                graphDetails.innerHTML = '';
-                return;
+    function drawQuickGraph() {
+        const funcStr = quickInput.value.trim();
+        if (!funcStr) {
+            clearGraph(graphEl);
+            graphDetails.replaceChildren();
+            return;
+        }
+
+        try {
+            const fn = (x) => evaluateMath(funcStr, x);
+            const dataPoints = [];
+            for (let i = 0; i <= 200; i++) {
+                const x = Math.round((-10 + i * 0.1) * 1e6) / 1e6;
+                const y = fn(x);
+                if (isFinite(y)) {
+                    dataPoints.push({ x, y });
+                }
+            }
+            if (dataPoints.length === 0) {
+                throw new Error('Ingen gyldige verdier');
             }
 
-            try {
-                const dataPoints = [];
-                for (let x = -10; x <= 10; x += 0.5) {
-                    const y = evaluateMath(funcStr, x);
-                    if (isFinite(y)) {
-                        dataPoints.push({ x, y });
-                    }
-                }
+            renderGraph(graphEl, dataPoints, null, null, { fn, name: `f(x) = ${funcStr}` });
 
-                renderGraph(canvas, dataPoints, null, null);
-                graphDetails.innerHTML = `<p>Viser graf for: <strong>f(x) = ${funcStr}</strong></p>`;
-            } catch (e) {
-                graphDetails.innerHTML = `<p style="color: var(--error-color);">Ugyldig funksjon. Prøv f.eks 'x*x', 'x^2' eller '2*x+1'</p>`;
+            const p = document.createElement('p');
+            p.append('Viser graf for: ');
+            const strong = document.createElement('strong');
+            strong.textContent = `f(x) = ${funcStr}`;
+            p.appendChild(strong);
+            const hint = document.createElement('p');
+            hint.textContent = 'Dra fingeren (eller musa) over grafen for å lese av verdier.';
+            hint.style.color = 'var(--text-secondary)';
+            graphDetails.replaceChildren(p, hint);
+        } catch (e) {
+            const p = document.createElement('p');
+            p.className = 'graph-error';
+            p.textContent = "Ugyldig funksjon. Prøv f.eks 'x*x', 'x^2' eller '2*x+1'";
+            graphDetails.replaceChildren(p);
+        }
+    }
+
+    if (btnDrawQuick && quickInput) {
+        btnDrawQuick.addEventListener('click', drawQuickGraph);
+        quickInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                drawQuickGraph();
+                quickInput.blur(); // lukker tastaturet på mobil
             }
         });
     }
@@ -280,7 +412,7 @@ export function initUI() {
 
         if (!validation.isValid) {
             showHint(hintBox, validation.hint);
-            resetUI(showStepsBtn, stepsContainer, canvas, graphDetails);
+            resetUI(showStepsBtn, stepsContainer, graphEl, graphDetails);
             return;
         }
 
@@ -312,11 +444,17 @@ export function initUI() {
             spread = Math.max(5, maxRootDist * 1.5);
         }
 
-        const dataPoints = generateQuadraticDataPoints(a, b, c, xCenter - spread, xCenter + spread, spread / 20);
-        renderGraph(canvas, dataPoints, result.vertex, result.roots);
+        const dataPoints = generateQuadraticDataPoints(a, b, c, xCenter - spread, xCenter + spread, spread / 80);
+        renderGraph(graphEl, dataPoints, result.vertex, result.roots, {
+            symmetry: true,
+            yIntercept: c,
+            fn: (x) => a * x * x + b * x + c,
+            name: `f(x) = ${a}x² ${b >= 0 ? '+' : '−'} ${Math.abs(b)}x ${c >= 0 ? '+' : '−'} ${Math.abs(c)}`
+        });
 
         // Oppdater tekstdetaljer under grafen
-        updateGraphDetails(graphDetails, result);
+        updateGraphDetails(graphDetails, result, c);
+        openSheet('tab-graph'); // på mobil: vis grafen i bunnarket
     });
 
     // Håndter "Vis utregning" knappen
@@ -375,15 +513,19 @@ export function initUI() {
             const spread = 10;
             const dataPoints = generateLinearDataPoints(a, b, xCenter - spread, xCenter + spread);
             const rootsArr = result.root !== null ? [result.root] : [];
-            renderGraph(canvas, dataPoints, null, rootsArr);
+            renderGraph(graphEl, dataPoints, null, rootsArr, {
+                yIntercept: result.yIntercept.y,
+                fn: (x) => a * x + b,
+                name: `f(x) = ${a}x ${b >= 0 ? '+' : '−'} ${Math.abs(b)}`
+            });
 
-            let graphHTML = `<p><strong>Skjæring med y-aksen:</strong> (0, ${result.yIntercept.y})</p>`;
-            if (result.root !== null) {
-                graphHTML += `<p><strong>Nullpunkt (skjæring x-akse):</strong> (${result.root.toFixed(2)}, 0)</p>`;
-            } else {
-                graphHTML += `<p><strong>Nullpunkt:</strong> Ingen (horisontal linje)</p>`;
-            }
-            graphDetails.innerHTML = graphHTML;
+            renderGraphStats(graphDetails, [
+                { label: 'Skjæring y-aksen', value: `(0, ${num(result.yIntercept.y)})`, kind: 'yint' },
+                result.root !== null
+                    ? { label: 'Nullpunkt', value: `x = ${num(result.root)}`, kind: 'root' }
+                    : { label: 'Nullpunkt', value: 'Ingen (horisontal linje)', kind: 'root' }
+            ]);
+            openSheet('tab-graph'); // på mobil: vis grafen i bunnarket
         });
 
         linearStepsBtn.addEventListener('click', () => {
@@ -1591,27 +1733,6 @@ export function initUI() {
         });
     }
 
-    // Oppdater graf på tema-bytte
-
-    window.addEventListener('themeChanged', () => {
-        if (state.currentResult) {
-             const formData = new FormData(form);
-             const a = parseFloat(formData.get('a'));
-             const b = parseFloat(formData.get('b'));
-             const c = parseFloat(formData.get('c'));
-
-             if(!isNaN(a) && !isNaN(b) && !isNaN(c)) {
-                 const xCenter = state.currentResult.vertex.x;
-                 let spread = 5;
-                 if (state.currentResult.roots.length > 0) {
-                     const maxDist = Math.max(...state.currentResult.roots.map(r => Math.abs(r - xCenter)));
-                     spread = Math.max(5, maxDist * 1.5);
-                 }
-                 const dataPoints = generateQuadraticDataPoints(a, b, c, xCenter - spread, xCenter + spread, spread / 20);
-                 renderGraph(canvas, dataPoints, state.currentResult.vertex, state.currentResult.roots);
-             }
-        }
-    });
 }
 
 function showHint(element, message) {
@@ -1624,31 +1745,71 @@ function hideHint(element) {
     element.hidden = true;
 }
 
-function resetUI(btn, stepsContainer, canvas, details) {
+function resetUI(btn, stepsContainer, graphEl, details) {
     btn.disabled = true;
     stepsContainer.hidden = true;
-    details.innerHTML = '';
+    details.replaceChildren();
     state.currentResult = null;
 
-    // Fjern evt chart
-    if (window.Chart) {
-       const chart = Chart.getChart(canvas);
-       if (chart) chart.destroy();
-    }
+    // Tilbake til tomt koordinatsystem
+    clearGraph(graphEl);
 }
 
-function updateGraphDetails(container, result) {
-    let html = `<p><strong>${result.vertex.type}:</strong> (${result.vertex.x.toFixed(2)}, ${result.vertex.y.toFixed(2)})</p>`;
+/** Kort tallformat: maks 2 desimaler uten overflødige nuller, med ekte minustegn. */
+function num(n) {
+    if (!Number.isFinite(n)) return '–';
+    let rounded = Math.round(n * 100) / 100;
+    if (Object.is(rounded, -0)) rounded = 0;
+    return String(rounded).replace('-', '−');
+}
 
-    if (result.roots.length === 2) {
-        html += `<p><strong>Nullpunkter:</strong> x₁ = ${result.roots[0].toFixed(2)}, x₂ = ${result.roots[1].toFixed(2)}</p>`;
-    } else if (result.roots.length === 1) {
-        html += `<p><strong>Nullpunkt:</strong> x = ${result.roots[0].toFixed(2)}</p>`;
+/** Viser nøkkeltall under grafen som små kort med samme symboler som i grafen. */
+function renderGraphStats(container, items) {
+    const wrap = document.createElement('div');
+    wrap.className = 'graph-stats';
+
+    items.forEach(({ label, value, kind }) => {
+        const card = document.createElement('div');
+        card.className = 'graph-stat';
+
+        const labelEl = document.createElement('div');
+        labelEl.className = 'graph-stat-label';
+        const dot = document.createElement('span');
+        dot.className = `stat-dot ${kind || ''}`;
+        dot.setAttribute('aria-hidden', 'true');
+        labelEl.append(dot, document.createTextNode(label));
+
+        const valueEl = document.createElement('div');
+        valueEl.className = 'graph-stat-value';
+        valueEl.textContent = value;
+
+        card.append(labelEl, valueEl);
+        wrap.appendChild(card);
+    });
+
+    container.replaceChildren(wrap);
+}
+
+function updateGraphDetails(container, result, yIntercept) {
+    const { vertex, roots } = result;
+    const items = [
+        { label: vertex.type, value: `(${num(vertex.x)}, ${num(vertex.y)})`, kind: 'vertex' },
+        { label: 'Symmetrilinje', value: `x = ${num(vertex.x)}`, kind: 'sym' }
+    ];
+
+    if (roots.length === 2) {
+        items.push({ label: 'Nullpunkter', value: `x₁ = ${num(roots[0])}, x₂ = ${num(roots[1])}`, kind: 'root' });
+    } else if (roots.length === 1) {
+        items.push({ label: 'Nullpunkt', value: `x = ${num(roots[0])}`, kind: 'root' });
     } else {
-        html += `<p><strong>Nullpunkter:</strong> Ingen reelle</p>`;
+        items.push({ label: 'Nullpunkter', value: 'Ingen reelle', kind: 'root' });
     }
 
-    container.innerHTML = html;
+    if (Number.isFinite(yIntercept)) {
+        items.push({ label: 'Skjæring y-aksen', value: `(0, ${num(yIntercept)})`, kind: 'yint' });
+    }
+
+    renderGraphStats(container, items);
 }
 
 function drawUnitCircle(canvas) {
