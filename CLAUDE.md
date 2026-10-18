@@ -22,6 +22,7 @@ python3 -m http.server 8123
 - `src/js/utils/validation.js` – én `validateXxx` per emne.
 - `src/js/utils/functionData.js` – listen over emner (id, tittel, kategori, beskrivelse, ikon).
 - `src/js/components/graph.js` – SVG-graf (ingen Chart.js). `renderGraph`, `renderEmptyGraph`, `clearGraph`.
+- `src/js/ui/extras.js` – favoriter (stjerne, localStorage `kk-favoritter`), «Sist brukt» (`kk-nylig`) og «Kopier resultat» på alle `.result-box`.
 - `src/js/components/step-by-step.js` – `renderSteps(steps, container)`.
 - `src/css/theme.css` – variabler for lys/mørk modus. `src/css/style.css` – resten.
 
