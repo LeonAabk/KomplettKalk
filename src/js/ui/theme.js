@@ -12,6 +12,9 @@ export function initTheme() {
         htmlEl.setAttribute('data-theme', savedTheme);
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         htmlEl.setAttribute('data-theme', 'dark');
+    } else {
+        // HTML-filen starter i mørkt tema; brukere med lys systemmodus skal få lyst
+        htmlEl.setAttribute('data-theme', 'light');
     }
 
     // Oppdater ikon
