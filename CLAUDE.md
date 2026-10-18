@@ -14,7 +14,7 @@ python3 -m http.server 8123
 `index.html` i roten er selve siden. KaTeX lastes fra CDN (`cdn.jsdelivr.net`).
 
 ## Struktur
-- `index.html` – all markup: dashboard, 49 `<section id="module-…">` og assistent-panelet.
+- `index.html` – all markup: dashboard, 49 håndskrevne `<section id="module-…">` (pluss emnene i `modules/catalog.js`, som bygges av JS) og assistent-panelet.
 - `src/js/main.js` – inngangspunkt (`initTheme`, `initUI`).
 - `src/js/ui/ui.js` – kobler skjemaer, dashboard, søk, faner, bunnark og graf.
 - `src/js/modules/*.js` – ren regnelogikk per tema. Hver `analyzeXxx(...)` returnerer
@@ -22,11 +22,14 @@ python3 -m http.server 8123
 - `src/js/utils/validation.js` – én `validateXxx` per emne.
 - `src/js/utils/functionData.js` – listen over emner (id, tittel, kategori, beskrivelse, ikon).
 - `src/js/components/graph.js` – SVG-graf (ingen Chart.js). `renderGraph`, `renderEmptyGraph`, `clearGraph`.
+- `src/js/modules/catalog.js` – emner definert som data (felt, `check`, `run` → `{html, steps}`). `src/js/ui/catalog-ui.js` bygger skjema/resultat/utregning og legger dem i `functionData`.
 - `src/js/ui/extras.js` – favoriter (stjerne, localStorage `kk-favoritter`), «Sist brukt» (`kk-nylig`) og «Kopier resultat» på alle `.result-box`.
 - `src/js/components/step-by-step.js` – `renderSteps(steps, container)`.
 - `src/css/theme.css` – variabler for lys/mørk modus. `src/css/style.css` – resten.
 
 ## Legge til et nytt emne
+Enklest: legg en oppføring i `modules/catalog.js` (se de andre der). Ingen HTML eller `ui.js` trengs.
+Eldre fremgangsmåte, for emner som trenger egen UI (graf, figur):
 1. Legg en oppføring i `functionData.js` (id må være `module-<navn>`).
 2. Legg en `<section id="module-<navn>" class="educational-module">` i `index.html`
    (kopier en eksisterende, f.eks. `module-compound-interest`).
